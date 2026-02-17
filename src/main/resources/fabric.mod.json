@@ -1,0 +1,43 @@
+{
+	"schemaVersion": 1,
+	"id": "awec",
+	"version": "${version}",
+	"name": "Another WorldEdit Clone",
+	"description": "Another WorldEdit Clone",
+	"authors": [
+		"Amp63"
+	],
+	"contact": {
+		"homepage": "https://github.com/Amp63/awec",
+		"sources": ""
+	},
+	"icon": "icon.png",
+	"license": "CC0-1.0",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"amp.awec.WorldEditMod"
+		],
+		"beforeGameStart": [
+			"amp.awec.WorldEditMod"
+		],
+		"afterGameStart": [
+			"amp.awec.WorldEditMod"
+		],
+		"recipesReady": [
+			"amp.awec.WorldEditMod"
+		]
+	},
+	"mixins": [
+		"awec.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=${fabricloader}",
+		"halplibe": ">=${halplibe}",
+		"minecraft": "*",
+		"java": ">=${java}"
+	},
+	"suggests": {
+		"modmenu": ">=${modmenu}"
+	}
+}
