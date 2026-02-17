@@ -1,8 +1,9 @@
 package amp.awec;
 
-import org.useless.seedviewer.collections.BlockPos3D;
+import net.minecraft.core.item.Item;
+import net.minecraft.core.item.Items;
 
 public class ModState {
-	public static BlockPos3D corner1 = null;
-	public static BlockPos3D corner2 = null;
+	public static BlockPos corner1 = null;
+	public static BlockPos corner2 = null;
 }
