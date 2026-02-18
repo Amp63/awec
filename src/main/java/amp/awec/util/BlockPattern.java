@@ -26,7 +26,7 @@ class BlockProbability {
 }
 
 public class BlockPattern {
-	private static final Pattern percentagePattern = Pattern.compile("(?:(\\d+)%)?([A-Za-z_]+)(?::(\\d+))?");
+	private static final Pattern percentagePattern = Pattern.compile("(?:(\\d+)%)?([A-Za-z0-9_]+)(?::(\\d+))?");
 	private final ArrayList<BlockProbability> patternBlocks = new ArrayList<>();
 	private final Random rng = new Random();
 
@@ -48,14 +48,28 @@ public class BlockPattern {
 
 			// Parse block name (required)
 			String blockName = matcher.group(2);
-			Block<?> block;
+			Block<?> block = null;
+
+			// Try to parse as numeric ID first
 			try {
-				NamespaceID blockNamespaceId = NamespaceID.getPermanent("minecraft:block/" + blockName);
-				block = Blocks.blockMap.get(blockNamespaceId);
-				if (block == null) {
-					throw new BlockPatternException("Unrecognized block name \"" + blockName + "\"");
+				int blockId = Integer.parseInt(blockName);
+				if (blockId < Blocks.blocksList.length) {
+					block = Blocks.getBlock(blockId);
 				}
-			} catch (HardIllegalArgumentException e) {
+			}
+			catch (NumberFormatException ignored) {}
+
+			if (block == null) {
+				// Could not parse as ID; try to find using block namespace
+				try {
+					NamespaceID blockNamespaceId = NamespaceID.getPermanent("minecraft:block/" + blockName);
+					block = Blocks.blockMap.get(blockNamespaceId);
+				}
+				catch (HardIllegalArgumentException ignored) {}
+			}
+
+			if (block == null) {
+				// Could not parse block type, exit
 				throw new BlockPatternException("Unrecognized block name \"" + blockName + "\"");
 			}
 
