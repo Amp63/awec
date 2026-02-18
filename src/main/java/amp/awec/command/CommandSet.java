@@ -2,7 +2,11 @@ package amp.awec.command;
 import amp.awec.BlockPos;
 import amp.awec.BlockVolumeIterator;
 import amp.awec.ModState;
+import amp.awec.WorldEditMod;
+import amp.awec.util.BlockPattern;
+import amp.awec.util.BlockPatternException;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.ArgumentTypeString;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import net.minecraft.core.block.Block;
@@ -20,22 +24,37 @@ public class CommandSet implements CommandManager.CommandRegistry {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/set")
 //				.requires(CommandSource::hasAdmin)
-				.then(ArgumentBuilderRequired.argument("block", ArgumentTypeBlock.block())
+				.then(ArgumentBuilderRequired.argument("pattern", ArgumentTypeString.greedyString())
 					.executes(context -> {
 						CommandSource source = (CommandSource) context.getSource();
-						BlockInput blockInput = (BlockInput) context.getArgument("block", BlockInput.class);
-						World world = source.getWorld();
-						doSet(world, ModState.corner1, ModState.corner2, blockInput.getBlockId());
-						return 1;
+						String patternString = (String) context.getArgument("pattern", String.class);
+						try {
+							BlockPattern pattern = new BlockPattern(patternString);
+							World world = source.getWorld();
+							if (ModState.CheckCorners()) {
+								doSet(world, ModState.corner1, ModState.corner2, pattern);
+								return 1;
+							}
+							else {
+								source.sendMessage("Both corners must be set");
+								return 0;
+							}
+						} catch (BlockPatternException e) {
+							source.sendMessage(e.getMessage());
+							return 0;
+						}
 					})
 				));
 	}
 
-	private void doSet(World world, BlockPos corner1, BlockPos corner2, int blockId) {
+	private void doSet(World world, BlockPos corner1, BlockPos corner2, BlockPattern pattern) {
 		BlockVolumeIterator iterator = new BlockVolumeIterator(corner1, corner2);
 		while (iterator.hasNext()) {
 			BlockPos setPos = iterator.next();
-			world.setBlockWithNotify(setPos.x, setPos.y, setPos.z, blockId);
+			Block<?> sampledBlock = pattern.sample();
+			if (sampledBlock != null) {
+				world.setBlockWithNotify(setPos.x, setPos.y, setPos.z, sampledBlock.id());
+			}
 		}
 	}
 }
