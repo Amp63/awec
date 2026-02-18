@@ -9,9 +9,12 @@
     "WandPos2Mixin"
   ],
   "client": [
+    "PlayerJoinClientMixin",
     "WandPos1ClientMixin"
   ],
   "server": [
+    "PlayerJoinServerMixin",
+    "PlayerLeaveServerMixin",
     "WandPos1ServerMixin"
   ]
 }
