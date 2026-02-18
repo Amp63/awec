@@ -6,15 +6,14 @@ import net.minecraft.core.util.HardIllegalArgumentException;
 import net.minecraft.core.util.collection.NamespaceID;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class BlockProbability {
 	public BlockState blockState;
 	public double probability;
+
 	public BlockProbability(BlockState blockState, double probability) {
 		this.blockState = blockState;
 		this.probability = probability;
@@ -27,6 +26,10 @@ class BlockProbability {
 
 public class BlockPattern {
 	private static final Pattern percentagePattern = Pattern.compile("(?:(\\d+)%)?([A-Za-z0-9_]+)(?::(\\d+))?");
+	private static Map<String, Block<?>> blockNameOverrides = new HashMap<String, Block<?>>() {{
+		put("air", null);
+	}};
+
 	private final ArrayList<BlockProbability> patternBlocks = new ArrayList<>();
 	private final Random rng = new Random();
 
@@ -48,6 +51,7 @@ public class BlockPattern {
 
 			// Parse block name (required)
 			String blockName = matcher.group(2);
+			boolean blockFound = false;
 			Block<?> block = null;
 
 			// Try to parse as numeric ID first
@@ -55,20 +59,32 @@ public class BlockPattern {
 				int blockId = Integer.parseInt(blockName);
 				if (blockId < Blocks.blocksList.length) {
 					block = Blocks.getBlock(blockId);
+					blockFound = true;
 				}
 			}
 			catch (NumberFormatException ignored) {}
 
-			if (block == null) {
+			if (!blockFound) {
 				// Could not parse as ID; try to find using block namespace
 				try {
-					NamespaceID blockNamespaceId = NamespaceID.getPermanent("minecraft:block/" + blockName);
-					block = Blocks.blockMap.get(blockNamespaceId);
+					NamespaceID blockNamespaceId = NamespaceID.getTemp("minecraft:block/" + blockName);
+					if (Blocks.blockMap.containsKey(blockNamespaceId)) {
+						block = Blocks.blockMap.get(blockNamespaceId);
+						blockFound = true;
+					}
 				}
 				catch (HardIllegalArgumentException ignored) {}
 			}
 
-			if (block == null) {
+			if (!blockFound) {
+				// Could not find in namespace, check in overrides map
+				if (blockNameOverrides.containsKey(blockName)) {
+					block = blockNameOverrides.get(blockName);
+					blockFound = true;
+				}
+			}
+
+			if (!blockFound) {
 				// Could not parse block type, exit
 				throw new BlockPatternException("Unrecognized block name \"" + blockName + "\"");
 			}

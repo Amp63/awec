@@ -2,7 +2,6 @@ package amp.awec.command;
 import amp.awec.BlockPos;
 import amp.awec.BlockVolumeIterator;
 import amp.awec.ModState;
-import amp.awec.WorldEditMod;
 import amp.awec.util.BlockPattern;
 import amp.awec.util.BlockPatternException;
 import amp.awec.util.BlockState;
@@ -10,11 +9,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeString;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
-import net.minecraft.core.block.Block;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
-import net.minecraft.core.net.command.arguments.ArgumentTypeBlock;
-import net.minecraft.core.net.command.helpers.BlockInput;
 import net.minecraft.core.world.World;
 
 public class CommandSet implements CommandManager.CommandRegistry {
@@ -54,7 +50,7 @@ public class CommandSet implements CommandManager.CommandRegistry {
 			BlockPos setPos = iterator.next();
 			BlockState sampledBlock = pattern.sample();
 			if (sampledBlock != null) {
-				sampledBlock.set(world, setPos);
+				sampledBlock.setNotify(world, setPos);
 			}
 		}
 	}
