@@ -2,10 +2,13 @@ package amp.awec.mixin;
 
 import amp.awec.BlockPos;
 import amp.awec.ModState;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.controller.PlayerController;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.helper.Side;
+import net.minecraft.server.world.ServerPlayerController;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,8 +18,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static amp.awec.util.WandHelper.isHoldingWand;
 
+@Environment(EnvType.CLIENT)
 @Mixin(value = PlayerController.class, remap = false)
-public class WandBreakMixin {
+public class WandPos1ClientMixin {
 	@Shadow
 	@Final
 	protected Minecraft mc;

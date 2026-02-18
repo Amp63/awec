@@ -6,8 +6,12 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "WandBreakMixin",
-    "WandRightClickMixin"
+    "WandPos2Mixin"
   ],
-  "client": []
+  "client": [
+    "WandPos1ClientMixin"
+  ],
+  "server": [
+    "WandPos1ServerMixin"
+  ]
 }

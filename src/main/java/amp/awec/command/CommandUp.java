@@ -6,12 +6,16 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeInteger;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.net.command.ClientCommandSource;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
+import net.minecraft.server.entity.player.PlayerServer;
 
 public class CommandUp implements CommandManager.CommandRegistry {
 	private static final int UP_BLOCK_ID = Blocks.GLASS.id();
@@ -45,7 +49,10 @@ public class CommandUp implements CommandManager.CommandRegistry {
 			Vec3 playerPos = player.getPosition(1.0f, false);
 			BlockPos blockPos = PosHelper.getPlayerBlockPos(player);
 			int shiftedY = Math.max(0, Math.min(255, blockPos.y + distance));
-			double playerTeleportY = blockPos.y + distance + player.getHeightOffset() + 1.1;
+			double playerTeleportY = shiftedY + 1.1;
+			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+				playerTeleportY += player.getHeightOffset();
+			}
 
 			source.teleportPlayerToPos(player, playerPos.x, playerTeleportY, playerPos.z);
 			world.setBlockWithNotify(blockPos.x, shiftedY, blockPos.z, UP_BLOCK_ID);

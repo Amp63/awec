@@ -12,7 +12,7 @@ public class BlockPos {
 	}
 
 	public String toString() {
-		return "BlockPos(" + this.x + ", " + this.y + ", " + this.z + ")";
+		return this.x + ", " + this.y + ", " + this.z;
 	}
 
 	@Override
