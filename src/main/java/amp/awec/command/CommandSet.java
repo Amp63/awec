@@ -5,6 +5,7 @@ import amp.awec.ModState;
 import amp.awec.WorldEditMod;
 import amp.awec.util.BlockPattern;
 import amp.awec.util.BlockPatternException;
+import amp.awec.util.BlockState;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeString;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
@@ -51,9 +52,9 @@ public class CommandSet implements CommandManager.CommandRegistry {
 		BlockVolumeIterator iterator = new BlockVolumeIterator(corner1, corner2);
 		while (iterator.hasNext()) {
 			BlockPos setPos = iterator.next();
-			Block<?> sampledBlock = pattern.sample();
+			BlockState sampledBlock = pattern.sample();
 			if (sampledBlock != null) {
-				world.setBlockWithNotify(setPos.x, setPos.y, setPos.z, sampledBlock.id());
+				sampledBlock.set(world, setPos);
 			}
 		}
 	}

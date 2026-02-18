@@ -5,8 +5,6 @@ import amp.awec.command.CommandPos2;
 import amp.awec.command.CommandSet;
 import amp.awec.command.CommandWand;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.core.block.Blocks;
-import net.minecraft.core.crafting.ContainerListener;
 import net.minecraft.core.net.command.CommandManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
