@@ -1,6 +1,7 @@
 package amp.awec.command;
 
 import amp.awec.BlockPos;
+import amp.awec.util.PosHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
@@ -22,12 +23,7 @@ public class CommandPosBase {
 					CommandSource source = (CommandSource) context.getSource();
 					Player player = source.getSender();
 					if (player != null) {
-						Vec3 playerPos = player.getPosition(1.0f, false);
-						BlockPos pos = new BlockPos(
-							(int) playerPos.x,
-							(int) playerPos.y,
-							(int) playerPos.z
-						);
+						BlockPos pos = PosHelper.getPlayerBlockPos(player);
 						setter.accept(pos);
 						source.sendMessage("Corner " + cornerNumber + " set to " + pos);
 						return 1;

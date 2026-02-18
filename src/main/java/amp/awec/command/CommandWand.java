@@ -1,6 +1,5 @@
 package amp.awec.command;
 
-import amp.awec.ModState;
 import amp.awec.util.WandHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;

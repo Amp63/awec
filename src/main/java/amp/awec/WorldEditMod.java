@@ -1,9 +1,6 @@
 package amp.awec;
 
-import amp.awec.command.CommandPos1;
-import amp.awec.command.CommandPos2;
-import amp.awec.command.CommandSet;
-import amp.awec.command.CommandWand;
+import amp.awec.command.*;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.net.command.CommandManager;
 import org.slf4j.Logger;
@@ -20,6 +17,7 @@ public class WorldEditMod implements ModInitializer, RecipeEntrypoint, GameStart
 		CommandManager.registerCommand(new CommandPos2());
 		CommandManager.registerCommand(new CommandWand());
 		CommandManager.registerCommand(new CommandSet());
+		CommandManager.registerCommand(new CommandUp());
 		LOGGER.info("WorldEdit initialized.");
 	}
 
