@@ -21,6 +21,7 @@ public class CommandUp implements CommandManager.CommandRegistry {
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("up")
+				.requires(source -> ((CommandSource)source).hasAdmin())
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
 					doUp(source, 1);

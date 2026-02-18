@@ -20,7 +20,7 @@ public class CommandSet implements CommandManager.CommandRegistry {
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/set")
-//				.requires(CommandSource::hasAdmin)
+				.requires(source -> ((CommandSource)source).hasAdmin())
 				.then(ArgumentBuilderRequired.argument("pattern", ArgumentTypeString.greedyString())
 					.executes(context -> {
 						CommandSource source = (CommandSource) context.getSource();

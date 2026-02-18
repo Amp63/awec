@@ -19,6 +19,7 @@ public class CommandPosBase {
 	public static void register(CommandDispatcher<CommandSource> dispatcher, String command, int cornerNumber, Consumer<BlockPos> setter) {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal(command)
+				.requires(source -> ((CommandSource)source).hasAdmin())
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
 					Player player = source.getSender();

@@ -13,6 +13,7 @@ public class CommandWand implements CommandManager.CommandRegistry {
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/wand")
+				.requires(source -> ((CommandSource)source).hasAdmin())
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
 					Player player = source.getSender();
