@@ -1,7 +1,8 @@
 package amp.awec.mixin;
 
 import amp.awec.BlockPos;
-import amp.awec.ModState;
+import amp.awec.WorldEditMod;
+import amp.awec.data.PlayerData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.block.Block;
@@ -24,18 +25,28 @@ public class WandPos1ServerMixin {
 
 	@Inject(method = "startMining", at = @At("HEAD"), cancellable = true)
 	private void startMining(int x, int y, int z, Side side, CallbackInfo ci) {
-		if (isHoldingWand(player)) {
-			ModState.corner1 = new BlockPos(x, y, z);
-			player.sendMessage("Corner 1 set to " + ModState.corner1);
-			ci.cancel();
-			if (player.world != null) {
-				int blockId = 0;
-				Block<?> block = player.world.getBlock(x, y, z);
-				if (block != null) {
-					blockId = block.id();
-				}
-				player.world.notifyBlockChange(x, y, z, blockId);
-			}
+		if (!isHoldingWand(player)) {
+			return;
 		}
+
+		PlayerData playerData = WorldEditMod.getPlayerData(player);
+		if (playerData == null) {
+			return;
+		}
+
+		playerData.corner1 = new BlockPos(x, y, z);
+		player.sendMessage("Corner 1 set to " + playerData.corner1);
+		ci.cancel();
+
+		if (player.world == null) {
+			return;
+		}
+
+		int blockId = 0;
+		Block<?> block = player.world.getBlock(x, y, z);
+		if (block != null) {
+			blockId = block.id();
+		}
+		player.world.notifyBlockChange(x, y, z, blockId);
 	}
 }

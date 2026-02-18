@@ -3,7 +3,9 @@ package amp.awec;
 import amp.awec.command.*;
 import amp.awec.data.PlayerData;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.command.CommandManager;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import turniplabs.halplibe.util.GameStartEntrypoint;
@@ -18,6 +20,10 @@ public class WorldEditMod implements ModInitializer, RecipeEntrypoint, GameStart
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	public static final Map<UUID, PlayerData> PLAYER_DATA = new HashMap<>();
+
+	public static @Nullable PlayerData getPlayerData(Player player) {
+		return PLAYER_DATA.get(player.uuid);
+	}
 
 	@Override
 	public void onInitialize() {

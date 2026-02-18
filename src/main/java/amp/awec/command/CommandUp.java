@@ -8,14 +8,12 @@ import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.net.command.ClientCommandSource;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
-import net.minecraft.server.entity.player.PlayerServer;
 
 public class CommandUp implements CommandManager.CommandRegistry {
 	private static final int UP_BLOCK_ID = Blocks.GLASS.id();

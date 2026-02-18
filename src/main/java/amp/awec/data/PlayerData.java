@@ -11,7 +11,7 @@ public class PlayerData {
 
 	public ArrayList<BlockState> clipboardBlocks = new ArrayList<>();
 
-	public boolean CheckCorners() {
+	public boolean hasBothCorners() {
 		return corner1 != null && corner2 != null;
 	}
 }
