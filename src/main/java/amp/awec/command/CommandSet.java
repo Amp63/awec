@@ -1,6 +1,6 @@
 package amp.awec.command;
-import amp.awec.BlockPos;
-import amp.awec.BlockVolumeIterator;
+import amp.awec.util.BlockPos;
+import amp.awec.volume.BlockVolumeIterator;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
 import amp.awec.permissions.WorldEditPermissions;

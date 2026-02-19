@@ -1,8 +1,5 @@
 package amp.awec.util;
 
-import amp.awec.BlockPos;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.phys.Vec3;
 

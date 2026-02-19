@@ -1,6 +1,6 @@
 package amp.awec.mixin;
 
-import amp.awec.BlockPos;
+import amp.awec.util.BlockPos;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
 import amp.awec.permissions.WorldEditPermissions;

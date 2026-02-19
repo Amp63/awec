@@ -13,12 +13,12 @@ import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.world.World;
 
-public class CommandCopy implements CommandManager.CommandRegistry {
+public class CommandPaste implements CommandManager.CommandRegistry {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(
-			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/copy")
+			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/paste")
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
@@ -38,17 +38,16 @@ public class CommandCopy implements CommandManager.CommandRegistry {
 					}
 
 					World world = source.getWorld();
-					BlockPos copyPos = PosHelper.getPlayerBlockPos(player);
-					doCopy(world, playerData.corner1, playerData.corner2, copyPos, playerData);
-					source.sendMessage("Copied");
+					BlockPos pastePos = PosHelper.getPlayerBlockPos(player);
+					doPaste(world, pastePos, playerData);
+					source.sendMessage("Pasted");
 					return 1;
 				})
 		);
 	}
 
-	private void doCopy(World world, BlockPos corner1, BlockPos corner2, BlockPos copyPos, PlayerData playerData) {
-		playerData.clipboardVolume = new CopiedVolume(world, corner1, corner2);
-		BlockPos rootPos = playerData.clipboardVolume.getRootPos();
-		playerData.copyOffset = rootPos.subtract(copyPos);
+	private void doPaste(World world, BlockPos pastePos, PlayerData playerData) {
+		BlockPos setPos = pastePos.add(playerData.copyOffset);
+		playerData.clipboardVolume.setAt(world, setPos);
 	}
 }

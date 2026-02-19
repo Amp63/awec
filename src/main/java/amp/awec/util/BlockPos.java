@@ -1,4 +1,4 @@
-package amp.awec;
+package amp.awec.util;
 
 import java.util.Objects;
 
@@ -26,5 +26,21 @@ public class BlockPos {
 	@Override
 	public int hashCode() {
 		return Objects.hash(x, y, z);
+	}
+
+	public BlockPos add(BlockPos other) {
+		return new BlockPos(
+			this.x + other.x,
+			this.y + other.y,
+			this.z + other.z
+		);
+	}
+
+	public BlockPos subtract(BlockPos other) {
+		return new BlockPos(
+			this.x - other.x,
+			this.y - other.y,
+			this.z - other.z
+		);
 	}
 }

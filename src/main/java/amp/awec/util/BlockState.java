@@ -1,6 +1,5 @@
 package amp.awec.util;
 
-import amp.awec.BlockPos;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.world.World;
@@ -20,6 +19,12 @@ public class BlockState {
 	public BlockState(@Nullable Block<?> block, int metadata) {
 		this.block = block;
 		this.metadata = metadata;
+	}
+
+	public BlockState(World world, BlockPos pos) {
+		this.block = world.getBlock(pos.x, pos.y, pos.z);
+		this.metadata = world.getBlockMetadata(pos.x, pos.y, pos.z);
+		this.tileEntity = world.getTileEntity(pos.x, pos.y, pos.z);
 	}
 
 	public void setNotify(World world, BlockPos pos) {

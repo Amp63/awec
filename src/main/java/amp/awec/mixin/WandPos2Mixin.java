@@ -1,6 +1,6 @@
 package amp.awec.mixin;
 
-import amp.awec.BlockPos;
+import amp.awec.util.BlockPos;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
 import amp.awec.permissions.WorldEditPermissions;
@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import static amp.awec.util.WandHelper.isHoldingWand;
 
 @Mixin(value = Block.class, remap = false)
 public class WandPos2Mixin {

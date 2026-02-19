@@ -1,6 +1,6 @@
 package amp.awec.command;
 
-import amp.awec.BlockPos;
+import amp.awec.util.BlockPos;
 import amp.awec.permissions.WorldEditPermissions;
 import amp.awec.util.PosHelper;
 import com.mojang.brigadier.CommandDispatcher;
