@@ -1,9 +1,12 @@
 package amp.awec.util;
 
+import amp.awec.WorldEditMod;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class BlockState {
 	public @Nullable Block<?> block;
@@ -32,10 +35,43 @@ public class BlockState {
 		if (block != null) {
 			blockId = block.id();
 		}
-		world.setBlockAndMetadataWithNotify(pos.x, pos.y, pos.z, blockId, metadata);
+
+		int setMetadata = metadata;
+		if (setMetadata == -1) {
+			// Keep original metadata
+			setMetadata = world.getBlockMetadata(pos.x, pos.y, pos.z);
+		}
+
+		world.setBlockAndMetadataWithNotify(pos.x, pos.y, pos.z, blockId, setMetadata);
 
 		if (tileEntity != null) {
 			world.setTileEntity(pos.x, pos.y, pos.z, tileEntity);
 		}
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof BlockState)) {
+			return false;
+		}
+
+		BlockState other = (BlockState) obj;
+		return this.block == other.block && this.metadata == other.metadata;
+	}
+
+	@Override
+	public String toString() {
+		if (block == null) {
+			return "air";
+		}
+		return block.namespaceId().value() + ":" + metadata;
+	}
+
+	@Override
+	public int hashCode() {
+		if (block == null) {
+			return Objects.hash(0, metadata);
+		}
+		return Objects.hash(block.id(), metadata);
 	}
 }
