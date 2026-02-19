@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.2+7.3_04
+
+- Added `//walls`
+- Refactoring
+
 ## v0.1.1+7.3_04
 
 - Added `//replace`

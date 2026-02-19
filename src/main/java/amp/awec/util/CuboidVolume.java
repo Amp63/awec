@@ -39,4 +39,25 @@ public class CuboidVolume {
 	public Vec3i getMaxCorner() {
 		return maxCorner;
 	}
+
+	public int getDimX() {
+		if (!isComplete()) {
+			return -1;
+		}
+		return maxCorner.x - minCorner.x + 1;
+	}
+
+	public int getDimY() {
+		if (!isComplete()) {
+			return -1;
+		}
+		return maxCorner.y - minCorner.y + 1;
+	}
+
+	public int getDimZ() {
+		if (!isComplete()) {
+			return -1;
+		}
+		return maxCorner.z - minCorner.z + 1;
+	}
 }

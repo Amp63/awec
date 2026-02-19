@@ -1,4 +1,5 @@
 package amp.awec.command;
+import amp.awec.operation.SetOperation;
 import amp.awec.pattern.ArgumentTypePattern;
 import amp.awec.util.Vec3i;
 import amp.awec.util.CuboidVolume;
@@ -44,27 +45,11 @@ public class CommandSet implements CommandManager.CommandRegistry {
 						}
 
 						World world = source.getWorld();
-						int changedBlocks = doSet(world, playerData.selection, pattern);
+						int changedBlocks = SetOperation.doSet(world, playerData.selection, pattern);
 
 						source.sendMessage("Changed " + changedBlocks + " blocks");
 						return 1;
 					})
 				));
-	}
-
-	private int doSet(World world, CuboidVolume volume, BlockPattern pattern) {
-		CuboidVolumeIterator iterator = new CuboidVolumeIterator(volume);
-		int changedBlocks = 0;
-
-		while (iterator.hasNext()) {
-			Vec3i setPos = iterator.next();
-			BlockState sampledBlock = pattern.sample();
-			if (sampledBlock != null) {
-				sampledBlock.setNotify(world, setPos);
-				changedBlocks++;
-			}
-		}
-
-		return changedBlocks;
 	}
 }

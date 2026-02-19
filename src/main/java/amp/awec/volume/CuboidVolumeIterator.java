@@ -12,10 +12,9 @@ public class CuboidVolumeIterator {
 	public CuboidVolumeIterator(CuboidVolume volume) {
 		currentIndex = 0;
 		rootPos = volume.getMinCorner();
-		Vec3i maxCorner = volume.getMaxCorner();
-		dimX = maxCorner.x + 1 - rootPos.x;
-		dimY = maxCorner.y + 1 - rootPos.y;
-		dimZ = maxCorner.z + 1 - rootPos.z;
+		dimX = volume.getDimX();
+		dimY = volume.getDimY();
+		dimZ = volume.getDimZ();
 		area = dimX * dimY * dimZ;
 	}
 

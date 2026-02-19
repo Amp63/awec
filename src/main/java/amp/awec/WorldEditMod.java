@@ -39,6 +39,7 @@ public class WorldEditMod implements ModInitializer, RecipeEntrypoint, GameStart
 		CommandManager.registerCommand(new CommandCopy());
 		CommandManager.registerCommand(new CommandPaste());
 		CommandManager.registerCommand(new CommandReplace());
+		CommandManager.registerCommand(new CommandWalls());
 
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
 			WorldEditWhitelist.initialize();

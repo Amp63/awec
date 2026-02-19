@@ -1,4 +1,5 @@
 package amp.awec.command;
+import amp.awec.operation.ReplaceOperation;
 import amp.awec.pattern.ArgumentTypePattern;
 import amp.awec.pattern.BlockPattern;
 import amp.awec.util.*;
@@ -45,30 +46,11 @@ public class CommandReplace implements CommandManager.CommandRegistry {
 						}
 
 						World world = source.getWorld();
-						int changedBlocks = doReplace(world, playerData.selection, targetPattern, replaceWithPattern);
+						int changedBlocks = ReplaceOperation.doReplace(world, playerData.selection, targetPattern, replaceWithPattern);
 
 						source.sendMessage("Changed " + changedBlocks + " blocks");
 						return 1;
 					})
 				)));
-	}
-
-	private int doReplace(World world, CuboidVolume volume, BlockPattern targetPattern, BlockPattern replaceWithPattern) {
-		CuboidVolumeIterator iterator = new CuboidVolumeIterator(volume);
-		int changedBlocks = 0;
-
-		while (iterator.hasNext()) {
-			Vec3i setPos = iterator.next();
-			BlockState replacedBlock = new BlockState(world, setPos);
-			if (targetPattern.shouldReplace(replacedBlock)) {
-				BlockState sampledBlock = replaceWithPattern.sample();
-				if (sampledBlock != null) {
-					sampledBlock.setNotify(world, setPos);
-					changedBlocks++;
-				}
-			}
-		}
-
-		return changedBlocks;
 	}
 }
