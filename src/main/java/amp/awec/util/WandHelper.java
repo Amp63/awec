@@ -1,5 +1,7 @@
 package amp.awec.util;
 
+import amp.awec.WorldEditMod;
+import amp.awec.data.PlayerData;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
@@ -10,7 +12,9 @@ public class WandHelper {
 
 	public static boolean isHoldingWand(Player player) {
 		ItemStack heldItem = player.getHeldItem();
-		return heldItem != null && heldItem.itemID == WAND_ITEM.id;
+		PlayerData playerData = WorldEditMod.getPlayerData(player);
+		return playerData != null && playerData.wandEnabled &&
+			   heldItem != null && heldItem.itemID == WAND_ITEM.id;
 	}
 
 }

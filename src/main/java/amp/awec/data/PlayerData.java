@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class PlayerData {
 	public BlockPos corner1 = null;
 	public BlockPos corner2 = null;
+	public boolean wandEnabled = true;
 
 	public ArrayList<BlockState> clipboardBlocks = new ArrayList<>();
 
