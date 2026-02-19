@@ -34,7 +34,7 @@ public class CommandSet implements CommandManager.CommandRegistry {
 						String patternString = (String) context.getArgument("pattern", String.class);
 						BlockPattern pattern;
 						try {
-							pattern = new BlockPattern(patternString);
+							pattern = new BlockPattern(patternString, player);
 						}
 						catch (BlockPatternException e) {
 							source.sendMessage(e.getMessage());

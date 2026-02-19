@@ -2,6 +2,8 @@ package amp.awec.util;
 
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;
+import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.HardIllegalArgumentException;
 import net.minecraft.core.util.collection.NamespaceID;
 import org.jetbrains.annotations.Nullable;
@@ -26,14 +28,31 @@ class BlockProbability {
 
 public class BlockPattern {
 	private static final Pattern percentagePattern = Pattern.compile("(?:(\\d+)%)?([A-Za-z0-9_]+)(?::(\\d+))?");
-	private static Map<String, Block<?>> blockNameOverrides = new HashMap<String, Block<?>>() {{
-		put("air", null);
-	}};
+	private final Map<String, Block<?>> blockNameOverrides = new HashMap<String, Block<?>>();
 
 	private final ArrayList<BlockProbability> patternBlocks = new ArrayList<>();
 	private final Random rng = new Random();
 
-	public BlockPattern(String patternString) throws BlockPatternException {
+	public BlockPattern(String patternString, Player parentPlayer) throws BlockPatternException {
+		setBlockNameOverrides(parentPlayer);
+		parsePattern(patternString);
+	}
+
+	private void setBlockNameOverrides(Player parentPlayer) {
+		blockNameOverrides.put("air", null);
+
+		// Set "hand" entry
+		ItemStack heldItem = parentPlayer.getHeldItem();
+		if (heldItem != null) {
+			Block<?> handBlock = null;
+			if (heldItem.itemID < Blocks.highestBlockId) {
+				handBlock = Blocks.getBlock(heldItem.itemID);
+			}
+			blockNameOverrides.put("hand", handBlock);
+		}
+	}
+
+	private void parsePattern(String patternString) throws BlockPatternException {
 		double cumulativePercentage = 0.0;
 		for (String patternBlock : patternString.split(",")) {
 			Matcher matcher = percentagePattern.matcher(patternBlock);
@@ -57,7 +76,7 @@ public class BlockPattern {
 			// Try to parse as numeric ID first
 			try {
 				int blockId = Integer.parseInt(blockName);
-				if (blockId < Blocks.blocksList.length) {
+				if (blockId < Blocks.highestBlockId) {
 					block = Blocks.getBlock(blockId);
 					blockFound = true;
 				}
