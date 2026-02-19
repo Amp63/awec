@@ -1,9 +1,10 @@
 package amp.awec.command;
 
-import amp.awec.util.BlockPos;
+import amp.awec.util.Vec3i;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
 import amp.awec.permissions.WorldEditPermissions;
+import amp.awec.util.CuboidVolume;
 import amp.awec.util.PosHelper;
 import amp.awec.volume.CopiedVolume;
 import com.mojang.brigadier.CommandDispatcher;
@@ -32,23 +33,23 @@ public class CommandCopy implements CommandManager.CommandRegistry {
 						source.sendMessage("Failed to access WorldEdit player data");
 						return 0;
 					}
-					if (!playerData.hasBothCorners()) {
+					if (!playerData.selection.isComplete()) {
 						source.sendMessage("Both corners must be set");
 						return 0;
 					}
 
 					World world = source.getWorld();
-					BlockPos copyPos = PosHelper.getPlayerBlockPos(player);
-					doCopy(world, playerData.corner1, playerData.corner2, copyPos, playerData);
+					Vec3i copyPos = PosHelper.getPlayerBlockPos(player);
+					doCopy(world, playerData.selection, copyPos, playerData);
 					source.sendMessage("Copied");
 					return 1;
 				})
 		);
 	}
 
-	private void doCopy(World world, BlockPos corner1, BlockPos corner2, BlockPos copyPos, PlayerData playerData) {
-		playerData.clipboardVolume = new CopiedVolume(world, corner1, corner2);
-		BlockPos rootPos = playerData.clipboardVolume.getRootPos();
+	private void doCopy(World world, CuboidVolume volume, Vec3i copyPos, PlayerData playerData) {
+		playerData.clipboardVolume = new CopiedVolume(world, volume);
+		Vec3i rootPos = volume.getMinCorner();
 		playerData.copyOffset = rootPos.subtract(copyPos);
 	}
 }

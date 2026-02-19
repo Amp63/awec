@@ -1,11 +1,10 @@
 package amp.awec.command;
 
-import amp.awec.util.BlockPos;
+import amp.awec.util.Vec3i;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
 import amp.awec.permissions.WorldEditPermissions;
 import amp.awec.util.PosHelper;
-import amp.awec.volume.CopiedVolume;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import net.minecraft.core.entity.player.Player;
@@ -32,13 +31,13 @@ public class CommandPaste implements CommandManager.CommandRegistry {
 						source.sendMessage("Failed to access WorldEdit player data");
 						return 0;
 					}
-					if (!playerData.hasBothCorners()) {
+					if (!playerData.selection.isComplete()) {
 						source.sendMessage("Both corners must be set");
 						return 0;
 					}
 
 					World world = source.getWorld();
-					BlockPos pastePos = PosHelper.getPlayerBlockPos(player);
+					Vec3i pastePos = PosHelper.getPlayerBlockPos(player);
 					doPaste(world, pastePos, playerData);
 					source.sendMessage("Pasted");
 					return 1;
@@ -46,8 +45,8 @@ public class CommandPaste implements CommandManager.CommandRegistry {
 		);
 	}
 
-	private void doPaste(World world, BlockPos pastePos, PlayerData playerData) {
-		BlockPos setPos = pastePos.add(playerData.copyOffset);
+	private void doPaste(World world, Vec3i pastePos, PlayerData playerData) {
+		Vec3i setPos = pastePos.add(playerData.copyOffset);
 		playerData.clipboardVolume.setAt(world, setPos);
 	}
 }

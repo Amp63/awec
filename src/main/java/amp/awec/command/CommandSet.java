@@ -1,12 +1,12 @@
 package amp.awec.command;
 import amp.awec.pattern.ArgumentTypePattern;
-import amp.awec.util.BlockPos;
-import amp.awec.volume.BlockVolumeIterator;
+import amp.awec.util.Vec3i;
+import amp.awec.util.CuboidVolume;
+import amp.awec.volume.CuboidVolumeIterator;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
 import amp.awec.permissions.WorldEditPermissions;
 import amp.awec.pattern.BlockPattern;
-import amp.awec.pattern.BlockPatternException;
 import amp.awec.util.BlockState;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
@@ -38,13 +38,13 @@ public class CommandSet implements CommandManager.CommandRegistry {
 							source.sendMessage("Failed to access WorldEdit player data");
 							return 0;
 						}
-						if (!playerData.hasBothCorners()) {
+						if (!playerData.selection.isComplete()) {
 							source.sendMessage("Both corners must be set");
 							return 0;
 						}
 
 						World world = source.getWorld();
-						int changedBlocks = doSet(world, playerData.corner1, playerData.corner2, pattern);
+						int changedBlocks = doSet(world, playerData.selection, pattern);
 
 						source.sendMessage("Changed " + changedBlocks + " blocks");
 						return 1;
@@ -52,12 +52,12 @@ public class CommandSet implements CommandManager.CommandRegistry {
 				));
 	}
 
-	private int doSet(World world, BlockPos corner1, BlockPos corner2, BlockPattern pattern) {
-		BlockVolumeIterator iterator = new BlockVolumeIterator(corner1, corner2);
+	private int doSet(World world, CuboidVolume volume, BlockPattern pattern) {
+		CuboidVolumeIterator iterator = new CuboidVolumeIterator(volume);
 		int changedBlocks = 0;
 
 		while (iterator.hasNext()) {
-			BlockPos setPos = iterator.next();
+			Vec3i setPos = iterator.next();
 			BlockState sampledBlock = pattern.sample();
 			if (sampledBlock != null) {
 				sampledBlock.setNotify(world, setPos);

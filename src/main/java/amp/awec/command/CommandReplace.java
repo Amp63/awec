@@ -2,7 +2,7 @@ package amp.awec.command;
 import amp.awec.pattern.ArgumentTypePattern;
 import amp.awec.pattern.BlockPattern;
 import amp.awec.util.*;
-import amp.awec.volume.BlockVolumeIterator;
+import amp.awec.volume.CuboidVolumeIterator;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
 import amp.awec.permissions.WorldEditPermissions;
@@ -39,13 +39,13 @@ public class CommandReplace implements CommandManager.CommandRegistry {
 							source.sendMessage("Failed to access WorldEdit player data");
 							return 0;
 						}
-						if (!playerData.hasBothCorners()) {
+						if (!playerData.selection.isComplete()) {
 							source.sendMessage("Both corners must be set");
 							return 0;
 						}
 
 						World world = source.getWorld();
-						int changedBlocks = doReplace(world, playerData.corner1, playerData.corner2, targetPattern, replaceWithPattern);
+						int changedBlocks = doReplace(world, playerData.selection, targetPattern, replaceWithPattern);
 
 						source.sendMessage("Changed " + changedBlocks + " blocks");
 						return 1;
@@ -53,12 +53,12 @@ public class CommandReplace implements CommandManager.CommandRegistry {
 				)));
 	}
 
-	private int doReplace(World world, BlockPos corner1, BlockPos corner2, BlockPattern targetPattern, BlockPattern replaceWithPattern) {
-		BlockVolumeIterator iterator = new BlockVolumeIterator(corner1, corner2);
+	private int doReplace(World world, CuboidVolume volume, BlockPattern targetPattern, BlockPattern replaceWithPattern) {
+		CuboidVolumeIterator iterator = new CuboidVolumeIterator(volume);
 		int changedBlocks = 0;
 
 		while (iterator.hasNext()) {
-			BlockPos setPos = iterator.next();
+			Vec3i setPos = iterator.next();
 			BlockState replacedBlock = new BlockState(world, setPos);
 			if (targetPattern.shouldReplace(replacedBlock)) {
 				BlockState sampledBlock = replaceWithPattern.sample();

@@ -1,6 +1,6 @@
 package amp.awec.command;
 
-import amp.awec.util.BlockPos;
+import amp.awec.util.Vec3i;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
 import amp.awec.permissions.WorldEditPermissions;
@@ -18,7 +18,7 @@ import java.util.function.BiConsumer;
 public class CommandPosBase {
 
 	@SuppressWarnings("unchecked")
-	public static void register(CommandDispatcher<CommandSource> dispatcher, String command, int cornerNumber, BiConsumer<PlayerData, BlockPos> setter) {
+	public static void register(CommandDispatcher<CommandSource> dispatcher, String command, int cornerNumber, BiConsumer<PlayerData, Vec3i> setter) {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal(command)
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
@@ -27,7 +27,7 @@ public class CommandPosBase {
 					Player player = source.getSender();
 					if (player != null) {
 						PlayerData playerData = WorldEditMod.getPlayerData(player);
-						BlockPos pos = PosHelper.getPlayerBlockPos(player);
+						Vec3i pos = PosHelper.getPlayerBlockPos(player);
 						setter.accept(playerData, pos);
 						source.sendMessage("Corner " + cornerNumber + " set to " + pos);
 						return 1;
@@ -44,7 +44,7 @@ public class CommandPosBase {
 							int y = coordinates.getY(source, true);
 							int z = coordinates.getZ(source);
 							PlayerData playerData = WorldEditMod.getPlayerData(player);
-							BlockPos pos = new BlockPos(x, y, z);
+							Vec3i pos = new Vec3i(x, y, z);
 							setter.accept(playerData, pos);
 							source.sendMessage("Corner " + cornerNumber + " set to " + pos);
 							return 1;

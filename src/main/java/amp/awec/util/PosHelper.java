@@ -4,9 +4,9 @@ import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.phys.Vec3;
 
 public class PosHelper {
-	public static BlockPos getPlayerBlockPos(Player player) {
+	public static Vec3i getPlayerBlockPos(Player player) {
 		Vec3 playerPos = player.getPosition(1.0f, true);
-		return new BlockPos(
+		return new Vec3i(
 			(int) Math.floor(playerPos.x),
 			(int) Math.floor(playerPos.y)-2,
 			(int) Math.floor(playerPos.z)

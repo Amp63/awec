@@ -1,8 +1,8 @@
 package amp.awec.volume;
 
-import amp.awec.util.BlockPos;
+import amp.awec.util.Vec3i;
 import amp.awec.util.BlockState;
-import jdk.nashorn.internal.ir.Block;
+import amp.awec.util.CuboidVolume;
 import net.minecraft.core.world.World;
 
 import java.util.ArrayList;
@@ -11,12 +11,10 @@ import java.util.Iterator;
 public class CopiedVolume {
 	private final ArrayList<BlockState> blockBuffer;
 	private final int dimX, dimY, dimZ;
-	private BlockPos rootPos;
 
-	public CopiedVolume(World world, BlockPos corner1, BlockPos corner2) {
-		BlockVolumeIterator iterator = new BlockVolumeIterator(corner1, corner2);
+	public CopiedVolume(World world, CuboidVolume volume) {
+		CuboidVolumeIterator iterator = new CuboidVolumeIterator(volume);
 		int area = iterator.getArea();
-		rootPos = iterator.getCorner1();
 
 		blockBuffer = new ArrayList<>();
 		blockBuffer.ensureCapacity(area);
@@ -27,28 +25,24 @@ public class CopiedVolume {
 		dimZ = dimensions[2];
 
 		while (iterator.hasNext()) {
-			BlockPos copyPos = iterator.next();
+			Vec3i copyPos = iterator.next();
 			blockBuffer.add(new BlockState(world, copyPos));
 		}
 	}
 
-	public void setAt(World world, BlockPos setPos) {
-		BlockPos corner2 = new BlockPos(
+	public void setAt(World world, Vec3i setPos) {
+		Vec3i corner2 = new Vec3i(
 			setPos.x + dimX - 1,
 			setPos.y + dimY - 1,
 			setPos.z + dimZ - 1
 		);
 
-		BlockVolumeIterator iterator = new BlockVolumeIterator(setPos, corner2);
+		CuboidVolumeIterator iterator = new CuboidVolumeIterator(new CuboidVolume(setPos, corner2));
 		Iterator<BlockState> bufferIterator = blockBuffer.iterator();
 		while (iterator.hasNext()) {
-			BlockPos setBlockPos = iterator.next();
+			Vec3i setBlockPos = iterator.next();
 			BlockState blockState = bufferIterator.next();
 			blockState.setNotify(world, setBlockPos);
 		}
-	}
-
-	public BlockPos getRootPos() {
-		return rootPos;
 	}
 }

@@ -1,6 +1,6 @@
 package amp.awec.mixin;
 
-import amp.awec.util.BlockPos;
+import amp.awec.util.Vec3i;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
 import amp.awec.permissions.WorldEditPermissions;
@@ -28,7 +28,8 @@ public class WandPos2Mixin {
 			return;
 		}
 
-		playerData.corner2 = new BlockPos(x, y, z);
-		player.sendMessage("Corner 2 set to " + playerData.corner2);
+		Vec3i pos = new Vec3i(x, y, z);
+		playerData.selection.setCorner2(pos);
+		player.sendMessage("Corner 2 set to " + pos);
 	}
 }

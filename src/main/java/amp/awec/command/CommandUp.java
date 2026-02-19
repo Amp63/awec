@@ -1,6 +1,6 @@
 package amp.awec.command;
 
-import amp.awec.util.BlockPos;
+import amp.awec.util.Vec3i;
 import amp.awec.permissions.WorldEditPermissions;
 import amp.awec.util.PosHelper;
 import com.mojang.brigadier.CommandDispatcher;
@@ -46,7 +46,7 @@ public class CommandUp implements CommandManager.CommandRegistry {
 		if (player != null) {
 			World world = source.getWorld();
 			Vec3 playerPos = player.getPosition(1.0f, false);
-			BlockPos blockPos = PosHelper.getPlayerBlockPos(player);
+			Vec3i blockPos = PosHelper.getPlayerBlockPos(player);
 			int shiftedY = Math.max(0, Math.min(255, blockPos.y + distance));
 			double playerTeleportY = shiftedY + 1.1;
 			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
