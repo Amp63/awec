@@ -3,6 +3,7 @@ import amp.awec.BlockPos;
 import amp.awec.BlockVolumeIterator;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
+import amp.awec.permissions.WorldEditPermissions;
 import amp.awec.util.BlockPattern;
 import amp.awec.util.BlockPatternException;
 import amp.awec.util.BlockState;
@@ -22,7 +23,7 @@ public class CommandSet implements CommandManager.CommandRegistry {
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/set")
-				.requires(source -> ((CommandSource)source).hasAdmin())
+				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.then(ArgumentBuilderRequired.argument("pattern", ArgumentTypeString.greedyString())
 					.executes(context -> {
 						CommandSource source = (CommandSource) context.getSource();
@@ -39,7 +40,6 @@ public class CommandSet implements CommandManager.CommandRegistry {
 							source.sendMessage(e.getMessage());
 							return 0;
 						}
-
 						PlayerData playerData = WorldEditMod.getPlayerData(player);
 						if (playerData == null) {
 							source.sendMessage("Failed to access WorldEdit player data");

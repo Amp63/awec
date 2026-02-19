@@ -3,6 +3,8 @@ package amp.awec.mixin;
 import amp.awec.BlockPos;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
+import amp.awec.permissions.WorldEditPermissions;
+import amp.awec.util.WandHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -16,8 +18,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static amp.awec.util.WandHelper.isHoldingWand;
-
 @Environment(EnvType.CLIENT)
 @Mixin(value = PlayerController.class, remap = false)
 public class WandPos1ClientMixin {
@@ -28,7 +28,8 @@ public class WandPos1ClientMixin {
 	@Inject(method = "startDestroyBlock", at = @At("HEAD"), cancellable = true)
 	private void startDestroyBlock(int x, int y, int z, Side side, double xHit, double yHit, boolean repeat, CallbackInfo ci) {
 		Player player = mc.thePlayer;
-		if (!isHoldingWand(player)) {
+
+		if (!WorldEditPermissions.canUseWorldEdit(player) || !WandHelper.isHoldingWand(player)) {
 			return;
 		}
 

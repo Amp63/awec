@@ -3,6 +3,7 @@ package amp.awec.command;
 import amp.awec.BlockPos;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
+import amp.awec.permissions.WorldEditPermissions;
 import amp.awec.util.PosHelper;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -23,7 +24,7 @@ public class CommandPosBase {
 	public static void register(CommandDispatcher<CommandSource> dispatcher, String command, int cornerNumber, BiConsumer<PlayerData, BlockPos> setter) {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal(command)
-				.requires(source -> ((CommandSource)source).hasAdmin())
+				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
 					Player player = source.getSender();

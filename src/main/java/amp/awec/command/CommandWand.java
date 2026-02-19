@@ -1,5 +1,6 @@
 package amp.awec.command;
 
+import amp.awec.permissions.WorldEditPermissions;
 import amp.awec.util.WandHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
@@ -13,7 +14,7 @@ public class CommandWand implements CommandManager.CommandRegistry {
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/wand")
-				.requires(source -> ((CommandSource)source).hasAdmin())
+				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
 					Player player = source.getSender();

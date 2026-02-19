@@ -3,6 +3,8 @@ package amp.awec.mixin;
 import amp.awec.BlockPos;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
+import amp.awec.permissions.WorldEditPermissions;
+import amp.awec.util.WandHelper;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.helper.Side;
@@ -19,7 +21,7 @@ public class WandPos2Mixin {
 
 	@Inject(method = "onBlockRightClicked", at = @At("HEAD"))
 	private void onRightClickBlock(World world, int x, int y, int z, Player player, Side side, double xHit, double yHit, CallbackInfoReturnable<Boolean> cir) {
-		if (!isHoldingWand(player)) {
+		if (!WorldEditPermissions.canUseWorldEdit(player) || !WandHelper.isHoldingWand(player)) {
 			return;
 		}
 

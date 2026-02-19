@@ -1,6 +1,7 @@
 package amp.awec.command;
 
 import amp.awec.BlockPos;
+import amp.awec.permissions.WorldEditPermissions;
 import amp.awec.util.PosHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeInteger;
@@ -23,7 +24,7 @@ public class CommandUp implements CommandManager.CommandRegistry {
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("up")
-				.requires(source -> ((CommandSource)source).hasAdmin())
+				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
 					doUp(source, 1);

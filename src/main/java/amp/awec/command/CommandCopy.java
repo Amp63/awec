@@ -4,6 +4,7 @@ import amp.awec.BlockPos;
 import amp.awec.BlockVolumeIterator;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
+import amp.awec.permissions.WorldEditPermissions;
 import amp.awec.util.PosHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
@@ -18,7 +19,7 @@ public class CommandCopy implements CommandManager.CommandRegistry {
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/copy")
-				.requires(source -> ((CommandSource)source).hasAdmin())
+				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
 					Player player = source.getSender();

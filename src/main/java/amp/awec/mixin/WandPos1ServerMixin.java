@@ -3,6 +3,8 @@ package amp.awec.mixin;
 import amp.awec.BlockPos;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
+import amp.awec.permissions.WorldEditPermissions;
+import amp.awec.util.WandHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.block.Block;
@@ -25,7 +27,7 @@ public class WandPos1ServerMixin {
 
 	@Inject(method = "startMining", at = @At("HEAD"), cancellable = true)
 	private void startMining(int x, int y, int z, Side side, CallbackInfo ci) {
-		if (!isHoldingWand(player)) {
+		if (!WorldEditPermissions.canUseWorldEdit(player) || !WandHelper.isHoldingWand(player)) {
 			return;
 		}
 

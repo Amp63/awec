@@ -2,7 +2,10 @@ package amp.awec;
 
 import amp.awec.command.*;
 import amp.awec.data.PlayerData;
+import amp.awec.permissions.WorldEditWhitelist;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.command.CommandManager;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +35,11 @@ public class WorldEditMod implements ModInitializer, RecipeEntrypoint, GameStart
 		CommandManager.registerCommand(new CommandWand());
 		CommandManager.registerCommand(new CommandSet());
 		CommandManager.registerCommand(new CommandUp());
+
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+			WorldEditWhitelist.initialize();
+			CommandManager.registerServerCommand(new CommandWorldEditWhitelist());
+		}
 		LOGGER.info("WorldEdit initialized.");
 	}
 
