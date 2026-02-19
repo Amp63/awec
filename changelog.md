@@ -3,6 +3,7 @@
 ## v0.1.2+7.3_04
 
 - Added `//walls`
+- Added `/thru`, `/ascend`, `/descend`
 - Refactoring
 
 ## v0.1.1+7.3_04

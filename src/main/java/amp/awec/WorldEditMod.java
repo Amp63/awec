@@ -1,5 +1,8 @@
 package amp.awec;
 
+import amp.awec.command.navigation.CommandAscend;
+import amp.awec.command.navigation.CommandDescend;
+import amp.awec.command.navigation.CommandThru;
 import amp.awec.command.navigation.CommandUp;
 import amp.awec.command.operation.*;
 import amp.awec.command.permission.CommandWorldEditWhitelist;
@@ -41,6 +44,9 @@ public class WorldEditMod implements ModInitializer, RecipeEntrypoint, GameStart
 		CommandManager.registerCommand(new CommandWand());
 		CommandManager.registerCommand(new CommandSet());
 		CommandManager.registerCommand(new CommandUp());
+		CommandManager.registerCommand(new CommandThru());
+		CommandManager.registerCommand(new CommandAscend());
+		CommandManager.registerCommand(new CommandDescend());
 		CommandManager.registerCommand(new CommandToggleWand());
 		CommandManager.registerCommand(new CommandCopy());
 		CommandManager.registerCommand(new CommandPaste());
