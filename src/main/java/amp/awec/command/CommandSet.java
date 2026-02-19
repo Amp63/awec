@@ -51,20 +51,27 @@ public class CommandSet implements CommandManager.CommandRegistry {
 						}
 
 						World world = source.getWorld();
-						doSet(world, playerData.corner1, playerData.corner2, pattern);
+						int changedBlocks = doSet(world, playerData.corner1, playerData.corner2, pattern);
+
+						source.sendMessage("Changed " + changedBlocks + " blocks");
 						return 1;
 					})
 				));
 	}
 
-	private void doSet(World world, BlockPos corner1, BlockPos corner2, BlockPattern pattern) {
+	private int doSet(World world, BlockPos corner1, BlockPos corner2, BlockPattern pattern) {
 		BlockVolumeIterator iterator = new BlockVolumeIterator(corner1, corner2);
+		int changedBlocks = 0;
+
 		while (iterator.hasNext()) {
 			BlockPos setPos = iterator.next();
 			BlockState sampledBlock = pattern.sample();
 			if (sampledBlock != null) {
 				sampledBlock.setNotify(world, setPos);
+				changedBlocks++;
 			}
 		}
+
+		return changedBlocks;
 	}
 }
