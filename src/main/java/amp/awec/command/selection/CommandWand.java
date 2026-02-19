@@ -1,6 +1,6 @@
-package amp.awec.command;
+package amp.awec.command.selection;
 
-import amp.awec.permissions.WorldEditPermissions;
+import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.WandHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;

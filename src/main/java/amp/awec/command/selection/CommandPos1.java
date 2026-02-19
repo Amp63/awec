@@ -1,4 +1,4 @@
-package amp.awec.command;
+package amp.awec.command.selection;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.core.net.command.CommandManager;

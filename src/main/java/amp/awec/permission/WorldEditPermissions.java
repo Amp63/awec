@@ -1,4 +1,4 @@
-package amp.awec.permissions;
+package amp.awec.permission;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -7,7 +7,6 @@ import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.world.World;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.player.PlayerServer;
-import net.minecraft.server.net.command.ServerCommandSource;
 
 public class WorldEditPermissions {
 	public static boolean canUseWorldEdit(CommandSource source) {

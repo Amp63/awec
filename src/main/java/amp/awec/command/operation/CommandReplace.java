@@ -1,14 +1,10 @@
-package amp.awec.command;
-import amp.awec.operation.SetOperation;
+package amp.awec.command.operation;
+import amp.awec.operation.ReplaceOperation;
 import amp.awec.pattern.ArgumentTypePattern;
-import amp.awec.util.Vec3i;
-import amp.awec.util.CuboidVolume;
-import amp.awec.volume.CuboidVolumeIterator;
+import amp.awec.pattern.BlockPattern;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
-import amp.awec.permissions.WorldEditPermissions;
-import amp.awec.pattern.BlockPattern;
-import amp.awec.util.BlockState;
+import amp.awec.permission.WorldEditPermissions;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
@@ -17,15 +13,16 @@ import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.world.World;
 
-public class CommandSet implements CommandManager.CommandRegistry {
+public class CommandReplace implements CommandManager.CommandRegistry {
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(
-			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/set")
+			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/replace")
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
-				.then(ArgumentBuilderRequired.argument("pattern", ArgumentTypePattern.normal())
+				.then(ArgumentBuilderRequired.argument("target_pattern", ArgumentTypePattern.replace())
+				.then(ArgumentBuilderRequired.argument("replace_pattern", ArgumentTypePattern.normal())
 					.executes(context -> {
 						CommandSource source = (CommandSource) context.getSource();
 						Player player = source.getSender();
@@ -33,7 +30,9 @@ public class CommandSet implements CommandManager.CommandRegistry {
 							return 0;
 						}
 
-						BlockPattern pattern = context.getArgument("pattern", BlockPattern.class);
+						BlockPattern targetPattern = context.getArgument("target_pattern", BlockPattern.class);
+						BlockPattern replaceWithPattern = context.getArgument("replace_pattern", BlockPattern.class);
+
 						PlayerData playerData = WorldEditMod.getPlayerData(player);
 						if (playerData == null) {
 							source.sendMessage("Failed to access WorldEdit player data");
@@ -45,11 +44,11 @@ public class CommandSet implements CommandManager.CommandRegistry {
 						}
 
 						World world = source.getWorld();
-						int changedBlocks = SetOperation.doSet(world, playerData.selection, pattern);
+						int changedBlocks = ReplaceOperation.doReplace(world, playerData.selection, targetPattern, replaceWithPattern);
 
 						source.sendMessage("Changed " + changedBlocks + " blocks");
 						return 1;
 					})
-				));
+				)));
 	}
 }

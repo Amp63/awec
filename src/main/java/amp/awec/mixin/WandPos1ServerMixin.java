@@ -3,7 +3,7 @@ package amp.awec.mixin;
 import amp.awec.util.Vec3i;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
-import amp.awec.permissions.WorldEditPermissions;
+import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.WandHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

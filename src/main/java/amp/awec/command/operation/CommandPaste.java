@@ -1,12 +1,10 @@
-package amp.awec.command;
+package amp.awec.command.operation;
 
 import amp.awec.util.Vec3i;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
-import amp.awec.permissions.WorldEditPermissions;
-import amp.awec.util.CuboidVolume;
+import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.PosHelper;
-import amp.awec.volume.CopiedVolume;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import net.minecraft.core.entity.player.Player;
@@ -14,12 +12,12 @@ import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.world.World;
 
-public class CommandCopy implements CommandManager.CommandRegistry {
+public class CommandPaste implements CommandManager.CommandRegistry {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(
-			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/copy")
+			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/paste")
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
@@ -39,17 +37,16 @@ public class CommandCopy implements CommandManager.CommandRegistry {
 					}
 
 					World world = source.getWorld();
-					Vec3i copyPos = PosHelper.getPlayerBlockPos(player);
-					doCopy(world, playerData.selection, copyPos, playerData);
-					source.sendMessage("Copied");
+					Vec3i pastePos = PosHelper.getPlayerBlockPos(player);
+					doPaste(world, pastePos, playerData);
+					source.sendMessage("Pasted");
 					return 1;
 				})
 		);
 	}
 
-	private void doCopy(World world, CuboidVolume volume, Vec3i copyPos, PlayerData playerData) {
-		playerData.clipboardVolume = new CopiedVolume(world, volume);
-		Vec3i rootPos = volume.getMinCorner();
-		playerData.copyOffset = rootPos.subtract(copyPos);
+	private void doPaste(World world, Vec3i pastePos, PlayerData playerData) {
+		Vec3i setPos = pastePos.add(playerData.copyOffset);
+		playerData.clipboardVolume.setAt(world, setPos);
 	}
 }

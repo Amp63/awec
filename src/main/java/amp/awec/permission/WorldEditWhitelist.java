@@ -1,4 +1,4 @@
-package amp.awec.permissions;
+package amp.awec.permission;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

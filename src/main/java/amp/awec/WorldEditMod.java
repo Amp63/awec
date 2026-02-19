@@ -1,8 +1,14 @@
 package amp.awec;
 
-import amp.awec.command.*;
+import amp.awec.command.navigation.CommandUp;
+import amp.awec.command.operation.*;
+import amp.awec.command.permission.CommandWorldEditWhitelist;
+import amp.awec.command.selection.CommandPos1;
+import amp.awec.command.selection.CommandPos2;
+import amp.awec.command.selection.CommandToggleWand;
+import amp.awec.command.selection.CommandWand;
 import amp.awec.data.PlayerData;
-import amp.awec.permissions.WorldEditWhitelist;
+import amp.awec.permission.WorldEditWhitelist;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;

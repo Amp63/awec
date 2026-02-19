@@ -1,9 +1,8 @@
-package amp.awec.command;
+package amp.awec.command.selection;
 
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
-import amp.awec.permissions.WorldEditPermissions;
-import amp.awec.util.WandHelper;
+import amp.awec.permission.WorldEditPermissions;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import net.minecraft.core.entity.player.Player;

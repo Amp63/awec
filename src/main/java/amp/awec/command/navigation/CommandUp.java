@@ -1,7 +1,7 @@
-package amp.awec.command;
+package amp.awec.command.navigation;
 
 import amp.awec.util.Vec3i;
-import amp.awec.permissions.WorldEditPermissions;
+import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.PosHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeInteger;

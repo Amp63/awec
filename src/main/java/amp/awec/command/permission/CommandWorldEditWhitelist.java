@@ -1,7 +1,6 @@
-package amp.awec.command;
+package amp.awec.command.permission;
 
-import amp.awec.permissions.WorldEditWhitelist;
-import amp.awec.util.WandHelper;
+import amp.awec.permission.WorldEditWhitelist;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeString;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
@@ -11,10 +10,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
-import net.minecraft.core.net.command.arguments.ArgumentTypeEntity;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.entity.player.PlayerServer;
-import net.minecraft.server.net.command.IServerCommandSource;
 
 @Environment(EnvType.SERVER)
 public class CommandWorldEditWhitelist implements CommandManager.CommandRegistry {
