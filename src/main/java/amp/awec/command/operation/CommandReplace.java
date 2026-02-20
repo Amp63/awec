@@ -1,6 +1,6 @@
 package amp.awec.command.operation;
 import amp.awec.operation.ReplaceOperation;
-import amp.awec.pattern.ArgumentTypePattern;
+import amp.awec.command.argtypes.ArgumentTypePattern;
 import amp.awec.pattern.BlockPattern;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;

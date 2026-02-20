@@ -1,5 +1,7 @@
-package amp.awec.pattern;
+package amp.awec.command.argtypes;
 
+import amp.awec.pattern.BlockPattern;
+import amp.awec.pattern.BlockPatternException;
 import amp.awec.util.PatternType;
 import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.StringReader;
@@ -50,13 +52,7 @@ public class ArgumentTypePattern implements ArgumentType<BlockPattern> {
 
 	@Override
 	public BlockPattern parse(StringReader stringReader) throws CommandSyntaxException {
-		String patternString = readPatternString(stringReader);
-		try {
-			return new BlockPattern(patternString, null, patternType);
-		} catch (BlockPatternException e) {
-			LiteralMessage message = new LiteralMessage(e.getMessage());
-			throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
-		}
+		return parse(stringReader, null);
 	}
 
 	@Override

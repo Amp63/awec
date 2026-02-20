@@ -30,7 +30,7 @@ public class CopiedVolume {
 		}
 	}
 
-	public void setAt(World world, Vec3i setPos) {
+	public int setAt(World world, Vec3i setPos) {
 		Vec3i corner2 = new Vec3i(
 			setPos.x + dimX - 1,
 			setPos.y + dimY - 1,
@@ -39,10 +39,14 @@ public class CopiedVolume {
 
 		CuboidVolumeIterator iterator = new CuboidVolumeIterator(new CuboidVolume(setPos, corner2));
 		Iterator<BlockState> bufferIterator = blockBuffer.iterator();
+		int changedBlocks = 0;
 		while (iterator.hasNext()) {
 			Vec3i setBlockPos = iterator.next();
 			BlockState blockState = bufferIterator.next();
 			blockState.setNotify(world, setBlockPos);
+			changedBlocks++;
 		}
+
+		return changedBlocks;
 	}
 }

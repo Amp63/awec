@@ -1,6 +1,6 @@
 package amp.awec.command.operation;
 import amp.awec.operation.SetOperation;
-import amp.awec.pattern.ArgumentTypePattern;
+import amp.awec.command.argtypes.ArgumentTypePattern;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
 import amp.awec.permission.WorldEditPermissions;

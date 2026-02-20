@@ -34,7 +34,7 @@ class BlockProbability {
 
 public class BlockPattern {
 	private static final Pattern percentagePattern = Pattern.compile("(?:(\\d+)%)?([A-Za-z0-9_]+)(?::(\\d+))?");
-	private final Map<String, Block<?>> blockNameOverrides = new HashMap<String, Block<?>>();
+	private final Map<String, Block<?>> blockNameOverrides = new HashMap<>();
 
 	private final ArrayList<BlockProbability> blockProbabilities = new ArrayList<>();
 	private final Random rng = new Random();
