@@ -1,4 +1,6 @@
-package amp.awec.util;
+package amp.awec.volume;
+
+import amp.awec.util.Vec3i;
 
 public class CuboidVolume {
 	private Vec3i corner1, corner2;

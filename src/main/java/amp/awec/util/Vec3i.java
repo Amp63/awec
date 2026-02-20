@@ -80,4 +80,10 @@ public class Vec3i {
 		this.y *= scalar;
 		this.z *= scalar;
 	}
+
+	public Vec3i scale(int scalar) {
+		Vec3i v = new Vec3i(this);
+		v.scalei(scalar);
+		return v;
+	}
 }

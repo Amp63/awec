@@ -1,4 +1,6 @@
 package amp.awec.command.operation;
+import amp.awec.command.CommandHelper;
+import amp.awec.operation.OperationResult;
 import amp.awec.operation.ReplaceOperation;
 import amp.awec.command.argtypes.ArgumentTypePattern;
 import amp.awec.pattern.BlockPattern;
@@ -25,28 +27,19 @@ public class CommandReplace implements CommandManager.CommandRegistry {
 				.then(ArgumentBuilderRequired.argument("replace_pattern", ArgumentTypePattern.normal())
 					.executes(context -> {
 						CommandSource source = (CommandSource) context.getSource();
-						Player player = source.getSender();
-						if (player == null) {
+						PlayerData playerData = CommandHelper.getPlayerData(source);
+						if (playerData == null) {
 							return 0;
 						}
 
 						BlockPattern targetPattern = context.getArgument("target_pattern", BlockPattern.class);
 						BlockPattern replaceWithPattern = context.getArgument("replace_pattern", BlockPattern.class);
 
-						PlayerData playerData = WorldEditMod.getPlayerData(player);
-						if (playerData == null) {
-							source.sendMessage("Failed to access WorldEdit player data");
-							return 0;
-						}
-						if (!playerData.selection.isComplete()) {
-							source.sendMessage("Both corners must be set");
-							return 0;
-						}
-
 						World world = source.getWorld();
-						int changedBlocks = ReplaceOperation.doReplace(world, playerData.selection, targetPattern, replaceWithPattern);
+						OperationResult result = ReplaceOperation.execute(world, playerData.selection, targetPattern, replaceWithPattern);
+						playerData.undoHistory.add(result);
 
-						source.sendMessage("Changed " + changedBlocks + " blocks");
+						source.sendMessage("Changed " + result.changedBlocks + " blocks");
 						return 1;
 					})
 				)));

@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PlayerLeaveServerMixin {
 	@Inject(method = "removePlayer", at = @At("TAIL"))
 	private void removePlayer(PlayerServer entityplayermp, CallbackInfo ci) {
-		WorldEditMod.LOGGER.info("Removed player data for " + entityplayermp.uuid);
-		WorldEditMod.PLAYER_DATA.remove(entityplayermp.uuid);
+		WorldEditMod.removePlayerData(entityplayermp);
+		WorldEditMod.LOGGER.info("Removed player data for " + entityplayermp.username);
 	}
 }

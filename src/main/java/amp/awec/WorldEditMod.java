@@ -10,6 +10,8 @@ import amp.awec.command.selection.CommandPos1;
 import amp.awec.command.selection.CommandPos2;
 import amp.awec.command.selection.CommandToggleWand;
 import amp.awec.command.selection.CommandWand;
+import amp.awec.command.undoredo.CommandRedo;
+import amp.awec.command.undoredo.CommandUndo;
 import amp.awec.data.PlayerData;
 import amp.awec.permission.WorldEditWhitelist;
 import net.fabricmc.api.EnvType;
@@ -37,6 +39,14 @@ public class WorldEditMod implements ModInitializer, RecipeEntrypoint, GameStart
 		return PLAYER_DATA.get(player.uuid);
 	}
 
+	public static void createPlayerData(Player player) {
+		PLAYER_DATA.put(player.uuid, new PlayerData(player));
+	}
+
+	public static void removePlayerData(Player player) {
+		PLAYER_DATA.remove(player.uuid);
+	}
+
 	@Override
 	public void onInitialize() {
 		CommandManager.registerCommand(new CommandPos1());
@@ -53,6 +63,8 @@ public class WorldEditMod implements ModInitializer, RecipeEntrypoint, GameStart
 		CommandManager.registerCommand(new CommandReplace());
 		CommandManager.registerCommand(new CommandWalls());
 		CommandManager.registerCommand(new CommandStack());
+		CommandManager.registerCommand(new CommandUndo());
+		CommandManager.registerCommand(new CommandRedo());
 
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
 			WorldEditWhitelist.initialize();

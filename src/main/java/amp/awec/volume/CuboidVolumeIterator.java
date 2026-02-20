@@ -2,7 +2,6 @@ package amp.awec.volume;
 
 
 import amp.awec.util.Vec3i;
-import amp.awec.util.CuboidVolume;
 
 public class CuboidVolumeIterator {
 	private final Vec3i rootPos;

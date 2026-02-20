@@ -17,7 +17,7 @@ public class PlayerJoinServerMixin {
 
 	@Inject(method = "addPlayer", at = @At("TAIL"))
 	private void addPlayer(PlayerServer player, CallbackInfo ci) {
-		WorldEditMod.LOGGER.info("Created player data for " + player.uuid);
-		WorldEditMod.PLAYER_DATA.put(player.uuid, new PlayerData());
+		WorldEditMod.createPlayerData(player);
+		WorldEditMod.LOGGER.info("Created player data for " + player.username);
 	}
 }

@@ -1,4 +1,6 @@
 package amp.awec.command.operation;
+import amp.awec.command.CommandHelper;
+import amp.awec.operation.OperationResult;
 import amp.awec.operation.WallsOperation;
 import amp.awec.command.argtypes.ArgumentTypePattern;
 import amp.awec.WorldEditMod;
@@ -38,26 +40,18 @@ public class CommandWalls implements CommandManager.CommandRegistry {
 
 	private int handleWallsCommand(CommandContext<Object> context, int thickness) {
 		CommandSource source = (CommandSource) context.getSource();
-		Player player = source.getSender();
-		if (player == null) {
+		PlayerData playerData = CommandHelper.getPlayerData(source);
+		if (playerData == null) {
 			return 0;
 		}
 
 		BlockPattern pattern = context.getArgument("pattern", BlockPattern.class);
-		PlayerData playerData = WorldEditMod.getPlayerData(player);
-		if (playerData == null) {
-			source.sendMessage("Failed to access WorldEdit player data");
-			return 0;
-		}
-		if (!playerData.selection.isComplete()) {
-			source.sendMessage("Both corners must be set");
-			return 0;
-		}
 
 		World world = source.getWorld();
-		int changedBlocks = WallsOperation.doWalls(world, playerData.selection, pattern, thickness);
+		OperationResult result = WallsOperation.execute(world, playerData.selection, pattern, thickness);
+		playerData.undoHistory.add(result);
 
-		source.sendMessage("Changed " + changedBlocks + " blocks");
+		source.sendMessage("Changed " + result.changedBlocks + " blocks");
 
 		return 1;
 	}

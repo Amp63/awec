@@ -81,8 +81,6 @@ public class BlockPattern {
 				parseReplacePattern(patternString);
 				break;
 		}
-
-		WorldEditMod.LOGGER.info("Pattern: " + blockProbabilities);
 	}
 
 	private void parseNormalPattern(String patternString) throws BlockPatternException {

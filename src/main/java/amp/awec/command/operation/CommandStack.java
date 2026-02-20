@@ -1,5 +1,7 @@
 package amp.awec.command.operation;
+import amp.awec.command.CommandHelper;
 import amp.awec.command.argtypes.ArgumentTypeDirection;
+import amp.awec.operation.OperationResult;
 import amp.awec.operation.StackOperation;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
@@ -43,31 +45,23 @@ public class CommandStack implements CommandManager.CommandRegistry {
 
 	private int handleStackCommand(CommandContext<Object> context, int amount, Direction direction) {
 		CommandSource source = (CommandSource) context.getSource();
-		Player player = source.getSender();
-		if (player == null) {
+		PlayerData playerData = CommandHelper.getPlayerData(source);
+		if (playerData == null) {
 			return 0;
 		}
 
 		if (direction == null) {
 			// Default to forward direction
+			Player player = playerData.parentPlayer;
 			direction = DirectionHelper.getMajorDirection(player.xRot, player.yRot);
 		}
 
-		PlayerData playerData = WorldEditMod.getPlayerData(player);
-		if (playerData == null) {
-			source.sendMessage("Failed to access WorldEdit player data");
-			return 0;
-		}
-		if (!playerData.selection.isComplete()) {
-			source.sendMessage("Both corners must be set");
-			return 0;
-		}
 
 		World world = source.getWorld();
+		OperationResult result = StackOperation.execute(world, playerData.selection, amount, direction);
+		playerData.undoHistory.add(result);
 
-		int changedBlocks = StackOperation.doStack(world, playerData.selection, amount, direction);
-
-		source.sendMessage("Changed " + changedBlocks + " blocks");
+		source.sendMessage("Changed " + result.changedBlocks + " blocks");
 
 		return 1;
 	}

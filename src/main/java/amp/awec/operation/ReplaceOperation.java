@@ -2,16 +2,18 @@ package amp.awec.operation;
 
 import amp.awec.pattern.BlockPattern;
 import amp.awec.util.BlockState;
-import amp.awec.util.CuboidVolume;
+import amp.awec.volume.CuboidVolume;
 import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolumeIterator;
 import net.minecraft.core.world.World;
 
 public class ReplaceOperation {
 
-	public static int doReplace(World world, CuboidVolume volume, BlockPattern targetPattern, BlockPattern replaceWithPattern) {
+	public static OperationResult execute(World world, CuboidVolume volume, BlockPattern targetPattern, BlockPattern replaceWithPattern) {
+		OperationResult result = new OperationResult();
+		result.copyPreviousVolume(world, volume);
+
 		CuboidVolumeIterator iterator = new CuboidVolumeIterator(volume);
-		int changedBlocks = 0;
 
 		while (iterator.hasNext()) {
 			Vec3i setPos = iterator.next();
@@ -20,11 +22,11 @@ public class ReplaceOperation {
 				BlockState sampledBlock = replaceWithPattern.sample();
 				if (sampledBlock != null) {
 					sampledBlock.setNotify(world, setPos);
-					changedBlocks++;
+					result.changedBlocks++;
 				}
 			}
 		}
 
-		return changedBlocks;
+		return result;
 	}
 }

@@ -4,6 +4,7 @@
 
 - Added `//walls`
 - Added `//stack`
+- Added `//undo`, `//redo`
 - Added `/thru`, `/ascend`, `/descend`
 - Refactoring
 

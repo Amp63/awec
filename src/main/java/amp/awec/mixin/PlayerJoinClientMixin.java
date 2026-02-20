@@ -18,6 +18,6 @@ public class PlayerJoinClientMixin {
 	@Inject(method = "spawnPlayerWithLoadedChunks", at = @At("TAIL"))
 	private void spawnPlayerWithLoadedChunks(Player player, CallbackInfo ci) {
 		WorldEditMod.LOGGER.info("Created player data for " + player.uuid);
-		WorldEditMod.PLAYER_DATA.put(player.uuid, new PlayerData());
+		WorldEditMod.createPlayerData(player);
 	}
 }
