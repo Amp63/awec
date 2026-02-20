@@ -6,8 +6,9 @@ import amp.awec.util.CuboidVolume;
 
 public class CuboidVolumeIterator {
 	private final Vec3i rootPos;
-	private int currentIndex;
 	private final int dimX, dimY, dimZ, area;
+	private int currentIndex;
+	private final Vec3i currentPos;
 
 	public CuboidVolumeIterator(CuboidVolume volume) {
 		currentIndex = 0;
@@ -16,6 +17,7 @@ public class CuboidVolumeIterator {
 		dimY = volume.getDimY();
 		dimZ = volume.getDimZ();
 		area = dimX * dimY * dimZ;
+		currentPos = new Vec3i(0, 0, 0);
 	}
 
 	public Vec3i next() {
@@ -23,7 +25,8 @@ public class CuboidVolumeIterator {
 		int y = currentIndex / dimX % dimY;
 		int z = currentIndex / (dimX * dimY);
 		currentIndex++;
-		return new Vec3i(rootPos.x + x, rootPos.y + y, rootPos.z + z);
+		currentPos.set(rootPos.x + x, rootPos.y + y, rootPos.z + z);
+		return currentPos;
 	}
 
 	public boolean hasNext() {

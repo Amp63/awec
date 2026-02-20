@@ -3,13 +3,18 @@ package amp.awec.util;
 import java.util.Objects;
 
 public class Vec3i {
-	public final int x, y, z;
+	public int x, y, z;
 
 	public Vec3i(int x, int y, int z) {
+		set(x, y, z);
+	}
+
+	public void set(int x, int y, int z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
+
 
 	public String toString() {
 		return this.x + ", " + this.y + ", " + this.z;
