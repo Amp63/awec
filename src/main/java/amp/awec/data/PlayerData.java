@@ -1,21 +1,45 @@
 package amp.awec.data;
 
+import amp.awec.WorldEditMod;
 import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolume;
 import amp.awec.volume.CopiedVolume;
 import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.world.Dimension;
+import net.minecraft.core.world.World;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+
+class PlayerDataWorld {
+	public CuboidVolume selection = new CuboidVolume(null, null);
+	public UndoHistory undoHistory = new UndoHistory();
+}
 
 public class PlayerData {
-	public Player parentPlayer;
-	public CuboidVolume selection = new CuboidVolume(null, null);
 	public boolean wandEnabled = true;
 
 	public CopiedVolume clipboardVolume = null;
 	public Vec3i copyOffset = null;
 
-	public UndoHistory undoHistory = new UndoHistory();
+	private final Map<Dimension, PlayerDataWorld> worldSpecificData = new HashMap<>();
 
-	public PlayerData(Player parent) {
-		parentPlayer = parent;
+	private void checkCreateWorldData(World world) {
+		if (!worldSpecificData.containsKey(world.dimension)) {
+			PlayerDataWorld data = new PlayerDataWorld();
+			worldSpecificData.put(world.dimension, data);
+			WorldEditMod.LOGGER.info("Created new WorldEdit data in dimension \"" + world.dimension.getTranslatedName() + "\"");
+		}
+	}
+
+	public CuboidVolume getSelection(@NotNull World world) {
+		checkCreateWorldData(world);
+		return worldSpecificData.get(world.dimension).selection;
+	}
+
+	public UndoHistory getUndoHistory(@NotNull World world) {
+		checkCreateWorldData(world);
+		return worldSpecificData.get(world.dimension).undoHistory;
 	}
 }

@@ -1,7 +1,7 @@
 package amp.awec.mixin;
 
+import amp.awec.data.PlayerDataManager;
 import amp.awec.util.Vec3i;
-import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.WandHelper;
@@ -19,17 +19,14 @@ public class WandPos2Mixin {
 
 	@Inject(method = "onBlockRightClicked", at = @At("HEAD"))
 	private void onRightClickBlock(World world, int x, int y, int z, Player player, Side side, double xHit, double yHit, CallbackInfoReturnable<Boolean> cir) {
-		if (!WorldEditPermissions.canUseWorldEdit(player) || !WandHelper.isHoldingWand(player)) {
+		if (!WorldEditPermissions.canUseWorldEdit(player) || !WandHelper.isHoldingWand(player) || player.world == null) {
 			return;
 		}
 
-		PlayerData playerData = WorldEditMod.getPlayerData(player);
-		if (playerData == null) {
-			return;
-		}
+		PlayerData playerData = PlayerDataManager.getPlayerData(player.uuid);
 
 		Vec3i pos = new Vec3i(x, y, z);
-		playerData.selection.setCorner2(pos);
+		playerData.getSelection(world).setCorner2(pos);
 		player.sendMessage("Corner 2 set to " + pos);
 	}
 }

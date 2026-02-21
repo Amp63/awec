@@ -1,11 +1,9 @@
 package amp.awec.command.operation;
 
-import amp.awec.command.CommandHelper;
+import amp.awec.command.CommandPlayerData;
 import amp.awec.command.argtypes.ArgumentTypeDirection;
-import amp.awec.data.PlayerData;
 import amp.awec.operation.MoveOperation;
 import amp.awec.operation.WorldChange;
-import amp.awec.operation.StackOperation;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.DirectionHelper;
 import com.mojang.brigadier.CommandDispatcher;
@@ -13,11 +11,9 @@ import com.mojang.brigadier.arguments.ArgumentTypeInteger;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.world.World;
 
 public class CommandMove implements CommandManager.CommandRegistry {
 
@@ -46,21 +42,18 @@ public class CommandMove implements CommandManager.CommandRegistry {
 
 	private int handleMoveCommand(CommandContext<Object> context, int amount, Direction direction) {
 		CommandSource source = (CommandSource) context.getSource();
-		PlayerData playerData = CommandHelper.getPlayerData(source);
+		CommandPlayerData playerData = CommandPlayerData.get(source);
 		if (playerData == null) {
 			return 0;
 		}
 
 		if (direction == null) {
 			// Default to forward direction
-			Player player = playerData.parentPlayer;
-			direction = DirectionHelper.getMajorDirection(player.xRot, player.yRot);
+			direction = DirectionHelper.getMajorDirection(playerData.player.xRot, playerData.player.yRot);
 		}
 
-
-		World world = source.getWorld();
-		WorldChange result = MoveOperation.execute(world, playerData.selection, amount, direction);
-		playerData.undoHistory.add(result);
+		WorldChange result = MoveOperation.execute(playerData.world, playerData.getSelection(), amount, direction);
+		playerData.addUndoChange(result);
 
 		source.sendMessage("Changed " + result.changedBlockCount + " blocks");
 

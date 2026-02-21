@@ -1,7 +1,9 @@
 package amp.awec.command.selection;
 
 import amp.awec.WorldEditMod;
+import amp.awec.command.CommandPlayerData;
 import amp.awec.data.PlayerData;
+import amp.awec.data.PlayerDataManager;
 import amp.awec.permission.WorldEditPermissions;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
@@ -18,22 +20,17 @@ public class CommandToggleWand implements CommandManager.CommandRegistry {
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
-					Player player = source.getSender();
-					if (player == null) {
-						return 0;
-					}
-
-					PlayerData playerData = WorldEditMod.getPlayerData(player);
+					CommandPlayerData playerData = CommandPlayerData.get(source);
 					if (playerData == null) {
 						return 0;
 					}
 
-					if (playerData.wandEnabled) {
-						playerData.wandEnabled = false;
+					if (playerData.data.wandEnabled) {
+						playerData.data.wandEnabled = false;
 						source.sendMessage("Disabled edit wand");
 					}
 					else {
-						playerData.wandEnabled = true;
+						playerData.data.wandEnabled = true;
 						source.sendMessage("Enabled edit wand");
 					}
 

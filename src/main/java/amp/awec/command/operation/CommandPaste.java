@@ -1,6 +1,6 @@
 package amp.awec.command.operation;
 
-import amp.awec.command.CommandHelper;
+import amp.awec.command.CommandPlayerData;
 import amp.awec.operation.WorldChange;
 import amp.awec.util.Vec3i;
 import amp.awec.data.PlayerData;
@@ -21,15 +21,15 @@ public class CommandPaste implements CommandManager.CommandRegistry {
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
-					PlayerData playerData = CommandHelper.getPlayerData(source);
+					CommandPlayerData playerData = CommandPlayerData.get(source);
 					if (playerData == null) {
 						return 0;
 					}
 
-					World world = source.getWorld();
-					Vec3i pastePos = PosHelper.getPlayerBlockPos(playerData.parentPlayer);
-					doPaste(world, pastePos, playerData);
+					Vec3i pastePos = PosHelper.getPlayerBlockPos(playerData.player);
+					doPaste(playerData.world, pastePos, playerData.data);
 					source.sendMessage("Pasted");
+
 					return 1;
 				})
 		);
@@ -38,6 +38,6 @@ public class CommandPaste implements CommandManager.CommandRegistry {
 	private void doPaste(World world, Vec3i pastePos, PlayerData playerData) {
 		Vec3i setPos = pastePos.add(playerData.copyOffset);
 		WorldChange result = playerData.clipboardVolume.setAt(world, setPos, true);
-		playerData.undoHistory.add(result);
+		playerData.getUndoHistory(world).add(result);
 	}
 }

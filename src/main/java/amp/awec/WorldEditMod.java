@@ -12,40 +12,19 @@ import amp.awec.command.selection.CommandToggleWand;
 import amp.awec.command.selection.CommandWand;
 import amp.awec.command.undoredo.CommandRedo;
 import amp.awec.command.undoredo.CommandUndo;
-import amp.awec.data.PlayerData;
 import amp.awec.permission.WorldEditWhitelist;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.command.CommandManager;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import turniplabs.halplibe.util.GameStartEntrypoint;
 import turniplabs.halplibe.util.RecipeEntrypoint;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 public class WorldEditMod implements ModInitializer, RecipeEntrypoint, GameStartEntrypoint {
 	public static final String MOD_ID = "awec";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-
-	public static final Map<UUID, PlayerData> PLAYER_DATA = new HashMap<>();
-
-	public static @Nullable PlayerData getPlayerData(Player player) {
-		return PLAYER_DATA.get(player.uuid);
-	}
-
-	public static void createPlayerData(Player player) {
-		PLAYER_DATA.put(player.uuid, new PlayerData(player));
-	}
-
-	public static void removePlayerData(Player player) {
-		PLAYER_DATA.remove(player.uuid);
-	}
 
 	@Override
 	public void onInitialize() {
@@ -71,6 +50,7 @@ public class WorldEditMod implements ModInitializer, RecipeEntrypoint, GameStart
 			WorldEditWhitelist.initialize();
 			CommandManager.registerServerCommand(new CommandWorldEditWhitelist());
 		}
+
 		LOGGER.info("WorldEdit initialized.");
 	}
 

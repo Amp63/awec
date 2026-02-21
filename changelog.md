@@ -1,6 +1,11 @@
 # Changelog
 
-## v0.1.2+7.3_04
+## v0.3.0+7.3_04
+
+- Implemented dimension-specific selections and undo history
+- Changed method hook for PlayerLeaveServerMixin
+
+## v0.2.0+7.3_04
 
 - Added `//walls`
 - Added `//stack`

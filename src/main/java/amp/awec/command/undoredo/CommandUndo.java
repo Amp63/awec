@@ -9,7 +9,7 @@ public class CommandUndo implements CommandManager.CommandRegistry {
 	@SuppressWarnings("unchecked")
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		CommandUndoBase.register(dispatcher, "/undo",
-			(w, d) -> d.undoHistory.undo(w),
+			(w, d) -> d.getUndoHistory(w).undo(w),
 			"Undid %d edits", "Nothing to undo"
 		);
 	}

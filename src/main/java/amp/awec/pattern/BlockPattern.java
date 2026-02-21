@@ -62,6 +62,8 @@ public class BlockPattern {
 
 	private void setBlockNameOverrides(@Nullable Player parentPlayer) {
 		blockNameOverrides.put("air", null);
+		blockNameOverrides.put("water", Blocks.FLUID_WATER_STILL);
+		blockNameOverrides.put("lava", Blocks.FLUID_LAVA_STILL);
 
 		// Set "hand" entry
 		if (parentPlayer == null) {

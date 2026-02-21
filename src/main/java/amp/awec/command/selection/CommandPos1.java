@@ -7,6 +7,6 @@ import net.minecraft.core.net.command.CommandSource;
 public class CommandPos1 implements CommandManager.CommandRegistry {
 	@Override
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
-		CommandPosBase.register(dispatcher, "/pos1", 1, (data, pos) -> data.selection.setCorner1(pos));
+		CommandPosBase.register(dispatcher, "/pos1", 1, (data, pos) -> data.getSelection().setCorner1(pos));
 	}
 }

@@ -1,9 +1,8 @@
 package amp.awec.command.operation;
-import amp.awec.command.CommandHelper;
+import amp.awec.command.CommandPlayerData;
 import amp.awec.operation.WorldChange;
 import amp.awec.operation.SetOperation;
 import amp.awec.command.argtypes.ArgumentTypePattern;
-import amp.awec.data.PlayerData;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.pattern.BlockPattern;
 import com.mojang.brigadier.CommandDispatcher;
@@ -11,7 +10,6 @@ import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
-import net.minecraft.core.world.World;
 
 public class CommandSet implements CommandManager.CommandRegistry {
 
@@ -24,15 +22,14 @@ public class CommandSet implements CommandManager.CommandRegistry {
 				.then(ArgumentBuilderRequired.argument("pattern", ArgumentTypePattern.normal())
 					.executes(context -> {
 						CommandSource source = (CommandSource) context.getSource();
-						PlayerData playerData = CommandHelper.getPlayerData(source);
+						CommandPlayerData playerData = CommandPlayerData.get(source);
 						if (playerData == null) {
 							return 0;
 						}
 
-						World world = source.getWorld();
 						BlockPattern pattern = context.getArgument("pattern", BlockPattern.class);
-						WorldChange result = SetOperation.execute(world, playerData.selection, pattern);
-						playerData.undoHistory.add(result);
+						WorldChange result = SetOperation.execute(playerData.world, playerData.getSelection(), pattern);
+						playerData.addUndoChange(result);
 
 						source.sendMessage("Changed " + result.changedBlockCount + " blocks");
 						return 1;

@@ -1,17 +1,15 @@
 package amp.awec.command.operation;
-import amp.awec.command.CommandHelper;
+import amp.awec.command.CommandPlayerData;
 import amp.awec.operation.WorldChange;
 import amp.awec.operation.ReplaceOperation;
 import amp.awec.command.argtypes.ArgumentTypePattern;
 import amp.awec.pattern.BlockPattern;
-import amp.awec.data.PlayerData;
 import amp.awec.permission.WorldEditPermissions;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
-import net.minecraft.core.world.World;
 
 public class CommandReplace implements CommandManager.CommandRegistry {
 
@@ -25,7 +23,7 @@ public class CommandReplace implements CommandManager.CommandRegistry {
 				.then(ArgumentBuilderRequired.argument("replace_pattern", ArgumentTypePattern.normal())
 					.executes(context -> {
 						CommandSource source = (CommandSource) context.getSource();
-						PlayerData playerData = CommandHelper.getPlayerData(source);
+						CommandPlayerData playerData = CommandPlayerData.get(source);
 						if (playerData == null) {
 							return 0;
 						}
@@ -33,9 +31,8 @@ public class CommandReplace implements CommandManager.CommandRegistry {
 						BlockPattern targetPattern = context.getArgument("target_pattern", BlockPattern.class);
 						BlockPattern replaceWithPattern = context.getArgument("replace_pattern", BlockPattern.class);
 
-						World world = source.getWorld();
-						WorldChange result = ReplaceOperation.execute(world, playerData.selection, targetPattern, replaceWithPattern);
-						playerData.undoHistory.add(result);
+						WorldChange result = ReplaceOperation.execute(playerData.world, playerData.getSelection(), targetPattern, replaceWithPattern);
+						playerData.addUndoChange(result);
 
 						source.sendMessage("Changed " + result.changedBlockCount + " blocks");
 						return 1;

@@ -1,6 +1,6 @@
 package amp.awec.command.undoredo;
 
-import amp.awec.command.CommandHelper;
+import amp.awec.command.CommandPlayerData;
 import amp.awec.data.PlayerData;
 import amp.awec.permission.WorldEditPermissions;
 import com.mojang.brigadier.CommandDispatcher;
@@ -11,7 +11,6 @@ import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.world.World;
 
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 
 public class CommandUndoBase {
 
@@ -37,7 +36,7 @@ public class CommandUndoBase {
 
 	private static int handleUndoRedo(CommandSource source, int amount, BiFunction<World, PlayerData, Boolean> undoRedoFunction,
 									  String successMessage, String nothingMessage) {
-		PlayerData playerData = CommandHelper.getPlayerData(source);
+		CommandPlayerData playerData = CommandPlayerData.get(source);
 		if (playerData == null) {
 			return 0;
 		}
@@ -47,7 +46,7 @@ public class CommandUndoBase {
 		boolean success = false;
 		int i;
 		for (i = 0; i < amount; i++) {
-			boolean result = undoRedoFunction.apply(world, playerData);
+			boolean result = undoRedoFunction.apply(world, playerData.data);
 			if (!result) {
 				break;
 			}

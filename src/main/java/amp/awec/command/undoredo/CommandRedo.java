@@ -9,7 +9,7 @@ public class CommandRedo implements CommandManager.CommandRegistry {
 	@SuppressWarnings("unchecked")
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		CommandUndoBase.register(dispatcher, "/redo",
-			(w, d) -> d.undoHistory.redo(w),
+			(w, d) -> d.getUndoHistory(w).redo(w),
 			"Redid %d edits", "Nothing to redo"
 		);
 	}
