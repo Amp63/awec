@@ -7,7 +7,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeInteger;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
-import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.world.World;
 
@@ -46,7 +45,8 @@ public class CommandUndoBase {
 		World world = source.getWorld();
 
 		boolean success = false;
-		for (int i = 0; i < amount; i++) {
+		int i;
+		for (i = 0; i < amount; i++) {
 			boolean result = undoRedoFunction.apply(world, playerData);
 			if (!result) {
 				break;
@@ -55,7 +55,7 @@ public class CommandUndoBase {
 		}
 
 		if (success) {
-			source.sendMessage(String.format(successMessage, amount));
+			source.sendMessage(String.format(successMessage, i+1));
 			return 1;
 		}
 

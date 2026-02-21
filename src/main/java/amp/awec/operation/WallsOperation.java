@@ -8,9 +8,8 @@ import org.jspecify.annotations.NonNull;
 
 public class WallsOperation {
 
-	public static OperationResult execute(World world, CuboidVolume volume, BlockPattern pattern, int thickness) {
-		OperationResult result = new OperationResult();
-		result.copyPreviousVolume(world, volume);
+	public static WorldChange execute(World world, CuboidVolume volume, BlockPattern pattern, int thickness) {
+		WorldChange result = new WorldChange();
 
 		Vec3i minCorner = volume.getMinCorner();
 		Vec3i maxCorner = volume.getMaxCorner();
@@ -22,7 +21,8 @@ public class WallsOperation {
 
 		int changedBlocks = 0;
 		for (CuboidVolume wallVolume : volumes) {
-			changedBlocks += SetOperation.execute(world, wallVolume, pattern, false).changedBlocks;
+			WorldChange setResult = SetOperation.execute(world, wallVolume, pattern, false);
+			result.extend(setResult);
 		}
 
 		return result;

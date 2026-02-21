@@ -1,9 +1,6 @@
 package amp.awec.data;
 
-import amp.awec.WorldEditMod;
-import amp.awec.operation.OperationResult;
-import amp.awec.util.Vec3i;
-import amp.awec.volume.CopiedVolume;
+import amp.awec.operation.WorldChange;
 import net.minecraft.core.world.World;
 
 import java.util.LinkedList;
@@ -13,40 +10,42 @@ import java.util.ListIterator;
 public class UndoHistory {
 	private static final int MAX_UNDO_HISTORY = 50;
 
-	private final List<OperationResult> undoTape = new LinkedList<>();
-	private ListIterator<OperationResult> head = undoTape.listIterator();
+	private final List<WorldChange> undoTape = new LinkedList<>();
+	private ListIterator<WorldChange> head = undoTape.listIterator();
 
-	public void add(OperationResult entry) {
+	public void add(WorldChange change) {
 		// Remove subsequent entries
 		while (head.hasNext()) {
 			head.next();
 			head.remove();
 		}
 
-		// Add the new entry
+		// Add the new change
 		if (undoTape.size() >= MAX_UNDO_HISTORY) {
 			undoTape.remove(0);
 		}
 
-		undoTape.add(entry);
+		undoTape.add(change);
 		head = undoTape.listIterator(undoTape.size());
 	}
 
 	public boolean undo(World world) {
 		if (head.hasPrevious()) {
 			boolean atEnd = head.hasNext();
-			OperationResult entry = head.previous();
+			WorldChange change = head.previous();
+
 			if (atEnd) {
-				entry.previousVolume.setAt(world, entry.previousVolumePos, false);
+				change.apply(world);
 			}
 			else {
 				// Save current state and add to the end
-				head.next();  // Next to prevent new entry from being deleted
-				OperationResult result = entry.previousVolume.setAt(world, entry.previousVolumePos, true);
+				head.next();  // Next to prevent new change from being deleted
+				WorldChange result = change.apply(world);
 				this.add(result);
 				head.previous();
 				head.previous();  // Step back to where we were before
 			}
+
 			return true;
 		}
 
@@ -61,12 +60,14 @@ public class UndoHistory {
 					return false;
 				}
 			}
-			OperationResult entry = head.next();
-			entry.previousVolume.setAt(world, entry.previousVolumePos, false);
+
+			WorldChange change = head.next();
+			change.apply(world);
 			if (!head.hasNext()) {
-				// Remove current state entry
+				// Remove current change
 				this.head.remove();
 			}
+
 			return true;
 		}
 

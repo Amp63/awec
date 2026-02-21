@@ -1,9 +1,8 @@
 package amp.awec.command.operation;
 import amp.awec.command.CommandHelper;
 import amp.awec.command.argtypes.ArgumentTypeDirection;
-import amp.awec.operation.OperationResult;
+import amp.awec.operation.WorldChange;
 import amp.awec.operation.StackOperation;
-import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.DirectionHelper;
@@ -58,10 +57,10 @@ public class CommandStack implements CommandManager.CommandRegistry {
 
 
 		World world = source.getWorld();
-		OperationResult result = StackOperation.execute(world, playerData.selection, amount, direction);
+		WorldChange result = StackOperation.execute(world, playerData.selection, amount, direction);
 		playerData.undoHistory.add(result);
 
-		source.sendMessage("Changed " + result.changedBlocks + " blocks");
+		source.sendMessage("Changed " + result.changedBlockCount + " blocks");
 
 		return 1;
 	}

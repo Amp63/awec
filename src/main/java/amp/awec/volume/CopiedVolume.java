@@ -1,6 +1,7 @@
 package amp.awec.volume;
 
-import amp.awec.operation.OperationResult;
+import amp.awec.operation.WorldChange;
+import amp.awec.util.BlockChange;
 import amp.awec.util.Vec3i;
 import amp.awec.util.BlockState;
 import net.minecraft.core.world.World;
@@ -30,7 +31,7 @@ public class CopiedVolume {
 		}
 	}
 
-	public OperationResult setAt(World world, Vec3i setPos, boolean copyPrevious) {
+	public WorldChange setAt(World world, Vec3i setPos, boolean trackChanges) {
 		Vec3i corner2 = new Vec3i(
 			setPos.x + dimX - 1,
 			setPos.y + dimY - 1,
@@ -39,18 +40,17 @@ public class CopiedVolume {
 
 		CuboidVolume pasteVolume = new CuboidVolume(setPos, corner2);
 
-		OperationResult result = new OperationResult();
-		if (copyPrevious) {
-			result.copyPreviousVolume(world, pasteVolume);
-		}
+		WorldChange result = new WorldChange();
 
 		CuboidVolumeIterator iterator = new CuboidVolumeIterator(pasteVolume);
 		Iterator<BlockState> bufferIterator = blockBuffer.iterator();
 		while (iterator.hasNext()) {
 			Vec3i setBlockPos = iterator.next();
 			BlockState blockState = bufferIterator.next();
-			blockState.setNotify(world, setBlockPos);
-			result.changedBlocks++;
+			BlockChange blockChange = blockState.setNotify(world, setBlockPos);
+			if (trackChanges) {
+				result.addChange(blockChange);
+			}
 		}
 
 		return result;

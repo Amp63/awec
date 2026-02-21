@@ -29,7 +29,10 @@ public class BlockState {
 		this.tileEntity = world.getTileEntity(pos.x, pos.y, pos.z);
 	}
 
-	public void setNotify(World world, Vec3i pos) {
+	public BlockChange setNotify(World world, Vec3i pos) {
+		BlockState oldBlock = new BlockState(world, pos);
+		BlockChange blockChange = new BlockChange(oldBlock, pos);
+
 		int blockId = 0;
 		if (block != null) {
 			blockId = block.id();
@@ -38,7 +41,7 @@ public class BlockState {
 		int setMetadata = metadata;
 		if (setMetadata == -1) {
 			// Keep original metadata
-			setMetadata = world.getBlockMetadata(pos.x, pos.y, pos.z);
+			setMetadata = oldBlock.metadata;
 		}
 
 		world.setBlockAndMetadataWithNotify(pos.x, pos.y, pos.z, blockId, setMetadata);
@@ -46,6 +49,8 @@ public class BlockState {
 		if (tileEntity != null) {
 			world.setTileEntity(pos.x, pos.y, pos.z, tileEntity);
 		}
+
+		return blockChange;
 	}
 
 	@Override

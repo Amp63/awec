@@ -7,8 +7,9 @@ import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
 
 public class StackOperation {
-	public static OperationResult execute(World world, CuboidVolume volume, int amount, Direction direction) {
-		OperationResult result = new OperationResult();
+	public static WorldChange execute(World world, CuboidVolume volume, int amount, Direction direction) {
+		WorldChange result = new WorldChange();
+
 		CopiedVolume copiedVolume = new CopiedVolume(world, volume);
 
 		Vec3i currentSetPos = new Vec3i(volume.getMinCorner());
@@ -19,16 +20,10 @@ public class StackOperation {
 		);
 		Vec3i shiftVector = volume.getDim().componentMultiply(directionVec);
 
-		// Calculate volume that will be changed
-		CuboidVolume overwrittenVolume = new CuboidVolume(
-			volume.getMinCorner().add(shiftVector),
-			volume.getMaxCorner().add(shiftVector.scale(amount-1))
-		);
-		result.copyPreviousVolume(world, overwrittenVolume);
-
 		for (int i = 0; i < amount; i++) {
 			currentSetPos.addi(shiftVector);
-			result.changedBlocks += copiedVolume.setAt(world, currentSetPos, false).changedBlocks;
+			WorldChange setResult = copiedVolume.setAt(world, currentSetPos, false);
+			result.extend(setResult);
 		}
 
 		return result;
