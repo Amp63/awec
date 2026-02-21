@@ -1,5 +1,7 @@
 package amp.awec.util;
 
+import net.minecraft.core.util.helper.Direction;
+
 import java.util.Objects;
 
 public class Vec3i {
@@ -22,6 +24,14 @@ public class Vec3i {
 
 	public Vec3i(Vec3i other) {
 		set(other.x, other.y, other.z);
+	}
+
+	public Vec3i(Direction dir) {
+		set(
+			dir.getOffsetX(),
+			dir.getOffsetY(),
+			dir.getOffsetZ()
+		);
 	}
 
 	public void set(int x, int y, int z) {

@@ -2,6 +2,7 @@
 
 ## v0.3.0+7.3_04
 
+- Added `//shift`
 - Implemented dimension-specific selections and undo history
 - Changed method hook for PlayerLeaveServerMixin
 

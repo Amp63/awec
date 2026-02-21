@@ -12,6 +12,14 @@ public class CuboidVolume {
 		updateCorrectedCorners();
 	}
 
+	public Vec3i getCorner1() {
+		return corner1;
+	}
+
+	public Vec3i getCorner2() {
+		return corner2;
+	}
+
 	public void setCorner1(Vec3i pos) {
 		corner1 = pos;
 		updateCorrectedCorners();
@@ -65,5 +73,11 @@ public class CuboidVolume {
 
 	public Vec3i getDim() {
 		return new Vec3i(getDimX(), getDimY(), getDimZ());
+	}
+
+	public void shift(Vec3i shiftVector) {
+		corner1.addi(shiftVector);
+		corner2.addi(shiftVector);
+		updateCorrectedCorners();
 	}
 }

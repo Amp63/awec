@@ -10,11 +10,7 @@ import net.minecraft.core.world.World;
 
 public class MoveOperation {
 	public static WorldChange execute(World world, CuboidVolume volume, int amount, Direction direction) {
-		Vec3i directionVec = new Vec3i(
-			direction.getOffsetX(),
-			direction.getOffsetY(),
-			direction.getOffsetZ()
-		);
+		Vec3i directionVec = new Vec3i(direction);
 		Vec3i shiftVector = directionVec.scale(amount);
 		Vec3i setPos = new Vec3i(volume.getMinCorner());
 		setPos.addi(shiftVector);

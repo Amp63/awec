@@ -13,11 +13,7 @@ public class StackOperation {
 		CopiedVolume copiedVolume = new CopiedVolume(world, volume);
 
 		Vec3i currentSetPos = new Vec3i(volume.getMinCorner());
-		Vec3i directionVec = new Vec3i(
-			direction.getOffsetX(),
-			direction.getOffsetY(),
-			direction.getOffsetZ()
-		);
+		Vec3i directionVec = new Vec3i(direction);
 		Vec3i shiftVector = volume.getDim().componentMultiply(directionVec);
 
 		for (int i = 0; i < amount; i++) {
