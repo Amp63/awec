@@ -19,7 +19,8 @@ public class WorldChange {
 	}
 
 	public void update(WorldChange other) {
-		other.changedBlocks.forEach(this::putChange);
+		this.changedBlocks.putAll(other.changedBlocks);
+		this.changedBlockCount = this.changedBlocks.size();
 	}
 
 	public WorldChange apply(World world) {

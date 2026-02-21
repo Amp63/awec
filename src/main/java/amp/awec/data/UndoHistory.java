@@ -44,9 +44,6 @@ public class UndoHistory {
 				head.previous();  // Step back to where we were before
 			}
 
-			WorldEditMod.LOGGER.info(undoTape.toString());
-			WorldEditMod.LOGGER.info("Head at position " + head.nextIndex());
-
 			return true;
 		}
 
@@ -55,11 +52,9 @@ public class UndoHistory {
 
 	public boolean redo(World world) {
 		if (head.hasNext()) {
-			if (!head.hasPrevious()) {
-				head.next();
-				if (!head.hasNext()) {
-					return false;
-				}
+			head.next();
+			if (!head.hasNext()) {
+				return false;
 			}
 
 			WorldChange change = head.next();
@@ -68,10 +63,6 @@ public class UndoHistory {
 				// Remove current change
 				this.head.remove();
 			}
-
-			WorldEditMod.LOGGER.info(undoTape.toString());
-			WorldEditMod.LOGGER.info("Head at position " + head.nextIndex());
-
 
 			return true;
 		}
