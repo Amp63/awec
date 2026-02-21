@@ -1,5 +1,7 @@
 package amp.awec.util;
 
+import amp.awec.WorldEditMod;
+import com.mojang.nbt.tags.CompoundTag;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.world.World;
@@ -12,21 +14,22 @@ public class BlockState {
 	public int metadata = 0;
 	public TileEntity tileEntity = null;
 
-	public BlockState(@Nullable Block<?> block, int metadata, TileEntity tileEntity) {
-		this.block = block;
-		this.metadata = metadata;
-		this.tileEntity = tileEntity;
-	}
-
 	public BlockState(@Nullable Block<?> block, int metadata) {
-		this.block = block;
-		this.metadata = metadata;
+		initialize(block, metadata, null);
 	}
 
 	public BlockState(World world, Vec3i pos) {
-		this.block = world.getBlock(pos.x, pos.y, pos.z);
-		this.metadata = world.getBlockMetadata(pos.x, pos.y, pos.z);
-		this.tileEntity = world.getTileEntity(pos.x, pos.y, pos.z);
+		initialize(
+			world.getBlock(pos.x, pos.y, pos.z),
+			world.getBlockMetadata(pos.x, pos.y, pos.z),
+			world.getTileEntity(pos.x, pos.y, pos.z)
+		);
+	}
+
+	private void initialize(@Nullable Block<?> block, int metadata, @Nullable TileEntity tileEntity) {
+		this.block = block;
+		this.metadata = metadata;
+		this.tileEntity = tileEntity;
 	}
 
 	public BlockState setNotify(World world, Vec3i pos) {
@@ -46,7 +49,18 @@ public class BlockState {
 		world.setBlockAndMetadataWithNotify(pos.x, pos.y, pos.z, blockId, setMetadata);
 
 		if (tileEntity != null) {
-			world.setTileEntity(pos.x, pos.y, pos.z, tileEntity);
+			try {
+				TileEntity tileEntityCopy = tileEntity.getClass().newInstance();
+				CompoundTag copiedTag = new CompoundTag();
+				tileEntity.writeToNBT(copiedTag);
+				tileEntityCopy.readFromNBT(copiedTag);
+				this.tileEntity = tileEntityCopy;
+				WorldEditMod.LOGGER.info("Created copy of tile entity");
+				world.setTileEntity(pos.x, pos.y, pos.z, tileEntityCopy);
+			}
+			catch (Exception e) {
+				WorldEditMod.LOGGER.error("Failed to create copy of tile entity at " + pos);
+			}
 		}
 
 		return oldBlock;
