@@ -1,7 +1,6 @@
 package amp.awec.operation;
 
 import amp.awec.pattern.BlockPattern;
-import amp.awec.util.BlockChange;
 import amp.awec.util.BlockState;
 import amp.awec.volume.CuboidVolume;
 import amp.awec.util.Vec3i;
@@ -21,8 +20,8 @@ public class ReplaceOperation {
 			if (targetPattern.shouldReplace(replacedBlock)) {
 				BlockState sampledBlock = replaceWithPattern.sample();
 				if (sampledBlock != null) {
-					BlockChange blockChange = sampledBlock.setNotify(world, setPos);
-					result.addChange(blockChange);
+					BlockState oldBlock = sampledBlock.setNotify(world, setPos);
+					result.putChange(setPos, oldBlock);
 				}
 			}
 		}

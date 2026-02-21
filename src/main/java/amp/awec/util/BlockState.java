@@ -29,9 +29,8 @@ public class BlockState {
 		this.tileEntity = world.getTileEntity(pos.x, pos.y, pos.z);
 	}
 
-	public BlockChange setNotify(World world, Vec3i pos) {
+	public BlockState setNotify(World world, Vec3i pos) {
 		BlockState oldBlock = new BlockState(world, pos);
-		BlockChange blockChange = new BlockChange(oldBlock, pos);
 
 		int blockId = 0;
 		if (block != null) {
@@ -50,7 +49,7 @@ public class BlockState {
 			world.setTileEntity(pos.x, pos.y, pos.z, tileEntity);
 		}
 
-		return blockChange;
+		return oldBlock;
 	}
 
 	@Override

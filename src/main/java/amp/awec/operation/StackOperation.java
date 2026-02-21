@@ -22,8 +22,8 @@ public class StackOperation {
 
 		for (int i = 0; i < amount; i++) {
 			currentSetPos.addi(shiftVector);
-			WorldChange setResult = copiedVolume.setAt(world, currentSetPos, false);
-			result.extend(setResult);
+			WorldChange setResult = copiedVolume.setAt(world, currentSetPos, true);
+			result.update(setResult);
 		}
 
 		return result;

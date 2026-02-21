@@ -55,7 +55,7 @@ public class CommandUndoBase {
 		}
 
 		if (success) {
-			source.sendMessage(String.format(successMessage, i+1));
+			source.sendMessage(String.format(successMessage, i));
 			return 1;
 		}
 

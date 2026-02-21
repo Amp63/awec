@@ -39,6 +39,12 @@ public class BlockPattern {
 	private final ArrayList<BlockProbability> blockProbabilities = new ArrayList<>();
 	private final Random rng = new Random();
 
+	public BlockPattern(@Nullable Block<?> singleBlock) {
+		blockProbabilities.add(new BlockProbability(
+			new BlockState(singleBlock, 0), 1.0
+		));
+	}
+
 	public BlockPattern(String patternString) throws BlockPatternException {
 		setBlockNameOverrides(null);
 		parsePattern(patternString, PatternType.NORMAL);

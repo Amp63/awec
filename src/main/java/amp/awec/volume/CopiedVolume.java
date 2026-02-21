@@ -1,7 +1,6 @@
 package amp.awec.volume;
 
 import amp.awec.operation.WorldChange;
-import amp.awec.util.BlockChange;
 import amp.awec.util.Vec3i;
 import amp.awec.util.BlockState;
 import net.minecraft.core.world.World;
@@ -47,9 +46,9 @@ public class CopiedVolume {
 		while (iterator.hasNext()) {
 			Vec3i setBlockPos = iterator.next();
 			BlockState blockState = bufferIterator.next();
-			BlockChange blockChange = blockState.setNotify(world, setBlockPos);
+			BlockState oldBlock = blockState.setNotify(world, setBlockPos);
 			if (trackChanges) {
-				result.addChange(blockChange);
+				result.putChange(setBlockPos, oldBlock);
 			}
 		}
 

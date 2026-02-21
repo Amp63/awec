@@ -1,5 +1,6 @@
 package amp.awec.data;
 
+import amp.awec.WorldEditMod;
 import amp.awec.operation.WorldChange;
 import net.minecraft.core.world.World;
 
@@ -31,20 +32,20 @@ public class UndoHistory {
 
 	public boolean undo(World world) {
 		if (head.hasPrevious()) {
-			boolean atEnd = head.hasNext();
+			boolean atEnd = !head.hasNext();
 			WorldChange change = head.previous();
+			WorldChange overwritten = change.apply(world);
 
 			if (atEnd) {
-				change.apply(world);
-			}
-			else {
 				// Save current state and add to the end
 				head.next();  // Next to prevent new change from being deleted
-				WorldChange result = change.apply(world);
-				this.add(result);
+				this.add(overwritten);
 				head.previous();
 				head.previous();  // Step back to where we were before
 			}
+
+			WorldEditMod.LOGGER.info(undoTape.toString());
+			WorldEditMod.LOGGER.info("Head at position " + head.nextIndex());
 
 			return true;
 		}
@@ -67,6 +68,10 @@ public class UndoHistory {
 				// Remove current change
 				this.head.remove();
 			}
+
+			WorldEditMod.LOGGER.info(undoTape.toString());
+			WorldEditMod.LOGGER.info("Head at position " + head.nextIndex());
+
 
 			return true;
 		}
