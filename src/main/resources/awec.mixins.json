@@ -9,7 +9,8 @@
     "WandPos2Mixin"
   ],
   "client": [
-    "WandPos1ClientMixin"
+    "WandPos1ClientMixin",
+    "RenderSelectionMixin"
   ],
   "server": [
     "PlayerLeaveServerMixin",

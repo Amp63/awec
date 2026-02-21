@@ -16,18 +16,18 @@ import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.util.helper.Direction;
 
-public class CommandShift implements CommandManager.CommandRegistry {
+public class CommandExpand implements CommandManager.CommandRegistry {
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(
-			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/shift")
+			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/expand")
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.executes(context -> {
 					return handleShiftCommand(context, 1, null);
 				})
-				.then(ArgumentBuilderRequired.argument("amount", ArgumentTypeInteger.integer(1, 255))
+				.then(ArgumentBuilderRequired.argument("amount", ArgumentTypeInteger.integer())
 					.executes(context -> {
 						int amount = context.getArgument("amount", Integer.class);
 						return handleShiftCommand(context, amount, null);
@@ -54,16 +54,18 @@ public class CommandShift implements CommandManager.CommandRegistry {
 		}
 
 		CuboidVolume selection = playerData.getSelection();
+
 		if (!selection.isComplete()) {
 			source.sendMessage("Both corners must be set");
 			return 0;
 		}
 
-		Vec3i shiftVector = new Vec3i(direction);
-		shiftVector.scalei(amount);
-		selection.shift(shiftVector);
+		Vec3i expandVector = new Vec3i(direction);
+		expandVector.absi();
+		expandVector.scalei(amount);
+		selection.expand(expandVector);
 
-		source.sendMessage("Moved selection " + amount + " blocks");
+		source.sendMessage("Expanded selection by " + amount + " blocks");
 
 		return 1;
 	}

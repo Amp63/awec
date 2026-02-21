@@ -1,6 +1,7 @@
 package amp.awec.util;
 
 import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.util.phys.Vec3;
 
 import java.util.Objects;
 
@@ -40,6 +41,10 @@ public class Vec3i {
 		this.z = z;
 	}
 
+	public void set(Vec3i other) {
+		set(other.x, other.y, other.z);
+	}
+
 	public String toString() {
 		return this.x + ", " + this.y + ", " + this.z;
 	}
@@ -69,12 +74,16 @@ public class Vec3i {
 		return v;
 	}
 
+	public void subtracti(Vec3i other) {
+		this.x -= other.x;
+		this.y -= other.y;
+		this.z -= other.z;
+	}
+
 	public Vec3i subtract(Vec3i other) {
-		return new Vec3i(
-			this.x - other.x,
-			this.y - other.y,
-			this.z - other.z
-		);
+		Vec3i v = new Vec3i(this);
+		v.subtracti(other);
+		return v;
 	}
 
 	public Vec3i componentMultiply(Vec3i other) {
@@ -95,5 +104,15 @@ public class Vec3i {
 		Vec3i v = new Vec3i(this);
 		v.scalei(scalar);
 		return v;
+	}
+
+	public void absi() {
+		this.x = Math.abs(x);
+		this.y = Math.abs(y);
+		this.z = Math.abs(z);
+	}
+
+	public Vec3 asVec3() {
+		return Vec3.getTempVec3(x, y, z);
 	}
 }

@@ -75,9 +75,48 @@ public class CuboidVolume {
 		return new Vec3i(getDimX(), getDimY(), getDimZ());
 	}
 
-	public void shift(Vec3i shiftVector) {
+	public boolean shift(Vec3i shiftVector) {
+		if (!isComplete()) {
+			return false;
+		}
+
 		corner1.addi(shiftVector);
 		corner2.addi(shiftVector);
 		updateCorrectedCorners();
+
+		return true;
+	}
+
+	public boolean expand(Vec3i expandVector) {
+		if (!isComplete()) {
+			return false;
+		}
+
+		minCorner.subtracti(expandVector);
+		maxCorner.addi(expandVector);
+
+		// Clamp each axis
+		if (maxCorner.x < minCorner.x) {
+			int mid = (minCorner.x + maxCorner.x) / 2;
+			minCorner.x = mid;
+			maxCorner.x = mid;
+		}
+		if (maxCorner.y < minCorner.y) {
+			int mid = (minCorner.y + maxCorner.y) / 2;
+			minCorner.y = mid;
+			maxCorner.y = mid;
+		}
+		if (maxCorner.z < minCorner.z) {
+			int mid = (minCorner.z + maxCorner.z) / 2;
+			minCorner.z = mid;
+			maxCorner.z = mid;
+		}
+
+		corner1.set(minCorner);
+		corner2.set(maxCorner);
+
+		updateCorrectedCorners();
+
+		return true;
 	}
 }
