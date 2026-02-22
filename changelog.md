@@ -4,7 +4,7 @@
 
 - Added `//sphere`, `//hsphere`, `//cyl`, `//hcyl`
 - Added `//shift`, `//expand`
-- Added `//showsel` to display selections in singleplayer
+- Added `//drawsel` to display selections in singleplayer
 - Implemented dimension-specific selections and undo history
 - Changed method hook for PlayerLeaveServerMixin
 
