@@ -22,13 +22,16 @@ public class SphereOperation {
 
 			for (int y = center.y-radius; y <= center.y+radius; y++) {
 				int dySquared = (y - center.y) * (y - center.y);
-				int remaining = radiusSquared - dxSquared - dySquared;
-				if (remaining < 0) {
+				if (dxSquared + dySquared > radiusSquared) {
 					continue;
 				}
 
-				int dzMax = (int) Math.sqrt(remaining);
-				for (int z = center.z-dzMax; z <= center.z+dzMax; z++) {
+				for (int z = center.z-radius; z <= center.z+radius; z++) {
+					int dzSquared = (z - center.z) * (z - center.z);
+					int distSquared = dxSquared + dySquared + dzSquared;
+					if (distSquared > radiusSquared) {
+						continue;
+					}
 					BlockState sampledBlock = pattern.sample();
 					if (sampledBlock != null) {
 						setPos.set(x, y, z);

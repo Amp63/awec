@@ -2,7 +2,7 @@
 
 ## v0.3.0+7.3_04
 
-- Added `//sphere`, `//hsphere`
+- Added `//sphere`, `//hsphere`, `//cyl`, `//hcyl`
 - Added `//shift`, `//expand`
 - Added `//showsel` to display selections in singleplayer
 - Implemented dimension-specific selections and undo history

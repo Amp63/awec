@@ -43,15 +43,15 @@ public class HollowSphereOperation {
 					neighbors[4] = dxSquared + dySquared + (z+1-cz)*(z+1-cz);
 					neighbors[5] = dxSquared + dySquared + (z-1-cz)*(z-1-cz);
 
-					boolean onSphere = false;
+					boolean onSurface = false;
 					for (int neighbor : neighbors) {
 						if (neighbor > radiusSquared) {
-							onSphere = true;
+							onSurface = true;
 							break;
 						}
 					}
 
-					if (onSphere) {
+					if (onSurface) {
 						BlockState sampledBlock = pattern.sample();
 						if (sampledBlock != null) {
 							setPos.set(x, y, z);

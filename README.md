@@ -14,7 +14,5 @@ A generic WorldEdit clone for BTA. Works as a client or server mod.
 
 
 ## Planned Features
-- Shapes
-  - Sphere, Cylinder, Pyramid, and their hollow variants
 - Schematics
 - Masks
