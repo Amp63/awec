@@ -11,7 +11,7 @@ public class ThroughFinder {
 										   double maxRayDistance, double maxThruDistance, double marchDistance) {
 		Vec3 scaledDirection = direction.scale(maxRayDistance);
 		Vec3 furthestPoint = startPos.add(scaledDirection.x, scaledDirection.y, scaledDirection.z);
-		HitResult hit = world.checkBlockCollisionBetweenPoints(startPos, furthestPoint, false, false, false);
+		HitResult hit = world.checkBlockCollisionBetweenPoints(startPos, furthestPoint);
 		if (hit == null) {
 			return null;
 		}

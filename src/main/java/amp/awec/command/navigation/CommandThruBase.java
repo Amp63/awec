@@ -6,6 +6,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeInteger;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
+import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.entity.player.Player;
@@ -26,22 +27,21 @@ public class CommandThruBase {
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal(command)
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.executes(context -> {
-					CommandSource source = (CommandSource) context.getSource();
-					doThru(source, 1, viewAngleFunction);
+					doThru(context, 1, viewAngleFunction);
 					return 1;
 				})
 				.then(ArgumentBuilderRequired.argument(wallCountName, ArgumentTypeInteger.integer(1, 255))
 					.executes(context -> {
-						CommandSource source = (CommandSource) context.getSource();
 						int wallCount = context.getArgument(wallCountName, Integer.class);
-						doThru(source, wallCount, viewAngleFunction);
+						doThru(context, wallCount, viewAngleFunction);
 						return 1;
 					})
 				)
 		);
 	}
 
-	private static void doThru(CommandSource source, int wallCount, Function<Player, Vec3> viewAngleFunction) {
+	private static void doThru(CommandContext<Object> context, int wallCount, Function<Player, Vec3> viewAngleFunction) {
+		CommandSource source = (CommandSource) context.getSource();
 		Player player = source.getSender();
 		if (player == null) {
 			return;
@@ -53,9 +53,10 @@ public class CommandThruBase {
 		}
 
 		Vec3 direction = viewAngleFunction.apply(player);
+		Vec3 startPos = player.getPosition(1.0f, true);
 		Vec3 throughPos = ThroughFinder.findSpace(
 			world,
-			player.getPosition(1.0f, true),
+			startPos,
 			direction,
 			wallCount, MAX_RAY_DISTANCE, MAX_THRU_DISTANCE, MARCH_DISTANCE
 		);
