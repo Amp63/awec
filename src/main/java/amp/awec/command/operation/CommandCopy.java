@@ -6,7 +6,7 @@ import amp.awec.data.PlayerData;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.volume.CuboidVolume;
 import amp.awec.util.PosHelper;
-import amp.awec.volume.CopiedVolume;
+import amp.awec.volume.CuboidVolumeBuffer;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import net.minecraft.core.net.command.CommandManager;
@@ -38,7 +38,7 @@ public class CommandCopy implements CommandManager.CommandRegistry {
 	}
 
 	private void doCopy(World world, CuboidVolume volume, Vec3i copyPos, PlayerData playerData) {
-		playerData.clipboardVolume = new CopiedVolume(world, volume);
+		playerData.clipboardVolume = CuboidVolumeBuffer.copyFrom(world, volume);
 		Vec3i rootPos = volume.getMinCorner();
 		playerData.copyOffset = rootPos.subtract(copyPos);
 	}

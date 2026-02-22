@@ -2,7 +2,7 @@ package amp.awec.operation;
 
 import amp.awec.pattern.BlockPattern;
 import amp.awec.util.Vec3i;
-import amp.awec.volume.CopiedVolume;
+import amp.awec.volume.CuboidVolumeBuffer;
 import amp.awec.volume.CuboidVolume;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.util.helper.Direction;
@@ -15,9 +15,9 @@ public class MoveOperation {
 		Vec3i setPos = new Vec3i(volume.getMinCorner());
 		setPos.addi(shiftVector);
 
-		CopiedVolume copiedVolume = new CopiedVolume(world, volume);
+		CuboidVolumeBuffer cuboidVolumeBuffer = CuboidVolumeBuffer.copyFrom(world, volume);
 		WorldChange setResult = SetOperation.execute(world, volume, new BlockPattern((Block<?>) null));
-		WorldChange moveResult = copiedVolume.setAt(world, setPos, true);
+		WorldChange moveResult = cuboidVolumeBuffer.setAt(world, setPos, true);
 		moveResult.update(setResult);
 
 		return moveResult;

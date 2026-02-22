@@ -3,8 +3,7 @@ package amp.awec.data;
 import amp.awec.WorldEditMod;
 import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolume;
-import amp.awec.volume.CopiedVolume;
-import net.minecraft.core.entity.player.Player;
+import amp.awec.volume.CuboidVolumeBuffer;
 import net.minecraft.core.world.Dimension;
 import net.minecraft.core.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +19,7 @@ class PlayerDataWorld {
 public class PlayerData {
 	public boolean wandEnabled = true;
 
-	public CopiedVolume clipboardVolume = null;
+	public CuboidVolumeBuffer clipboardVolume = null;
 	public Vec3i copyOffset = null;
 
 	private final Map<Dimension, PlayerDataWorld> worldSpecificData = new HashMap<>();
