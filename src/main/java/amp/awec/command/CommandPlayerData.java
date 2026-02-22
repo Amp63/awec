@@ -22,6 +22,10 @@ public class CommandPlayerData {
 	}
 
 	public static @Nullable CommandPlayerData get(CommandSource source) {
+		return get(source, true);
+	}
+
+	public static @Nullable CommandPlayerData get(CommandSource source, boolean ensureSelection) {
 		Player player = source.getSender();
 		if (player == null) {
 			return null;
@@ -34,7 +38,7 @@ public class CommandPlayerData {
 			return null;
 		}
 
-		if (!playerData.getSelection(world).isComplete()) {
+		if (ensureSelection && !playerData.getSelection(world).isComplete()) {
 			source.sendMessage("Both corners must be set");
 			return null;
 		}

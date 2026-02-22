@@ -36,7 +36,7 @@ public class CommandUndoBase {
 
 	private static int handleUndoRedo(CommandSource source, int amount, BiFunction<World, PlayerData, Boolean> undoRedoFunction,
 									  String successMessage, String nothingMessage) {
-		CommandPlayerData playerData = CommandPlayerData.get(source);
+		CommandPlayerData playerData = CommandPlayerData.get(source, false);
 		if (playerData == null) {
 			return 0;
 		}

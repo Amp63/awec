@@ -20,10 +20,6 @@ public class CommandDrawSel implements CommandManager.CommandRegistry {
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
-					CommandPlayerData playerData = CommandPlayerData.get(source);
-					if (playerData == null) {
-						return 0;
-					}
 
 					ClientPlayerData.drawSelections = !ClientPlayerData.drawSelections;
 

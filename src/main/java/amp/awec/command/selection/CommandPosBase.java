@@ -26,7 +26,7 @@ public class CommandPosBase {
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
-					CommandPlayerData playerData = CommandPlayerData.get(source);
+					CommandPlayerData playerData = CommandPlayerData.get(source, false);
 					if (playerData == null) {
 						return 0;
 					}
@@ -40,7 +40,7 @@ public class CommandPosBase {
 				.then(ArgumentBuilderRequired.argument("position", ArgumentTypeIntegerCoordinates.intCoordinates())
 					.executes(context -> {
 						CommandSource source = (CommandSource) context.getSource();
-						CommandPlayerData playerData = CommandPlayerData.get(source);
+						CommandPlayerData playerData = CommandPlayerData.get(source, false);
 						if (playerData == null) {
 							return 0;
 						}

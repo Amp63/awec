@@ -20,7 +20,7 @@ public class CommandToggleWand implements CommandManager.CommandRegistry {
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
-					CommandPlayerData playerData = CommandPlayerData.get(source);
+					CommandPlayerData playerData = CommandPlayerData.get(source, false);
 					if (playerData == null) {
 						return 0;
 					}

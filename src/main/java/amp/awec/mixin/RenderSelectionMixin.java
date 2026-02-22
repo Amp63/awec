@@ -1,6 +1,5 @@
 package amp.awec.mixin;
 
-import amp.awec.WorldEditMod;
 import amp.awec.data.ClientPlayerData;
 import amp.awec.data.PlayerData;
 import amp.awec.data.PlayerDataManager;
@@ -22,8 +21,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.awt.*;
-
 
 @Environment(EnvType.CLIENT)
 @Mixin(value = WorldRenderer.class, remap = false)
@@ -36,9 +33,9 @@ public class RenderSelectionMixin {
 	@Unique
 	private static final double[] OUTLINE_COLOR = {0.749, 0.906, 0.988, 1.0};
 	@Unique
-	private static final double[] MINCORNER_COLOR = {1.0, 0.478, 0.478, 1.0};
+	private static final double[] CORNER1_COLOR = {1.0, 0.478, 0.478, 1.0};
 	@Unique
-	private static final double[] MAXCORNER_COLOR = {0.678, 1, 0.478, 1.0};
+	private static final double[] CORNER2_COLOR = {0.678, 1.0, 0.478, 1.0};
 
 	@Shadow
 	public Minecraft mc;
@@ -65,45 +62,49 @@ public class RenderSelectionMixin {
 
 		CuboidVolume selection = playerData.getSelection(world);
 
+		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_LINE_SMOOTH);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+		GL11.glLineWidth(3.0F);
+
+		Vec3i corner1 = selection.getCorner1();
+		Vec3i corner2 = selection.getCorner2();
+		double boxOffset1 = (1.0 - CORNER_BOX_SIZE) / 2.0;
+		double boxOffset2 = 1.0 - boxOffset1;
+
+		if (corner1 != null) {
+			Vec3 v = corner1.asVec3();
+			AABB corner1Box = getAABB(mc.activeCamera, partialTicks, v.add(boxOffset1, boxOffset1, boxOffset1), v.add(boxOffset2, boxOffset2, boxOffset2));
+			GL11.glColor4dv(CORNER1_COLOR);
+			mc.renderGlobal.drawOutlinedBoundingBox(corner1Box);
+		}
+		if (corner2 != null) {
+			Vec3 v = corner2.asVec3();
+			AABB corner2Box = getAABB(mc.activeCamera, partialTicks, v.add(boxOffset1, boxOffset1, boxOffset1), v.add(boxOffset2, boxOffset2, boxOffset2));
+			GL11.glColor4dv(CORNER2_COLOR);
+			mc.renderGlobal.drawOutlinedBoundingBox(corner2Box);
+		}
+
 		if (selection.isComplete()) {
 			Vec3 minCorner = selection.getMinCorner().asVec3();
 			Vec3 maxCorner = selection.getMaxCorner().asVec3();
-			Vec3 corner1 = selection.getCorner1().asVec3();
-			Vec3 corner2 = selection.getCorner2().asVec3();
 
 			AABB mainBox = getAABB(mc.activeCamera, partialTicks, minCorner, maxCorner.add(1, 1, 1));
 			mainBox = mainBox.grow(EXPAND_AMOUNT, EXPAND_AMOUNT, EXPAND_AMOUNT);
 
-			double boxOffset1 = (1.0 - CORNER_BOX_SIZE) / 2.0;
-			double boxOffset2 = 1.0 - boxOffset1;
-
-			AABB corner1Box = getAABB(mc.activeCamera, partialTicks, corner1.add(boxOffset1, boxOffset1, boxOffset1), corner1.add(boxOffset2, boxOffset2, boxOffset2));
-			AABB corner2Box = getAABB(mc.activeCamera, partialTicks, corner2.add(boxOffset1, boxOffset1, boxOffset1), corner2.add(boxOffset2, boxOffset2, boxOffset2));
-
-			GL11.glDisable(GL11.GL_ALPHA_TEST);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glEnable(GL11.GL_LINE_SMOOTH);
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-			GL11.glLineWidth(3.0F);
 			GL11.glColor4dv(OUTLINE_COLOR);
 			mc.renderGlobal.drawOutlinedBoundingBox(mainBox);
-
-			GL11.glColor4dv(MINCORNER_COLOR);
-			mc.renderGlobal.drawOutlinedBoundingBox(corner1Box);
-
-			GL11.glColor4dv(MAXCORNER_COLOR);
-			mc.renderGlobal.drawOutlinedBoundingBox(corner2Box);
-
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
-			GL11.glDisable(GL11.GL_LINE_SMOOTH);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_ALPHA_TEST);
-
 		}
+
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL11.GL_LINE_SMOOTH);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
 	}
 
 	private AABB getAABB(ICamera camera, float partialTicks, Vec3 minCorner, Vec3 maxCorner) {
