@@ -17,15 +17,6 @@
 	"entrypoints": {
 		"main": [
 			"amp.awec.WorldEditMod"
-		],
-		"beforeGameStart": [
-			"amp.awec.WorldEditMod"
-		],
-		"afterGameStart": [
-			"amp.awec.WorldEditMod"
-		],
-		"recipesReady": [
-			"amp.awec.WorldEditMod"
 		]
 	},
 	"mixins": [
