@@ -2,6 +2,7 @@ package amp.awec.command.selection;
 
 import amp.awec.command.CommandPlayerData;
 import amp.awec.data.PlayerDataManager;
+import amp.awec.util.MessageHelper;
 import amp.awec.util.Vec3i;
 import amp.awec.WorldEditMod;
 import amp.awec.data.PlayerData;
@@ -33,7 +34,7 @@ public class CommandPosBase {
 
 					Vec3i pos = PosHelper.getPlayerBlockPos(playerData.player);
 					setter.accept(playerData, pos);
-					source.sendMessage("Corner " + cornerNumber + " set to " + pos);
+					MessageHelper.info(source, "Corner " + cornerNumber + " set to " + pos);
 
 					return 1;
 				})
@@ -52,7 +53,7 @@ public class CommandPosBase {
 
 						Vec3i pos = new Vec3i(x, y, z);
 						setter.accept(playerData, pos);
-						source.sendMessage("Corner " + cornerNumber + " set to " + pos);
+						MessageHelper.info(source, "Corner " + cornerNumber + " set to " + pos);
 
 						return 1;
 				}))

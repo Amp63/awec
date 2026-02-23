@@ -5,6 +5,7 @@
 - Added `//schem delete`
 - Implemented configurable settings via `worldedit.properties`
   - Added `//reloadconfig` to reload configuration file
+- Added formatted status messages
 - Added metadata to schematics
   - Schematics now keep track of required mods
 

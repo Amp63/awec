@@ -5,6 +5,7 @@ import amp.awec.command.CommandPlayerData;
 import amp.awec.command.argtypes.ArgumentTypeSchematicPath;
 import amp.awec.schematic.Schematic;
 import amp.awec.schematic.SchematicsManager;
+import amp.awec.util.MessageHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeString;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
@@ -32,7 +33,7 @@ public class CommandSchem implements CommandManager.CommandRegistry {
 							}
 
 							if (playerData.data.clipboardBuffer == null) {
-								source.sendMessage("Clipboard is empty");
+								MessageHelper.error(source, "Clipboard is empty");
 								return 0;
 							}
 
@@ -45,15 +46,15 @@ public class CommandSchem implements CommandManager.CommandRegistry {
 
 							try {
 								String wrotePath = SchematicsManager.create(schem, filePath);
-								source.sendMessage("Wrote schematic to \"" + wrotePath + "\"");
+								MessageHelper.success(source, "Wrote schematic to \"" + wrotePath + "\"");
 								return 1;
 							}
 							catch (SecurityException e) {
-								source.sendMessage(e.getMessage());
+								MessageHelper.error(source, e.getMessage());
 							}
 							catch (IOException e) {
 								WorldEditMod.LOGGER.error(e.getMessage());
-								source.sendMessage("Got error while writing schematic");
+								MessageHelper.error(source, "Got error while writing schematic");
 							}
 
 							return 0;
@@ -76,23 +77,23 @@ public class CommandSchem implements CommandManager.CommandRegistry {
 								playerData.data.clipboardBuffer = result.buffer;
 								playerData.data.copyOffset = result.offset;
 
-								source.sendMessage("Schematic loaded successfully");
+								MessageHelper.success(source, "Schematic loaded successfully");
 								return 1;
 							}
 							catch (NoSuchFileException e) {
 								WorldEditMod.LOGGER.error(e.toString());
-								source.sendMessage("Could not find schematic \"" + filePath + "\"");
+								MessageHelper.error(source,"Could not find schematic \"" + filePath + "\"");
 							}
 							catch (SecurityException e) {
-								source.sendMessage(e.getMessage());
+								MessageHelper.error(source, e.getMessage());
 							}
 							catch (Schematic.ModNotFoundException e) {
 								WorldEditMod.LOGGER.error(e.toString());
-								source.sendMessage(e.getMessage());
+								MessageHelper.error(source, e.getMessage());
 							}
 							catch (Exception e) {
 								WorldEditMod.LOGGER.error(e.toString());
-								source.sendMessage("Got error while loading schematic");
+								MessageHelper.error(source, "Got error while loading schematic");
 							}
 
 							return 0;
@@ -112,19 +113,19 @@ public class CommandSchem implements CommandManager.CommandRegistry {
 							try {
 								SchematicsManager.delete(filePath);
 
-								source.sendMessage("Schematic deleted");
+								MessageHelper.success(source, "Schematic deleted");
 								return 1;
 							}
 							catch (NoSuchFileException e) {
 								WorldEditMod.LOGGER.error(e.toString());
-								source.sendMessage("Could not find schematic \"" + filePath + "\"");
+								MessageHelper.error(source, "Could not find schematic \"" + filePath + "\"");
 							}
 							catch (SecurityException e) {
-								source.sendMessage(e.getMessage());
+								MessageHelper.error(source, e.getMessage());
 							}
 							catch (IOException e) {
 								WorldEditMod.LOGGER.error(e.toString());
-								source.sendMessage("Got error while deleting schematic");
+								MessageHelper.error(source,"Got error while deleting schematic");
 							}
 
 							return 0;

@@ -5,6 +5,7 @@ import amp.awec.command.CommandPlayerData;
 import amp.awec.data.PlayerData;
 import amp.awec.data.PlayerDataManager;
 import amp.awec.permission.WorldEditPermissions;
+import amp.awec.util.MessageHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import net.minecraft.core.entity.player.Player;
@@ -27,11 +28,11 @@ public class CommandToggleWand implements CommandManager.CommandRegistry {
 
 					if (playerData.data.wandEnabled) {
 						playerData.data.wandEnabled = false;
-						source.sendMessage("Disabled edit wand");
+						MessageHelper.info(source, "Disabled edit wand");
 					}
 					else {
 						playerData.data.wandEnabled = true;
-						source.sendMessage("Enabled edit wand");
+						MessageHelper.info(source, "Enabled edit wand");
 					}
 
 					return 1;

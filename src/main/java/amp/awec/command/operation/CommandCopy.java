@@ -1,6 +1,7 @@
 package amp.awec.command.operation;
 
 import amp.awec.command.CommandPlayerData;
+import amp.awec.util.MessageHelper;
 import amp.awec.util.Vec3i;
 import amp.awec.data.PlayerData;
 import amp.awec.permission.WorldEditPermissions;
@@ -30,7 +31,7 @@ public class CommandCopy implements CommandManager.CommandRegistry {
 					CuboidVolume selection = playerData.getSelection();
 					Vec3i copyPos = PosHelper.getPlayerBlockPos(playerData.player);
 					doCopy(playerData.world, selection, copyPos, playerData.data);
-					source.sendMessage("Copied");
+					MessageHelper.info(source, "Copied");
 
 					return 1;
 				})

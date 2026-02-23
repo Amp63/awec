@@ -5,6 +5,7 @@ import amp.awec.operation.WallsOperation;
 import amp.awec.command.argtypes.ArgumentTypePattern;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.pattern.BlockPattern;
+import amp.awec.util.MessageHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeInteger;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
@@ -46,7 +47,7 @@ public class CommandWalls implements CommandManager.CommandRegistry {
 		WorldChange result = WallsOperation.execute(playerData.world, playerData.getSelection(), pattern, thickness);
 		playerData.addUndoChange(result);
 
-		source.sendMessage("Changed " + result.changedBlockCount + " blocks");
+		MessageHelper.info(source, "Changed " + result.changedBlockCount + " blocks");
 
 		return 1;
 	}

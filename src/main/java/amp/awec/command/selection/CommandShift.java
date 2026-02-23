@@ -5,6 +5,7 @@ import amp.awec.operation.WorldChange;
 import amp.awec.operation.StackOperation;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.DirectionHelper;
+import amp.awec.util.MessageHelper;
 import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolume;
 import com.mojang.brigadier.CommandDispatcher;
@@ -54,16 +55,12 @@ public class CommandShift implements CommandManager.CommandRegistry {
 		}
 
 		CuboidVolume selection = playerData.getSelection();
-		if (!selection.isComplete()) {
-			source.sendMessage("Both corners must be set");
-			return 0;
-		}
 
 		Vec3i shiftVector = new Vec3i(direction);
 		shiftVector.scalei(amount);
 		selection.shift(shiftVector);
 
-		source.sendMessage("Moved selection " + amount + " blocks");
+		MessageHelper.info(source, "Moved selection " + amount + " blocks");
 
 		return 1;
 	}

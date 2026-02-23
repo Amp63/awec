@@ -3,6 +3,7 @@ package amp.awec.command;
 import amp.awec.data.PlayerData;
 import amp.awec.data.PlayerDataManager;
 import amp.awec.operation.WorldChange;
+import amp.awec.util.MessageHelper;
 import amp.awec.volume.CuboidVolume;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.command.CommandSource;
@@ -39,7 +40,7 @@ public class CommandPlayerData {
 		}
 
 		if (ensureSelection && !playerData.getSelection(world).isComplete()) {
-			source.sendMessage("Both corners must be set");
+			MessageHelper.error(source, "Both corners must be set");
 			return null;
 		}
 

@@ -2,6 +2,7 @@ package amp.awec.command.navigation;
 
 import amp.awec.config.Config;
 import amp.awec.permission.WorldEditPermissions;
+import amp.awec.util.MessageHelper;
 import amp.awec.util.ThroughFinder;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeInteger;
@@ -57,7 +58,7 @@ public class CommandThruBase {
 		);
 
 		if (throughPos == null) {
-			source.sendMessage("Could not find a valid location");
+			MessageHelper.error(source, "Could not find a valid location");
 			return;
 		}
 

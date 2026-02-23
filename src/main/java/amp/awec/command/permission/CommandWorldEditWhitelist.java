@@ -1,6 +1,7 @@
 package amp.awec.command.permission;
 
 import amp.awec.permission.WorldEditWhitelist;
+import amp.awec.util.MessageHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeString;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
@@ -26,15 +27,15 @@ public class CommandWorldEditWhitelist implements CommandManager.CommandRegistry
 							String nameToAdd = context.getArgument("name", String.class);
 							Player player = source.getWorld().getPlayerEntityByName(nameToAdd);
 							if (player == null) {
-								source.sendMessage("Could not find player " + nameToAdd);
+								MessageHelper.error(source, "Could not find player " + nameToAdd);
 								return 0;
 							}
 							if (WorldEditWhitelist.addUUID(player.uuid)) {
-								source.sendMessage(player.username + " can now use WorldEdit");
+								MessageHelper.success(source, player.username + " can now use WorldEdit");
 								return 1;
 							}
 							else {
-								source.sendMessage(player.username + " is already whitelisted");
+								MessageHelper.info(source, player.username + " is already whitelisted");
 								return 0;
 							}
 						})
@@ -47,15 +48,15 @@ public class CommandWorldEditWhitelist implements CommandManager.CommandRegistry
 							String nameToRemove = context.getArgument("name", String.class);
 							Player player = source.getWorld().getPlayerEntityByName(nameToRemove);
 							if (player == null) {
-								source.sendMessage("Could not find player " + nameToRemove);
+								MessageHelper.error(source, "Could not find player " + nameToRemove);
 								return 0;
 							}
 							if (WorldEditWhitelist.removeUUID(player.uuid)) {
-								source.sendMessage(player.username + " can no longer use WorldEdit");
+								MessageHelper.success(source, player.username + " can no longer use WorldEdit");
 								return 1;
 							}
 							else {
-								source.sendMessage(player.username + " is not whitelisted");
+								MessageHelper.info(source, player.username + " is not whitelisted");
 								return 0;
 							}
 						})

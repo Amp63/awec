@@ -5,6 +5,7 @@ import amp.awec.operation.SetOperation;
 import amp.awec.command.argtypes.ArgumentTypePattern;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.pattern.BlockPattern;
+import amp.awec.util.MessageHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
@@ -31,7 +32,7 @@ public class CommandSet implements CommandManager.CommandRegistry {
 						WorldChange result = SetOperation.execute(playerData.world, playerData.getSelection(), pattern);
 						playerData.addUndoChange(result);
 
-						source.sendMessage("Changed " + result.changedBlockCount + " blocks");
+						MessageHelper.info(source, "Changed " + result.changedBlockCount + " blocks");
 						return 1;
 					})
 				));

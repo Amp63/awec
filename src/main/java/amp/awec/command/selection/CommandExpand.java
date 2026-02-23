@@ -5,6 +5,7 @@ import amp.awec.operation.WorldChange;
 import amp.awec.operation.StackOperation;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.DirectionHelper;
+import amp.awec.util.MessageHelper;
 import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolume;
 import com.mojang.brigadier.CommandDispatcher;
@@ -55,17 +56,12 @@ public class CommandExpand implements CommandManager.CommandRegistry {
 
 		CuboidVolume selection = playerData.getSelection();
 
-		if (!selection.isComplete()) {
-			source.sendMessage("Both corners must be set");
-			return 0;
-		}
-
 		Vec3i expandVector = new Vec3i(direction);
 		expandVector.absi();
 		expandVector.scalei(amount);
 		selection.expand(expandVector);
 
-		source.sendMessage("Expanded selection by " + amount + " blocks");
+		MessageHelper.info(source, "Expanded selection by " + amount + " blocks");
 
 		return 1;
 	}

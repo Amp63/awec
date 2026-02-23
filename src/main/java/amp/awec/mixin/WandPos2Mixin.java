@@ -1,6 +1,7 @@
 package amp.awec.mixin;
 
 import amp.awec.data.PlayerDataManager;
+import amp.awec.util.MessageHelper;
 import amp.awec.util.Vec3i;
 import amp.awec.data.PlayerData;
 import amp.awec.permission.WorldEditPermissions;
@@ -27,6 +28,6 @@ public class WandPos2Mixin {
 
 		Vec3i pos = new Vec3i(x, y, z);
 		playerData.getSelection(world).setCorner2(pos);
-		player.sendMessage("Corner 2 set to " + pos);
+		MessageHelper.info(player, "Corner 2 set to " + pos);
 	}
 }

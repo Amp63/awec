@@ -7,6 +7,7 @@ import amp.awec.operation.SphereOperation;
 import amp.awec.operation.WorldChange;
 import amp.awec.pattern.BlockPattern;
 import amp.awec.permission.WorldEditPermissions;
+import amp.awec.util.MessageHelper;
 import amp.awec.util.PosHelper;
 import amp.awec.util.Vec3i;
 import com.mojang.brigadier.CommandDispatcher;
@@ -55,7 +56,7 @@ public class CommandCylinder implements CommandManager.CommandRegistry {
 		WorldChange result = CylinderOperation.execute(playerData.world, centerPos, pattern, radius, height);
 		playerData.addUndoChange(result);
 
-		source.sendMessage("Changed " + result.changedBlockCount + " blocks");
+		MessageHelper.info(source, "Changed " + result.changedBlockCount + " blocks");
 
 		return 1;
 	}

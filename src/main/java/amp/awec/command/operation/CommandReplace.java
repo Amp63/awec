@@ -5,6 +5,7 @@ import amp.awec.operation.ReplaceOperation;
 import amp.awec.command.argtypes.ArgumentTypePattern;
 import amp.awec.pattern.BlockPattern;
 import amp.awec.permission.WorldEditPermissions;
+import amp.awec.util.MessageHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
@@ -34,7 +35,7 @@ public class CommandReplace implements CommandManager.CommandRegistry {
 						WorldChange result = ReplaceOperation.execute(playerData.world, playerData.getSelection(), targetPattern, replaceWithPattern);
 						playerData.addUndoChange(result);
 
-						source.sendMessage("Changed " + result.changedBlockCount + " blocks");
+						MessageHelper.info(source, "Changed " + result.changedBlockCount + " blocks");
 						return 1;
 					})
 				)));

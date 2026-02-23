@@ -5,6 +5,7 @@ import amp.awec.operation.WorldChange;
 import amp.awec.operation.StackOperation;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.DirectionHelper;
+import amp.awec.util.MessageHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeInteger;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
@@ -54,7 +55,7 @@ public class CommandStack implements CommandManager.CommandRegistry {
 		WorldChange result = StackOperation.execute(playerData.world, playerData.getSelection(), amount, direction);
 		playerData.addUndoChange(result);
 
-		source.sendMessage("Changed " + result.changedBlockCount + " blocks");
+		MessageHelper.info(source, "Changed " + result.changedBlockCount + " blocks");
 
 		return 1;
 	}

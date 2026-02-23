@@ -2,6 +2,7 @@ package amp.awec.command.operation;
 
 import amp.awec.command.CommandPlayerData;
 import amp.awec.operation.WorldChange;
+import amp.awec.util.MessageHelper;
 import amp.awec.util.Vec3i;
 import amp.awec.data.PlayerData;
 import amp.awec.permission.WorldEditPermissions;
@@ -28,7 +29,7 @@ public class CommandPaste implements CommandManager.CommandRegistry {
 
 					Vec3i pastePos = PosHelper.getPlayerBlockPos(playerData.player);
 					doPaste(playerData.world, pastePos, playerData.data);
-					source.sendMessage("Pasted");
+					MessageHelper.success(source, "Pasted");
 
 					return 1;
 				})

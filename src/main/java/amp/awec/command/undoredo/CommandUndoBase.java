@@ -3,6 +3,7 @@ package amp.awec.command.undoredo;
 import amp.awec.command.CommandPlayerData;
 import amp.awec.data.PlayerData;
 import amp.awec.permission.WorldEditPermissions;
+import amp.awec.util.MessageHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeInteger;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
@@ -54,11 +55,11 @@ public class CommandUndoBase {
 		}
 
 		if (success) {
-			source.sendMessage(String.format(successMessage, i));
+			MessageHelper.info(source, String.format(successMessage, i));
 			return 1;
 		}
 
-		source.sendMessage(nothingMessage);
+		MessageHelper.info(source, nothingMessage);
 		return 1;
 	}
 }

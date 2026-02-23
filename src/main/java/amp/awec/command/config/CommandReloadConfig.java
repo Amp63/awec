@@ -3,6 +3,7 @@ package amp.awec.command.config;
 import amp.awec.WorldEditMod;
 import amp.awec.config.Config;
 import amp.awec.permission.WorldEditPermissions;
+import amp.awec.util.MessageHelper;
 import amp.awec.util.WandHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
@@ -24,12 +25,12 @@ public class CommandReloadConfig implements CommandManager.CommandRegistry {
 					try {
 						Config.load();
 
-						source.sendMessage("Reloaded configuration");
+						MessageHelper.success(source, "Reloaded configuration");
 						return 1;
 					}
 					catch (IOException e) {
 						WorldEditMod.LOGGER.error(e.toString());
-						source.sendMessage("Failed to reload configuration");
+						MessageHelper.error(source, "Failed to reload configuration");
 						return 0;
 					}
 				})
