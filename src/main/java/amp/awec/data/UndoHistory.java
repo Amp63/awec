@@ -1,6 +1,6 @@
 package amp.awec.data;
 
-import amp.awec.WorldEditMod;
+import amp.awec.config.Config;
 import amp.awec.operation.WorldChange;
 import net.minecraft.core.world.World;
 
@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class UndoHistory {
-	private static final int MAX_UNDO_HISTORY = 50;
 
 	private final List<WorldChange> undoTape = new LinkedList<>();
 	private ListIterator<WorldChange> head = undoTape.listIterator();
@@ -22,7 +21,7 @@ public class UndoHistory {
 		}
 
 		// Add the new change
-		if (undoTape.size() >= MAX_UNDO_HISTORY) {
+		if (undoTape.size() >= Config.MAX_UNDO_HISTORY) {
 			undoTape.remove(0);
 		}
 

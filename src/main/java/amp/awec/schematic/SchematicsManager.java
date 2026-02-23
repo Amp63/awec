@@ -1,5 +1,7 @@
 package amp.awec.schematic;
 
+import amp.awec.config.Config;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,8 +9,6 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 public class SchematicsManager {
-	private static final String SCHEMATICS_DIRECTORY = "schematics";
-
 	public static String create(Schematic schem, String filePath) throws IOException, SecurityException {
 		Path writePath = resolvePath(filePath);
 		schem.writeToFile(writePath.toString());
@@ -26,7 +26,7 @@ public class SchematicsManager {
 	}
 
 	public static String[] getAllFilePaths() throws IOException {
-		Path dir = Paths.get(SCHEMATICS_DIRECTORY);
+		Path dir = Paths.get(Config.SCHEMATIC_SAVE_DIRECTORY);
 		try (Stream<Path> stream = Files.walk(dir)) {
 			return stream
 				.filter(Files::isRegularFile)
@@ -40,7 +40,7 @@ public class SchematicsManager {
 			path += ".schem";
 		}
 
-		Path schemDir = Paths.get(SCHEMATICS_DIRECTORY).toAbsolutePath();
+		Path schemDir = Paths.get(Config.SCHEMATIC_SAVE_DIRECTORY).toAbsolutePath();
 		Path filePath = Paths.get(path);
 		Path fullFilePath = schemDir.resolve(filePath).normalize();
 

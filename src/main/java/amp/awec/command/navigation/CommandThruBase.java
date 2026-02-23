@@ -1,5 +1,6 @@
 package amp.awec.command.navigation;
 
+import amp.awec.config.Config;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.ThroughFinder;
 import com.mojang.brigadier.CommandDispatcher;
@@ -17,10 +18,6 @@ import net.minecraft.core.world.World;
 import java.util.function.Function;
 
 public class CommandThruBase {
-	static final double MAX_RAY_DISTANCE = 50.0;
-	static final double MARCH_DISTANCE = 1.0;
-	static final double MAX_THRU_DISTANCE = 50.0;
-
 	@SuppressWarnings("unchecked")
 	public static void register(CommandDispatcher<CommandSource> dispatcher, String command, String wallCountName, Function<Player, Vec3> viewAngleFunction) {
 		dispatcher.register(
@@ -55,10 +52,8 @@ public class CommandThruBase {
 		Vec3 direction = viewAngleFunction.apply(player);
 		Vec3 startPos = player.getPosition(1.0f, true);
 		Vec3 throughPos = ThroughFinder.findSpace(
-			world,
-			startPos,
-			direction,
-			wallCount, MAX_RAY_DISTANCE, MAX_THRU_DISTANCE, MARCH_DISTANCE
+			world, startPos, direction, wallCount,
+			Config.THRU_MAX_RAY_DISTANCE, Config.THRU_MAX_THRU_DISTANCE, Config.THRU_MARCH_DISTANCE
 		);
 
 		if (throughPos == null) {

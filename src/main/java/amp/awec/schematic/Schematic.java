@@ -22,6 +22,7 @@ import java.util.zip.GZIPOutputStream;
 /**
  * Format changes:
  *     - Palette indices are stored using IntTag instead of varint
+ *     - Block resource locations are replaced with blockId:blockMetadata strings
  */
 public class Schematic {
 	private static final int SCHEMATIC_VERSION = 3;

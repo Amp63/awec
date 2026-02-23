@@ -1,5 +1,7 @@
-package amp.awec.command.selection;
+package amp.awec.command.config;
 
+import amp.awec.WorldEditMod;
+import amp.awec.config.Config;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.WandHelper;
 import com.mojang.brigadier.CommandDispatcher;
@@ -8,21 +10,28 @@ import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
 
-public class CommandWand implements CommandManager.CommandRegistry {
+import java.io.IOException;
+
+public class CommandReloadConfig implements CommandManager.CommandRegistry {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(
-			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/wand")
-				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
+			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/reloadconfig")
+				.requires(source -> ((CommandSource)source).hasAdmin())
 				.executes(context -> {
 					CommandSource source = (CommandSource) context.getSource();
-					Player player = source.getSender();
-					if (player != null) {
-						player.inventory.insertItem(WandHelper.getWandItem().getDefaultStack(), true);
+					try {
+						Config.load();
+
+						source.sendMessage("Reloaded configuration");
 						return 1;
 					}
-					return 0;
+					catch (IOException e) {
+						WorldEditMod.LOGGER.error(e.toString());
+						source.sendMessage("Failed to reload configuration");
+						return 0;
+					}
 				})
 		);
 	}

@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.0+7.3_04
+
+- Added `//schem delete`
+- Implemented configurable settings via `worldedit.properties`
+  - Added `//reloadconfig` to reload configuration file
+
 ## v0.4.0+7.3_04
 
 - Added `//schem`
