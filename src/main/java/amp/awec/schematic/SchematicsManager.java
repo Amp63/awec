@@ -20,6 +20,11 @@ public class SchematicsManager {
 		return new Schematic(loadPath.toString());
 	}
 
+	public static void delete(String filePath) throws IOException, SecurityException {
+		Path deletePath = resolvePath(filePath);
+		Files.delete(deletePath);
+	}
+
 	public static String[] getAllFilePaths() throws IOException {
 		Path dir = Paths.get(SCHEMATICS_DIRECTORY);
 		try (Stream<Path> stream = Files.walk(dir)) {

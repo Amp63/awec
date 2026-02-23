@@ -96,6 +96,38 @@ public class CommandSchem implements CommandManager.CommandRegistry {
 						})
 					)
 				)
+				.then(ArgumentBuilderLiteral.literal("delete")
+					.then(ArgumentBuilderRequired.argument("file_path", ArgumentTypeSchematicPath.path())
+						.executes(context -> {
+							CommandSource source = (CommandSource) context.getSource();
+							CommandPlayerData playerData = CommandPlayerData.get(source, false);
+							if (playerData == null) {
+								return 0;
+							}
+
+							String filePath = context.getArgument("file_path", String.class);
+							try {
+								SchematicsManager.delete(filePath);
+
+								source.sendMessage("Schematic deleted");
+								return 1;
+							}
+							catch (NoSuchFileException e) {
+								WorldEditMod.LOGGER.error(e.toString());
+								source.sendMessage("Could not find schematic \"" + filePath + "\"");
+							}
+							catch (SecurityException e) {
+								source.sendMessage(e.getMessage());
+							}
+							catch (IOException e) {
+								WorldEditMod.LOGGER.error(e.toString());
+								source.sendMessage("Got error while deleting schematic");
+							}
+
+							return 0;
+						})
+					)
+				)
 		);
 	}
 }
