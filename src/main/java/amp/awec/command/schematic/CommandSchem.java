@@ -15,6 +15,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
+import net.minecraft.core.util.HardIllegalArgumentException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -87,7 +88,7 @@ public class CommandSchem implements CommandManager.CommandRegistry {
 							catch (SecurityException e) {
 								source.sendMessage(e.getMessage());
 							}
-							catch (IOException e) {
+							catch (Exception e) {
 								WorldEditMod.LOGGER.error(e.toString());
 								source.sendMessage("Got error while loading schematic");
 							}

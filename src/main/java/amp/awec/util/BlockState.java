@@ -26,6 +26,10 @@ public class BlockState {
 		);
 	}
 
+	public BlockState(BlockState other) {
+		initialize(other.block, other.metadata, other.tileEntity);
+	}
+
 	private void initialize(@Nullable Block<?> block, int metadata, @Nullable TileEntity tileEntity) {
 		this.block = block;
 		this.metadata = metadata;

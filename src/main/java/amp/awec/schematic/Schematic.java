@@ -7,6 +7,8 @@ import com.mojang.nbt.tags.*;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.util.HardIllegalArgumentException;
+import net.minecraft.core.util.collection.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +24,9 @@ import java.util.zip.GZIPOutputStream;
 /**
  * Format changes:
  *     - Palette indices are stored using IntTag instead of varint
- *     - Block resource locations are replaced with blockId:blockMetadata strings
+ *     - Block Entity `Id` field is omitted
+ *     		- This is because tile entities don't have a dedicated namespaceID registry, so we just use
+ *     		  the block ID at that location to get which tile entity class should be used.
  */
 public class Schematic {
 	private static final int SCHEMATIC_VERSION = 3;
@@ -77,7 +81,10 @@ public class Schematic {
 		ListTag blockEntitiesTag = new ListTag();
 
 		for (BlockState blockState : buffer.getBlockBuffer()) {
-			String namespaceString = blockState.block == null ? "0:0" : blockState.block.id() + ":" + blockState.metadata;
+			String namespaceString = blockState.block == null ?
+				"minecraft:block/air;0" :
+				blockState.block.namespaceId().toString() + ";" + blockState.metadata;
+
 			if (!paletteTag.containsKey(namespaceString)) {
 				paletteTag.putInt(namespaceString, paletteIndex);
 				paletteIndex++;
@@ -118,7 +125,7 @@ public class Schematic {
 			this.buffer = buffer; this.offset = offset;
 		}
 	}
-	public LoadResult toVolumeBuffer() {
+	public LoadResult toVolumeBuffer() throws HardIllegalArgumentException {
 		CompoundTag schematicTag = data.getCompound("").getCompound("Schematic");
 		int dimX = schematicTag.getShort("Width") & 0xFFFF;
 		int dimY = schematicTag.getShort("Height") & 0xFFFF;
@@ -131,45 +138,48 @@ public class Schematic {
 
 		CompoundTag paletteTag = blocksTag.getCompound("Palette");
 
-		// Reverse palette map
-		Map<Integer, String> palette = new HashMap<>();
+		// Reverse palette map and convert namespaces into BlockStates
+		Map<Integer, BlockState> palette = new HashMap<>();
 		for (Map.Entry<String, Tag<?>> entry : paletteTag.getValue().entrySet()) {
 			int paletteId = ((IntTag) entry.getValue()).getValue();
-			palette.put(paletteId, entry.getKey());
+			String blockString = entry.getKey();
+			String[] blockStringSplit = blockString.split(";");
+
+			NamespaceID blockNamespaceId = NamespaceID.getTemp(blockStringSplit[0]);
+			Block<?> block = Blocks.blockMap.get(blockNamespaceId);
+
+			int blockMetadata = Integer.parseInt(blockStringSplit[1]);
+
+			BlockState blockState = new BlockState(block, blockMetadata);
+			palette.put(paletteId, blockState);
 		}
 
 		ListTag blockDataTag = blocksTag.getList("Data");
 		ListTag blockEntitiesTag = blocksTag.getList("BlockEntities");
 
-		// Create block states
+		// Create block states for the whole volume
 		int blockIndex = 0;
 		for (Tag<?> paletteIdTag : blockDataTag) {
 			int paletteId = ((IntTag) paletteIdTag).getValue();
-			String blockString = palette.get(paletteId);
-			String[] blockStringSplit = blockString.split(":");
-			Block<?> block = Blocks.getBlock(Integer.parseInt(blockStringSplit[0]));
-			int blockMetadata = Integer.parseInt(blockStringSplit[1]);
+			BlockState blockState = palette.get(paletteId);
 
-			BlockState blockState = new BlockState(block, blockMetadata);
-			blockBuffer[blockIndex] = blockState;
+			blockBuffer[blockIndex] = new BlockState(blockState);
 			blockIndex++;
 		}
 
 		// Create tile entities
 		for (Tag<?> blockEntityTag : blockEntitiesTag) {
 			ListTag posTag = ((CompoundTag) blockEntityTag).getList("Pos");
-			String blockEntityId = ((CompoundTag) blockEntityTag).getString("Id");
 			CompoundTag blockEntityData = ((CompoundTag) blockEntityTag).getCompound("Data");
 
-			try {
-				TileEntity newTileEntity = (TileEntity) Class.forName(blockEntityId).newInstance();
+			Vec3i pos = listTagToVec3i(posTag);
+			int blockStateIndex = pos.x + pos.z * dimX + pos.y * dimX * dimZ;
+			BlockState blockState = blockBuffer[blockStateIndex];
+			if (blockState.block != null && blockState.block.entitySupplier != null) {
+				TileEntity newTileEntity = blockState.block.entitySupplier.get();
 				newTileEntity.readFromNBT(blockEntityData);
-
-				Vec3i pos = listTagToVec3i(posTag);
-				int blockStateIndex = pos.x + pos.z * dimX + pos.y * dimX * dimZ;
-				blockBuffer[blockStateIndex].tileEntity = newTileEntity;
+				blockState.tileEntity = newTileEntity;
 			}
-			catch (ClassNotFoundException | InstantiationException | IllegalAccessException ignored) {}
 		}
 
 		ListTag offsetTag = schematicTag.getList("Offset");
@@ -211,7 +221,6 @@ public class Schematic {
 		CompoundTag blockEntityTag = new CompoundTag();
 
 		blockEntityTag.putList("Pos", Schematic.vec3iToListTag(pos));
-		blockEntityTag.putString("Id", tileEntity.getClass().getName());
 
 		CompoundTag blockEntityData = new CompoundTag();
 		tileEntity.writeToNBT(blockEntityData);
