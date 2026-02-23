@@ -206,18 +206,6 @@ public class Schematic {
 		return tag;
 	}
 
-	private static CompoundTag createPaletteTag(String[] resourceIds) {
-		CompoundTag paletteTag = new CompoundTag();
-
-		int index = 0;
-		for (String resourceId : resourceIds) {
-			paletteTag.put(resourceId, new IntTag(index));
-			index++;
-		}
-
-		return paletteTag;
-	}
-
 	private static CompoundTag createBlockEntityTag(TileEntity tileEntity, Vec3i pos) {
 		CompoundTag blockEntityTag = new CompoundTag();
 
