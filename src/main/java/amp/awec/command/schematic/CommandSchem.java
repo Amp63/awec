@@ -3,6 +3,7 @@ package amp.awec.command.schematic;
 import amp.awec.WorldEditMod;
 import amp.awec.command.CommandPlayerData;
 import amp.awec.command.argtypes.ArgumentTypeSchematicPath;
+import amp.awec.permission.WorldEditPermissions;
 import amp.awec.schematic.Schematic;
 import amp.awec.schematic.SchematicsManager;
 import amp.awec.util.MessageHelper;
@@ -15,6 +16,7 @@ import net.minecraft.core.net.command.CommandSource;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
+import java.util.Arrays;
 
 public class CommandSchem implements CommandManager.CommandRegistry {
 	@Override
@@ -22,7 +24,7 @@ public class CommandSchem implements CommandManager.CommandRegistry {
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/schem")
-				.requires(source -> ((CommandSource)source).hasAdmin())
+				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.then(ArgumentBuilderLiteral.literal("save")
 					.then(ArgumentBuilderRequired.argument("file_path", ArgumentTypeString.string())
 						.executes(context -> {
@@ -131,6 +133,29 @@ public class CommandSchem implements CommandManager.CommandRegistry {
 							return 0;
 						})
 					)
+				)
+				.then(ArgumentBuilderLiteral.literal("list")
+					.executes(context -> {
+						CommandSource source = (CommandSource) context.getSource();
+						CommandPlayerData playerData = CommandPlayerData.get(source, false);
+						if (playerData == null) {
+							return 0;
+						}
+
+						try {
+							String[] allSchematics = SchematicsManager.getAllFilePaths();
+							Arrays.stream(allSchematics)
+								.sorted()
+								.forEach(s -> source.sendMessage(" - " + s));
+							return 1;
+						}
+						catch (IOException e) {
+							WorldEditMod.LOGGER.error(e.toString());
+							MessageHelper.error(source, "Failed to get schematic list");
+						}
+
+						return 0;
+					})
 				)
 		);
 	}

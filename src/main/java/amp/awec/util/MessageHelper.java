@@ -9,6 +9,8 @@ public class MessageHelper {
 	private static final String ERROR_TAG = "§8[§e❌§8] ";
 	private static final String SUCCESS_TAG = "§8[§5✔§8] ";
 
+	private static final String ERROR_SOUND = "note.bd";
+
 	public static void info(CommandSource source, String message) {
 		if (source.getSender() != null) {
 			info(source.getSender(), message);
@@ -33,6 +35,9 @@ public class MessageHelper {
 
 	public static void error(Player player, String message) {
 		player.sendMessage(ERROR_TAG + TextFormatting.RED + message + TextFormatting.RESET);
+		if (player.world != null) {
+			player.world.playSoundAtEntity(null, player, ERROR_SOUND, 1.0f, 1.0f);
+		}
 	}
 
 	public static void success(CommandSource source, String message) {

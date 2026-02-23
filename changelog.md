@@ -2,10 +2,12 @@
 
 ## v0.5.0+7.3_04
 
-- Added `//schem delete`
+- Added `//schem delete` and `//schem list`
+- Reduce `//schem` permission requirement from admin
 - Implemented configurable settings via `worldedit.properties`
   - Added `//reloadconfig` to reload configuration file
 - Added formatted status messages
+  - Added sfx to error messages
 - Added metadata to schematics
   - Schematics now keep track of required mods
 
