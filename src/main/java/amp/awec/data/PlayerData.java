@@ -19,7 +19,7 @@ class PlayerDataWorld {
 public class PlayerData {
 	public boolean wandEnabled = true;
 
-	public CuboidVolumeBuffer clipboardVolume = null;
+	public CuboidVolumeBuffer clipboardBuffer = null;
 	public Vec3i copyOffset = null;
 
 	private final Map<Dimension, PlayerDataWorld> worldSpecificData = new HashMap<>();

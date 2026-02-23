@@ -6,6 +6,7 @@ import amp.awec.command.navigation.CommandThru;
 import amp.awec.command.navigation.CommandUp;
 import amp.awec.command.operation.*;
 import amp.awec.command.permission.CommandWorldEditWhitelist;
+import amp.awec.command.schematic.CommandSchem;
 import amp.awec.command.selection.*;
 import amp.awec.command.undoredo.CommandRedo;
 import amp.awec.command.undoredo.CommandUndo;
@@ -48,6 +49,7 @@ public class WorldEditMod implements ModInitializer, RecipeEntrypoint, GameStart
 		CommandManager.registerCommand(new CommandHollowSphere());
 		CommandManager.registerCommand(new CommandCylinder());
 		CommandManager.registerCommand(new CommandHollowCylinder());
+		CommandManager.registerCommand(new CommandSchem());
 
 
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {

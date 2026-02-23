@@ -63,4 +63,12 @@ public class CuboidVolumeBuffer {
 
 		return result;
 	}
+
+	public BlockState[] getBlockBuffer() {
+		return blockBuffer;
+	}
+
+	public Vec3i getDim() {
+		return new Vec3i(dimX, dimY, dimZ);
+	}
 }

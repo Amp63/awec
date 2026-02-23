@@ -38,7 +38,7 @@ public class CommandCopy implements CommandManager.CommandRegistry {
 	}
 
 	private void doCopy(World world, CuboidVolume volume, Vec3i copyPos, PlayerData playerData) {
-		playerData.clipboardVolume = CuboidVolumeBuffer.copyFrom(world, volume);
+		playerData.clipboardBuffer = CuboidVolumeBuffer.copyFrom(world, volume);
 		Vec3i rootPos = volume.getMinCorner();
 		playerData.copyOffset = rootPos.subtract(copyPos);
 	}

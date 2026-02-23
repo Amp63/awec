@@ -21,8 +21,8 @@ public class CuboidVolumeIterator {
 
 	public Vec3i next() {
 		int x = currentIndex % dimX;
-		int y = currentIndex / dimX % dimY;
-		int z = currentIndex / (dimX * dimY);
+		int z = currentIndex / dimX % dimZ;
+		int y = currentIndex / (dimX * dimZ);
 		currentIndex++;
 		currentPos.set(rootPos.x + x, rootPos.y + y, rootPos.z + z);
 		return currentPos;

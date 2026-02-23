@@ -37,7 +37,7 @@ public class CommandPaste implements CommandManager.CommandRegistry {
 
 	private void doPaste(World world, Vec3i pastePos, PlayerData playerData) {
 		Vec3i setPos = pastePos.add(playerData.copyOffset);
-		WorldChange result = playerData.clipboardVolume.setAt(world, setPos, true);
+		WorldChange result = playerData.clipboardBuffer.setAt(world, setPos, true);
 		playerData.getUndoHistory(world).add(result);
 	}
 }
