@@ -4,6 +4,7 @@ import amp.awec.util.BlockState;
 import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolumeBuffer;
 import com.mojang.nbt.tags.*;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.entity.TileEntity;
@@ -15,9 +16,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -61,7 +61,8 @@ public class Schematic {
 		this.readFromFile(filePath);
 	}
 
-	public static Schematic fromVolumeBuffer(CuboidVolumeBuffer buffer, Vec3i offset) {
+	public static Schematic fromVolumeBuffer(CuboidVolumeBuffer buffer, Vec3i offset,
+											 String name, String author, long date) {
 		Schematic schem = new Schematic();
 		CompoundTag schematicTag = schem.data.getCompound("").getCompound("Schematic");
 
@@ -80,17 +81,24 @@ public class Schematic {
 
 		ListTag blockEntitiesTag = new ListTag();
 
-		for (BlockState blockState : buffer.getBlockBuffer()) {
-			String namespaceString = blockState.block == null ?
-				"minecraft:block/air;0" :
-				blockState.block.namespaceId().toString() + ";" + blockState.metadata;
+		Set<String> requiredMods = new HashSet<>();
 
-			if (!paletteTag.containsKey(namespaceString)) {
-				paletteTag.putInt(namespaceString, paletteIndex);
+		for (BlockState blockState : buffer.getBlockBuffer()) {
+			String fullNamespaceString = "minecraft:block/air;0";
+			String namespace = "minecraft";
+			if (blockState.block != null) {
+				NamespaceID namespaceId = blockState.block.namespaceId();
+				fullNamespaceString = namespaceId + ";" + blockState.metadata;
+				namespace = namespaceId.namespace();
+			}
+			requiredMods.add(namespace);  // The namespace is the modId here
+
+			if (!paletteTag.containsKey(fullNamespaceString)) {
+				paletteTag.putInt(fullNamespaceString, paletteIndex);
 				paletteIndex++;
 			}
 
-			blockData[blockIndex] = new IntTag(paletteTag.getInteger(namespaceString));
+			blockData[blockIndex] = new IntTag(paletteTag.getInteger(fullNamespaceString));
 
 			if (blockState.tileEntity != null) {
 				Vec3i tileEntityPos = new Vec3i(
@@ -106,6 +114,8 @@ public class Schematic {
 		}
 
 		// Assemble the schematic
+		schematicTag.putCompound("Metadata", createMetadataTag(name, author, date, requiredMods.toArray(new String[0])));
+
 		CompoundTag blocksTag = schematicTag.getCompound("Blocks");
 
 		blocksTag.putCompound("Palette", paletteTag);
@@ -125,8 +135,11 @@ public class Schematic {
 			this.buffer = buffer; this.offset = offset;
 		}
 	}
-	public LoadResult toVolumeBuffer() throws HardIllegalArgumentException {
+	public LoadResult toVolumeBuffer() throws HardIllegalArgumentException, ModNotFoundException {
 		CompoundTag schematicTag = data.getCompound("").getCompound("Schematic");
+
+		checkRequiredMods(schematicTag);
+
 		int dimX = schematicTag.getShort("Width") & 0xFFFF;
 		int dimY = schematicTag.getShort("Height") & 0xFFFF;
 		int dimZ = schematicTag.getShort("Length") & 0xFFFF;
@@ -138,8 +151,8 @@ public class Schematic {
 
 		CompoundTag paletteTag = blocksTag.getCompound("Palette");
 
-		// Reverse palette map and convert namespaces into BlockStates
-		Map<Integer, BlockState> palette = new HashMap<>();
+		// Create palette array and convert namespaces into BlockStates
+		BlockState[] palette = new BlockState[paletteTag.getValue().size()];
 		for (Map.Entry<String, Tag<?>> entry : paletteTag.getValue().entrySet()) {
 			int paletteId = ((IntTag) entry.getValue()).getValue();
 			String blockString = entry.getKey();
@@ -151,7 +164,7 @@ public class Schematic {
 			int blockMetadata = Integer.parseInt(blockStringSplit[1]);
 
 			BlockState blockState = new BlockState(block, blockMetadata);
-			palette.put(paletteId, blockState);
+			palette[paletteId] = blockState;
 		}
 
 		ListTag blockDataTag = blocksTag.getList("Data");
@@ -161,7 +174,7 @@ public class Schematic {
 		int blockIndex = 0;
 		for (Tag<?> paletteIdTag : blockDataTag) {
 			int paletteId = ((IntTag) paletteIdTag).getValue();
-			BlockState blockState = palette.get(paletteId);
+			BlockState blockState = palette[paletteId];
 
 			blockBuffer[blockIndex] = new BlockState(blockState);
 			blockIndex++;
@@ -240,5 +253,40 @@ public class Schematic {
 		int y = ((IntTag) tag.tagAt(1)).getValue();
 		int z = ((IntTag) tag.tagAt(2)).getValue();
 		return new Vec3i(x, y, z);
+	}
+
+	public static class ModNotFoundException extends RuntimeException {
+		public ModNotFoundException(String message) {
+			super(message);
+		}
+	}
+
+	private static void checkRequiredMods(CompoundTag schematicTag) throws ModNotFoundException {
+		if (!schematicTag.containsKey("Metadata")) {
+			return;
+		}
+		CompoundTag metaTag = schematicTag.getCompound("Metadata");
+
+		if (!metaTag.containsKey("RequiredMods")) {
+			return;
+		}
+		ListTag requiredModsTag = metaTag.getList("RequiredMods");
+
+		Set<String> installedMods = FabricLoader.getInstance().getAllMods().stream()
+			.map(m -> m.getMetadata().getId())
+			.collect(Collectors.toSet());
+
+		Set<String> neededMods = new HashSet<>();
+		for (Tag<?> tag : requiredModsTag) {
+			String requiredMod = ((StringTag) tag).getValue();
+			if (!installedMods.contains(requiredMod)) {
+				neededMods.add(requiredMod);
+			}
+		}
+
+		if (!neededMods.isEmpty()) {
+			String neededString = String.join(", ", neededMods);
+			throw new ModNotFoundException("Schematic requires additional mods: " + neededString);
+		}
 	}
 }

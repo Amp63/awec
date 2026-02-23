@@ -5,19 +5,13 @@ import amp.awec.command.CommandPlayerData;
 import amp.awec.command.argtypes.ArgumentTypeSchematicPath;
 import amp.awec.schematic.Schematic;
 import amp.awec.schematic.SchematicsManager;
-import amp.awec.util.Vec3i;
-import amp.awec.volume.CuboidVolumeBuffer;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeString;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
-import net.minecraft.core.util.HardIllegalArgumentException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 
@@ -44,7 +38,11 @@ public class CommandSchem implements CommandManager.CommandRegistry {
 
 							String filePath = context.getArgument("file_path", String.class);
 
-							Schematic schem = Schematic.fromVolumeBuffer(playerData.data.clipboardBuffer, playerData.data.copyOffset);
+							Schematic schem = Schematic.fromVolumeBuffer(
+								playerData.data.clipboardBuffer, playerData.data.copyOffset,
+								filePath, playerData.player.username, System.currentTimeMillis()
+							);
+
 							try {
 								String wrotePath = SchematicsManager.create(schem, filePath);
 								source.sendMessage("Wrote schematic to \"" + wrotePath + "\"");
@@ -86,6 +84,10 @@ public class CommandSchem implements CommandManager.CommandRegistry {
 								source.sendMessage("Could not find schematic \"" + filePath + "\"");
 							}
 							catch (SecurityException e) {
+								source.sendMessage(e.getMessage());
+							}
+							catch (Schematic.ModNotFoundException e) {
+								WorldEditMod.LOGGER.error(e.toString());
 								source.sendMessage(e.getMessage());
 							}
 							catch (Exception e) {
