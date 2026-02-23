@@ -17,10 +17,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.net.command.CommandManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import turniplabs.halplibe.util.GameStartEntrypoint;
-import turniplabs.halplibe.util.RecipeEntrypoint;
 
-public class WorldEditMod implements ModInitializer, RecipeEntrypoint, GameStartEntrypoint {
+public class WorldEditMod implements ModInitializer {
 	public static final String MOD_ID = "awec";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
@@ -62,16 +60,4 @@ public class WorldEditMod implements ModInitializer, RecipeEntrypoint, GameStart
 
 		LOGGER.info("WorldEdit initialized.");
 	}
-
-	@Override
-	public void onRecipesReady() {}
-
-	@Override
-	public void initNamespaces() {}
-
-	@Override
-	public void beforeGameStart() {}
-
-	@Override
-	public void afterGameStart() {}
 }
