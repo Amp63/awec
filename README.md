@@ -9,6 +9,7 @@ A generic WorldEdit clone for BTA. Works as a client or server mod.
 - `//undo`, `//redo`
 - `/up`, `/thru`, `/ascend`, `/descend`
 - `//shift`, `//expand`
+- Schematics
 - `//drawsel` to display selections
 - Block patterns (like `50%stone,50%dirt`)
 - Configurable permissions via `/wewhitelist`
@@ -16,5 +17,4 @@ A generic WorldEdit clone for BTA. Works as a client or server mod.
 
 
 ## Planned Features
-- Schematics
 - Masks

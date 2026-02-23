@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.4.0+7.3_04
+
+- Added `//schem`
+- Removed Halplibe dependency
+
 ## v0.3.0+7.3_04
 
 - Added `//sphere`, `//hsphere`, `//cyl`, `//hcyl`
