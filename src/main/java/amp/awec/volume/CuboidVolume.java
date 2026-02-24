@@ -87,33 +87,36 @@ public class CuboidVolume {
 		return true;
 	}
 
-	public boolean expand(Vec3i expandVector) {
+	public boolean expand(Vec3i expandVector, int amount) {
 		if (!isComplete()) {
 			return false;
 		}
 
-		minCorner.subtracti(expandVector);
-		maxCorner.addi(expandVector);
+		Vec3i scaledVector = expandVector.scale(amount);
 
-		// Clamp each axis
-		if (maxCorner.x < minCorner.x) {
-			int mid = (minCorner.x + maxCorner.x) / 2;
-			minCorner.x = mid;
-			maxCorner.x = mid;
-		}
-		if (maxCorner.y < minCorner.y) {
-			int mid = (minCorner.y + maxCorner.y) / 2;
-			minCorner.y = mid;
-			maxCorner.y = mid;
-		}
-		if (maxCorner.z < minCorner.z) {
-			int mid = (minCorner.z + maxCorner.z) / 2;
-			minCorner.z = mid;
-			maxCorner.z = mid;
-		}
+		Vec3i minCornerExpand = new Vec3i(
+			expandVector.x < 0 ? scaledVector.x : 0,
+			expandVector.y < 0 ? scaledVector.y : 0,
+			expandVector.z < 0 ? scaledVector.z : 0
+		);
+		Vec3i maxCornerExpand = new Vec3i(
+			expandVector.x > 0 ? scaledVector.x : 0,
+			expandVector.y > 0 ? scaledVector.y : 0,
+			expandVector.z > 0 ? scaledVector.z : 0
+		);
 
-		corner1.set(minCorner);
-		corner2.set(maxCorner);
+		Vec3i newMin = minCorner.add(minCornerExpand);
+		Vec3i newMax = maxCorner.add(maxCornerExpand);
+
+		newMin.x = Math.min(newMin.x, maxCorner.x);
+		newMin.y = Math.min(newMin.y, maxCorner.y);
+		newMin.z = Math.min(newMin.z, maxCorner.z);
+		newMax.x = Math.max(newMax.x, minCorner.x);
+		newMax.y = Math.max(newMax.y, minCorner.y);
+		newMax.z = Math.max(newMax.z, minCorner.z);
+
+		corner1.set(newMin);
+		corner2.set(newMax);
 
 		updateCorrectedCorners();
 

@@ -3,6 +3,7 @@
 ## v0.5.0+7.3_04
 
 - Added `//schem delete` and `//schem list`
+- `//expand` now expands in a single direction
 - Reduce `//schem` permission requirement from admin
 - Implemented configurable settings via `worldedit.properties`
   - Added `//reloadconfig` to reload configuration file

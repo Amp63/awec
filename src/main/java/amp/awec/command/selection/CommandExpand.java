@@ -56,10 +56,7 @@ public class CommandExpand implements CommandManager.CommandRegistry {
 
 		CuboidVolume selection = playerData.getSelection();
 
-		Vec3i expandVector = new Vec3i(direction);
-		expandVector.absi();
-		expandVector.scalei(amount);
-		selection.expand(expandVector);
+		selection.expand(new Vec3i(direction), amount);
 
 		MessageHelper.info(source, "Expanded selection by " + amount + " blocks");
 
