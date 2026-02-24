@@ -8,6 +8,7 @@ import java.util.Objects;
 public class Vec3i {
 	public int x, y, z;
 
+	public static final Vec3i ZERO = new Vec3i(0, 0, 0);
 	public static final Vec3i UP = new Vec3i(0, 1, 0);
 	public static final Vec3i DOWN = new Vec3i(0, -1, 0);
 	public static final Vec3i NORTH = new Vec3i(0, 0, -1);
@@ -62,10 +63,11 @@ public class Vec3i {
 		return Objects.hash(x, y, z);
 	}
 
-	public void addi(Vec3i other) {
+	public Vec3i addi(Vec3i other) {
 		this.x += other.x;
 		this.y += other.y;
 		this.z += other.z;
+		return this;
 	}
 
 	public Vec3i add(Vec3i other) {
@@ -74,10 +76,11 @@ public class Vec3i {
 		return v;
 	}
 
-	public void subtracti(Vec3i other) {
+	public Vec3i subtracti(Vec3i other) {
 		this.x -= other.x;
 		this.y -= other.y;
 		this.z -= other.z;
+		return this;
 	}
 
 	public Vec3i subtract(Vec3i other) {
@@ -94,10 +97,11 @@ public class Vec3i {
 		);
 	}
 
-	public void scalei(int scalar) {
+	public Vec3i scalei(int scalar) {
 		this.x *= scalar;
 		this.y *= scalar;
 		this.z *= scalar;
+		return this;
 	}
 
 	public Vec3i scale(int scalar) {
@@ -106,10 +110,11 @@ public class Vec3i {
 		return v;
 	}
 
-	public void absi() {
+	public Vec3i absi() {
 		this.x = Math.abs(x);
 		this.y = Math.abs(y);
 		this.z = Math.abs(z);
+		return this;
 	}
 
 	public Vec3 asVec3() {

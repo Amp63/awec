@@ -1,5 +1,9 @@
 package amp.awec;
 
+import amp.awec.command.clipboard.CommandCopy;
+import amp.awec.command.clipboard.CommandCut;
+import amp.awec.command.clipboard.CommandFlip;
+import amp.awec.command.clipboard.CommandPaste;
 import amp.awec.command.config.CommandReloadConfig;
 import amp.awec.command.navigation.CommandAscend;
 import amp.awec.command.navigation.CommandDescend;
@@ -13,6 +17,7 @@ import amp.awec.command.undoredo.CommandRedo;
 import amp.awec.command.undoredo.CommandUndo;
 import amp.awec.config.Config;
 import amp.awec.permission.WorldEditWhitelist;
+import amp.awec.util.BlockFlipper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -37,6 +42,8 @@ public class WorldEditMod implements ModInitializer {
 			throw new RuntimeException("Failed to load WorldEdit configuration");
 		}
 
+		BlockFlipper.initialize();
+
 		CommandManager.registerCommand(new CommandPos1());
 		CommandManager.registerCommand(new CommandPos2());
 		CommandManager.registerCommand(new CommandWand());
@@ -49,6 +56,7 @@ public class WorldEditMod implements ModInitializer {
 		CommandManager.registerCommand(new CommandCopy());
 		CommandManager.registerCommand(new CommandPaste());
 		CommandManager.registerCommand(new CommandCut());
+		CommandManager.registerCommand(new CommandFlip());
 		CommandManager.registerCommand(new CommandReplace());
 		CommandManager.registerCommand(new CommandWalls());
 		CommandManager.registerCommand(new CommandStack());

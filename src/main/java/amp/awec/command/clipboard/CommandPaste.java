@@ -1,4 +1,4 @@
-package amp.awec.command.operation;
+package amp.awec.command.clipboard;
 
 import amp.awec.command.CommandPlayerData;
 import amp.awec.operation.WorldChange;
@@ -24,6 +24,11 @@ public class CommandPaste implements CommandManager.CommandRegistry {
 					CommandSource source = (CommandSource) context.getSource();
 					CommandPlayerData playerData = CommandPlayerData.get(source, false);
 					if (playerData == null) {
+						return 0;
+					}
+
+					if (playerData.data.clipboardBuffer == null) {
+						MessageHelper.error(source, "Clipboard is empty");
 						return 0;
 					}
 
