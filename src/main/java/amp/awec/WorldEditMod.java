@@ -48,6 +48,7 @@ public class WorldEditMod implements ModInitializer {
 		CommandManager.registerCommand(new CommandToggleWand());
 		CommandManager.registerCommand(new CommandCopy());
 		CommandManager.registerCommand(new CommandPaste());
+		CommandManager.registerCommand(new CommandCut());
 		CommandManager.registerCommand(new CommandReplace());
 		CommandManager.registerCommand(new CommandWalls());
 		CommandManager.registerCommand(new CommandStack());

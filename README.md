@@ -18,6 +18,5 @@ A generic WorldEdit clone for BTA. Works as a client or server mod.
 
 ## Planned Features
 - Masks
-- `//cut`
 - `//rotate`, `//flip`
 - `//drawsel` on servers

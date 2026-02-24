@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.0+7.3_04
+
+- Added `//cut`
+
 ## v0.5.0+7.3_04
 
 - Added `//schem delete` and `//schem list`
