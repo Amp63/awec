@@ -32,7 +32,8 @@ public class CommandWalls implements CommandManager.CommandRegistry {
 							handleWallsCommand(context, thickness);
 							return 1;
 						}))
-				));
+				)
+		);
 	}
 
 	private int handleWallsCommand(CommandContext<Object> context, int thickness) {

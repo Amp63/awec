@@ -17,7 +17,7 @@ public class MoveOperation {
 
 		CuboidVolumeBuffer cuboidVolumeBuffer = CuboidVolumeBuffer.copyFrom(world, volume);
 		WorldChange setResult = SetOperation.execute(world, volume, new BlockPattern((Block<?>) null));
-		WorldChange moveResult = cuboidVolumeBuffer.setAt(world, setPos, true);
+		WorldChange moveResult = cuboidVolumeBuffer.setAt(world, setPos, null);
 		moveResult.update(setResult);
 
 		return moveResult;

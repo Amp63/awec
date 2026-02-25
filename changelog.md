@@ -4,6 +4,7 @@
 
 - Added block masks
 - Block pattern and mask arguments now support suggestions
+- Added `-m` flag to `//set` and `//paste` commands for specifying masks
 - Added more block aliases
 - Added `//flip`
 - Added `//cut`

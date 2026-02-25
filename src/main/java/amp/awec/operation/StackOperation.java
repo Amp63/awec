@@ -18,7 +18,7 @@ public class StackOperation {
 
 		for (int i = 0; i < amount; i++) {
 			currentSetPos.addi(shiftVector);
-			WorldChange setResult = cuboidVolumeBuffer.setAt(world, currentSetPos, true);
+			WorldChange setResult = cuboidVolumeBuffer.setAt(world, currentSetPos, null);
 			result.update(setResult);
 		}
 

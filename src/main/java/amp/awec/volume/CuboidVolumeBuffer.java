@@ -1,14 +1,12 @@
 package amp.awec.volume;
 
-import amp.awec.WorldEditMod;
 import amp.awec.operation.WorldChange;
+import amp.awec.pattern.BlockMask;
 import amp.awec.util.BlockFlipper;
 import amp.awec.util.Vec3i;
 import amp.awec.util.BlockState;
 import net.minecraft.core.world.World;
-
-import java.util.ArrayList;
-import java.util.Iterator;
+import org.jetbrains.annotations.Nullable;
 
 public class CuboidVolumeBuffer {
 	private final BlockState[] blockBuffer;
@@ -41,7 +39,7 @@ public class CuboidVolumeBuffer {
 		return volumeBuffer;
 	}
 
-	public WorldChange setAt(World world, Vec3i setPos, boolean trackChanges) {
+	public WorldChange setAt(World world, Vec3i setPos, @Nullable BlockMask mask) {
 		Vec3i corner2 = new Vec3i(
 			setPos.x + dimX - 1,
 			setPos.y + dimY - 1,
@@ -56,10 +54,9 @@ public class CuboidVolumeBuffer {
 		int index = 0;
 		while (iterator.hasNext()) {
 			Vec3i setBlockPos = iterator.next();
-			BlockState oldBlock = blockBuffer[index].setNotify(world, setBlockPos);
-			if (trackChanges) {
-				result.putChange(setBlockPos, oldBlock);
-			}
+			BlockState setBlock = blockBuffer[index];
+			BlockState oldBlock = setBlock.setNotify(world, setBlockPos, mask);
+			result.putChange(setBlockPos, oldBlock);
 			index++;
 		}
 

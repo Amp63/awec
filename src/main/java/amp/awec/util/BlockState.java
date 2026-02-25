@@ -1,6 +1,7 @@
 package amp.awec.util;
 
 import amp.awec.WorldEditMod;
+import amp.awec.pattern.BlockMask;
 import com.mojang.nbt.tags.CompoundTag;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
@@ -37,7 +38,14 @@ public class BlockState {
 	}
 
 	public BlockState setNotify(World world, Vec3i pos) {
+		return setNotify(world, pos, null);
+	}
+
+	public @Nullable BlockState setNotify(World world, Vec3i pos, @Nullable BlockMask mask) {
 		BlockState oldBlock = new BlockState(world, pos);
+		if (mask != null && !mask.matches(oldBlock)) {
+			return null;
+		}
 
 		int blockId = 0;
 		if (block != null) {

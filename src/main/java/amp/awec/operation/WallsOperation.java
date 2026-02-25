@@ -21,7 +21,7 @@ public class WallsOperation {
 
 		int changedBlocks = 0;
 		for (CuboidVolume wallVolume : volumes) {
-			WorldChange setResult = SetOperation.execute(world, wallVolume, pattern, false);
+			WorldChange setResult = SetOperation.execute(world, wallVolume, pattern);
 			result.update(setResult);
 		}
 
