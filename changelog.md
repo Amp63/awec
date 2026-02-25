@@ -2,9 +2,14 @@
 
 ## v0.6.0+7.3_04
 
+- Added block masks
+- Block pattern and mask arguments now support suggestions
+- Added more block aliases
 - Added `//flip`
 - Added `//cut`
 - Removed `//paste` and `//flip` from command options when clipboard is empty
+- Removed "Replace" mode from BlockPattern class
+  - This functionality has been replaced by masks
 
 ## v0.5.0+7.3_04
 

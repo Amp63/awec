@@ -2,8 +2,7 @@ package amp.awec.command.operation;
 import amp.awec.command.CommandPlayerData;
 import amp.awec.operation.SphereOperation;
 import amp.awec.operation.WorldChange;
-import amp.awec.operation.SetOperation;
-import amp.awec.command.argtypes.ArgumentTypePattern;
+import amp.awec.command.argtypes.ArgumentTypeBlockPattern;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.pattern.BlockPattern;
 import amp.awec.util.MessageHelper;
@@ -24,7 +23,7 @@ public class CommandSphere implements CommandManager.CommandRegistry {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/sphere")
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
-				.then(ArgumentBuilderRequired.argument("pattern", ArgumentTypePattern.normal())
+				.then(ArgumentBuilderRequired.argument("pattern", ArgumentTypeBlockPattern.pattern())
 					.then(ArgumentBuilderRequired.argument("radius", ArgumentTypeInteger.integer(1, 255))
 						.executes(context -> {
 							CommandSource source = (CommandSource) context.getSource();

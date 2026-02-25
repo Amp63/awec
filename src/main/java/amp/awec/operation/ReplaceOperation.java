@@ -1,5 +1,6 @@
 package amp.awec.operation;
 
+import amp.awec.pattern.BlockMask;
 import amp.awec.pattern.BlockPattern;
 import amp.awec.util.BlockState;
 import amp.awec.volume.CuboidVolume;
@@ -9,7 +10,7 @@ import net.minecraft.core.world.World;
 
 public class ReplaceOperation {
 
-	public static WorldChange execute(World world, CuboidVolume volume, BlockPattern targetPattern, BlockPattern replaceWithPattern) {
+	public static WorldChange execute(World world, CuboidVolume volume, BlockMask mask, BlockPattern replaceWithPattern) {
 		WorldChange result = new WorldChange();
 
 		CuboidVolumeIterator iterator = new CuboidVolumeIterator(volume);
@@ -17,7 +18,7 @@ public class ReplaceOperation {
 		while (iterator.hasNext()) {
 			Vec3i setPos = iterator.next();
 			BlockState replacedBlock = new BlockState(world, setPos);
-			if (targetPattern.shouldReplace(replacedBlock)) {
+			if (mask.matches(replacedBlock)) {
 				BlockState sampledBlock = replaceWithPattern.sample();
 				if (sampledBlock != null) {
 					BlockState oldBlock = sampledBlock.setNotify(world, setPos);

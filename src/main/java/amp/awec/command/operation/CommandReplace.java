@@ -1,8 +1,10 @@
 package amp.awec.command.operation;
 import amp.awec.command.CommandPlayerData;
+import amp.awec.command.argtypes.ArgumentTypeBlockMask;
 import amp.awec.operation.WorldChange;
 import amp.awec.operation.ReplaceOperation;
-import amp.awec.command.argtypes.ArgumentTypePattern;
+import amp.awec.command.argtypes.ArgumentTypeBlockPattern;
+import amp.awec.pattern.BlockMask;
 import amp.awec.pattern.BlockPattern;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.MessageHelper;
@@ -20,8 +22,8 @@ public class CommandReplace implements CommandManager.CommandRegistry {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/replace")
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
-				.then(ArgumentBuilderRequired.argument("target_pattern", ArgumentTypePattern.replace())
-				.then(ArgumentBuilderRequired.argument("replace_pattern", ArgumentTypePattern.normal())
+				.then(ArgumentBuilderRequired.argument("mask", ArgumentTypeBlockMask.mask())
+				.then(ArgumentBuilderRequired.argument("replace_pattern", ArgumentTypeBlockPattern.pattern())
 					.executes(context -> {
 						CommandSource source = (CommandSource) context.getSource();
 						CommandPlayerData playerData = CommandPlayerData.get(source);
@@ -29,10 +31,10 @@ public class CommandReplace implements CommandManager.CommandRegistry {
 							return 0;
 						}
 
-						BlockPattern targetPattern = context.getArgument("target_pattern", BlockPattern.class);
+						BlockMask mask = context.getArgument("mask", BlockMask.class);
 						BlockPattern replaceWithPattern = context.getArgument("replace_pattern", BlockPattern.class);
 
-						WorldChange result = ReplaceOperation.execute(playerData.world, playerData.getSelection(), targetPattern, replaceWithPattern);
+						WorldChange result = ReplaceOperation.execute(playerData.world, playerData.getSelection(), mask, replaceWithPattern);
 						playerData.addUndoChange(result);
 
 						MessageHelper.info(source, "Changed " + result.changedBlockCount + " blocks");

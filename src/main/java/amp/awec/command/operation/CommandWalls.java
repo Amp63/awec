@@ -2,7 +2,7 @@ package amp.awec.command.operation;
 import amp.awec.command.CommandPlayerData;
 import amp.awec.operation.WorldChange;
 import amp.awec.operation.WallsOperation;
-import amp.awec.command.argtypes.ArgumentTypePattern;
+import amp.awec.command.argtypes.ArgumentTypeBlockPattern;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.pattern.BlockPattern;
 import amp.awec.util.MessageHelper;
@@ -22,7 +22,7 @@ public class CommandWalls implements CommandManager.CommandRegistry {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/walls")
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
-				.then(ArgumentBuilderRequired.argument("pattern", ArgumentTypePattern.normal())
+				.then(ArgumentBuilderRequired.argument("pattern", ArgumentTypeBlockPattern.pattern())
 					.executes(context -> {
 						return handleWallsCommand(context, 1);
 					})

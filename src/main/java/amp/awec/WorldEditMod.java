@@ -16,6 +16,7 @@ import amp.awec.command.selection.*;
 import amp.awec.command.undoredo.CommandRedo;
 import amp.awec.command.undoredo.CommandUndo;
 import amp.awec.config.Config;
+import amp.awec.pattern.BlockAliases;
 import amp.awec.permission.WorldEditWhitelist;
 import amp.awec.util.BlockFlipper;
 import net.fabricmc.api.EnvType;
@@ -42,6 +43,7 @@ public class WorldEditMod implements ModInitializer {
 			throw new RuntimeException("Failed to load WorldEdit configuration");
 		}
 
+		BlockAliases.initialize();
 		BlockFlipper.initialize();
 
 		CommandManager.registerCommand(new CommandPos1());

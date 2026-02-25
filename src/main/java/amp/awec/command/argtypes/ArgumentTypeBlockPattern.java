@@ -1,8 +1,8 @@
 package amp.awec.command.argtypes;
 
+import amp.awec.pattern.BlockAliases;
 import amp.awec.pattern.BlockPattern;
-import amp.awec.pattern.BlockPatternException;
-import amp.awec.util.PatternType;
+import amp.awec.util.RegexUtil;
 import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -11,26 +11,22 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import net.minecraft.core.block.Blocks;
 import net.minecraft.core.net.command.CommandSource;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
-public class ArgumentTypePattern implements ArgumentType<BlockPattern> {
-	private final PatternType patternType;
+public class ArgumentTypeBlockPattern implements ArgumentType<BlockPattern> {
 	private static final String[] EXAMPLES = {"stone", "50%stone,50%dirt", "10%dirt", "10%dirt,stone"};
 
-	public ArgumentTypePattern(PatternType type) {
-		patternType = type;
-	}
+	private static List<String> currentSuggestions = null;
 
-	public static ArgumentTypePattern normal() {
-		return new ArgumentTypePattern(PatternType.NORMAL);
-	}
-
-	public static ArgumentTypePattern replace() {
-		return new ArgumentTypePattern(PatternType.REPLACE);
+	public static ArgumentTypeBlockPattern pattern() {
+		return new ArgumentTypeBlockPattern();
 	}
 
 	private boolean isValidPatternChar(char c) {
@@ -59,8 +55,16 @@ public class ArgumentTypePattern implements ArgumentType<BlockPattern> {
 	public <S> BlockPattern parse(StringReader reader, S source) throws CommandSyntaxException {
 		String patternString = readPatternString(reader);
 		try {
-			return new BlockPattern(patternString, ((CommandSource) source).getSender(), patternType);
-		} catch (BlockPatternException e) {
+			BlockPattern pattern = new BlockPattern(patternString, ((CommandSource) source).getSender());
+			currentSuggestions = null;
+			return pattern;
+		}
+		catch (BlockPattern.UnrecognizedBlockException e) {
+			currentSuggestions = SuggestionHelper.getBlockSuggestions(e.partialString);
+			LiteralMessage message = new LiteralMessage(e.getMessage());
+			throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
+		}
+		catch (BlockPattern.BlockPatternException e) {
 			LiteralMessage message = new LiteralMessage(e.getMessage());
 			throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
 		}
@@ -68,8 +72,20 @@ public class ArgumentTypePattern implements ArgumentType<BlockPattern> {
 
 	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-		return ArgumentType.super.listSuggestions(context, builder);
-	}
+		String remaining = builder.getRemainingLowerCase();
+		int lastOperatorIndex = RegexUtil.lastIndexOfSet(remaining, "[,%]");
+		String suggestionPrefix = "";
+		if (lastOperatorIndex != -1) {
+			suggestionPrefix = remaining.substring(0, lastOperatorIndex+1);
+		}
+
+		if (currentSuggestions != null) {
+			for (String suggestion : currentSuggestions) {
+				builder.suggest(suggestionPrefix + suggestion);
+			}
+		}
+
+		return builder.buildFuture();	}
 
 	@Override
 	public Collection<String> getExamples() {
