@@ -1,5 +1,6 @@
 package amp.awec.permission;
 
+import amp.awec.command.CommandPlayerData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.entity.player.Player;
@@ -33,5 +34,14 @@ public class WorldEditPermissions {
 			boolean isOp = server.playerList.isOp(player.uuid);
 			return isOp || WorldEditWhitelist.isWhitelisted(player.uuid);
 		}
+	}
+
+	public static boolean hasClipboard(CommandSource source) {
+		CommandPlayerData playerData = CommandPlayerData.get(source, false);
+		if (playerData == null) {
+			return false;
+		}
+
+		return playerData.data.clipboardBuffer != null;
 	}
 }

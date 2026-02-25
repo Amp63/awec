@@ -25,6 +25,7 @@ public class CommandFlip implements CommandManager.CommandRegistry {
 		dispatcher.register(
 			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/flip")
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
+				.requires(source -> WorldEditPermissions.hasClipboard((CommandSource) source))
 				.executes(context -> {
 					return handleFlipCommand(context, null);
 				})
@@ -40,11 +41,6 @@ public class CommandFlip implements CommandManager.CommandRegistry {
 		CommandSource source = (CommandSource) context.getSource();
 		CommandPlayerData playerData = CommandPlayerData.get(source);
 		if (playerData == null) {
-			return 0;
-		}
-
-		if (playerData.data.clipboardBuffer == null) {
-			MessageHelper.error(source, "Clipboard is empty");
 			return 0;
 		}
 

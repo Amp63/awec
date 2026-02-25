@@ -2,7 +2,9 @@
 
 ## v0.6.0+7.3_04
 
+- Added `//flip`
 - Added `//cut`
+- Removed `//paste` and `//flip` from command options when clipboard is empty
 
 ## v0.5.0+7.3_04
 
