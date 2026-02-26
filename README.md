@@ -5,13 +5,14 @@ A generic WorldEdit clone for BTA. Works as a client or server mod.
 ## Current Feature List
 - `//set`, `//replace`, `//move`
 - `//walls`, `//sphere`, `//hsphere`, `//cyl`, `//hcyl`
-- `//copy`, `//paste`, `//stack`
+- `//copy`, `//paste`, `//cut`, `//stack`, `//flip`
 - `//undo`, `//redo`
 - `/up`, `/thru`, `/ascend`, `/descend`
 - `//shift`, `//expand`
-- Schematics
 - `//drawsel` to display selections
-- Block patterns (like `50%stone,50%dirt`)
+- Schematics
+- Random block patterns (like `50%stone,50%dirt`)
+- Block masks
 - Configurable permissions via `/wewhitelist`
 - Toggleable edit wand via `/togglewand`
 
