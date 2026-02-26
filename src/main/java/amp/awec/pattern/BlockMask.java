@@ -1,6 +1,5 @@
 package amp.awec.pattern;
 
-import amp.awec.WorldEditMod;
 import amp.awec.util.BlockState;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.tag.BlockTags;
@@ -11,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 abstract class MaskElement {
 	abstract public boolean matches(BlockState blockState);
@@ -62,6 +60,9 @@ public class BlockMask {
 	private final BlockStateParser blockStateParser;
 	private final List<Object> rpnTokens = new ArrayList<>();
 
+	// An empty mask that matches any block
+	public static final BlockMask ANY = new BlockMask();
+
 	public static class BlockMaskException extends Exception {
 		public BlockMaskException(String errorMessage) {
 			super(errorMessage);
@@ -84,9 +85,8 @@ public class BlockMask {
 		}
 	}
 
-	public BlockMask(String maskString) throws BlockMaskException {
+	public BlockMask() {
 		blockStateParser = new BlockStateParser(null);
-		parseMask(maskString);
 	}
 
 	public BlockMask(String maskString, @Nullable Player player) throws BlockMaskException {
@@ -95,6 +95,10 @@ public class BlockMask {
 	}
 
 	public boolean matches(BlockState blockState) {
+		if (rpnTokens.isEmpty()) {
+			return true;
+		}
+
 		Deque<Boolean> stack = new ArrayDeque<>();
 
 		for (Object token : rpnTokens) {
@@ -126,6 +130,27 @@ public class BlockMask {
 		}
 
 		return stack.pop();
+	}
+
+	public BlockMask and(BlockMask other) {
+		if (this.rpnTokens.isEmpty() && other.rpnTokens.isEmpty()) {
+			return BlockMask.ANY;
+		}
+
+		BlockMask combined = new BlockMask();
+		if (this.rpnTokens.isEmpty()) {
+			combined.rpnTokens.addAll(other.rpnTokens);
+		}
+		else if (other.rpnTokens.isEmpty()) {
+			combined.rpnTokens.addAll(this.rpnTokens);
+		}
+		else {
+			combined.rpnTokens.addAll(this.rpnTokens);
+			combined.rpnTokens.addAll(other.rpnTokens);
+			combined.rpnTokens.add("&");
+		}
+
+		return combined;
 	}
 
 	private void parseMask(String maskString) throws BlockMaskException {

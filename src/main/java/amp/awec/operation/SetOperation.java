@@ -15,7 +15,7 @@ public class SetOperation {
 		return execute(world, volume, pattern, null);
 	}
 
-	public static WorldChange execute(World world, CuboidVolume volume, BlockPattern pattern, @Nullable BlockMask mask) {
+	public static WorldChange execute(World world, CuboidVolume volume, BlockPattern pattern, BlockMask mask) {
 		WorldChange result = new WorldChange();
 
 		CuboidVolumeIterator iterator = new CuboidVolumeIterator(volume);

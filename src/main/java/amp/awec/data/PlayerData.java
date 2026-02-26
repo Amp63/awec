@@ -1,6 +1,7 @@
 package amp.awec.data;
 
 import amp.awec.WorldEditMod;
+import amp.awec.pattern.BlockMask;
 import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolume;
 import amp.awec.volume.CuboidVolumeBuffer;
@@ -21,6 +22,8 @@ public class PlayerData {
 
 	public CuboidVolumeBuffer clipboardBuffer = null;
 	public Vec3i copyOffset = null;
+
+	public BlockMask globalMask = BlockMask.ANY;
 
 	private final Map<Dimension, PlayerDataWorld> worldSpecificData = new HashMap<>();
 

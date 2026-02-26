@@ -34,7 +34,7 @@ public class CommandReplace implements CommandManager.CommandRegistry {
 						BlockMask mask = context.getArgument("mask", BlockMask.class);
 						BlockPattern replaceWithPattern = context.getArgument("replace_pattern", BlockPattern.class);
 
-						WorldChange result = SetOperation.execute(playerData.world, playerData.getSelection(), replaceWithPattern, mask);
+						WorldChange result = SetOperation.execute(playerData.world, playerData.getSelection(), replaceWithPattern, mask.and(playerData.data.globalMask));
 						playerData.addUndoChange(result);
 
 						MessageHelper.info(source, "Changed " + result.changedBlockCount + " blocks");

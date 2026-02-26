@@ -5,12 +5,15 @@
 - Added block masks
 - Block pattern and mask arguments now support suggestions
 - Added `-m` flag to `//set` and `//paste` commands for specifying masks
+- Added `//gmask` to create a global mask
 - Added more block aliases
 - Added `//flip`
 - Added `//cut`
 - Removed `//paste` and `//flip` from command options when clipboard is empty
 - Removed "Replace" mode from BlockPattern class
   - This functionality has been replaced by masks
+- Cancel right click block event while holding wand
+  - Prevents opening chests, editing signs, etc. while trying to make selections
 
 ## v0.5.0+7.3_04
 

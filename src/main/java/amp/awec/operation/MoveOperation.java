@@ -1,5 +1,6 @@
 package amp.awec.operation;
 
+import amp.awec.pattern.BlockMask;
 import amp.awec.pattern.BlockPattern;
 import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolumeBuffer;
@@ -17,7 +18,7 @@ public class MoveOperation {
 
 		CuboidVolumeBuffer cuboidVolumeBuffer = CuboidVolumeBuffer.copyFrom(world, volume);
 		WorldChange setResult = SetOperation.execute(world, volume, new BlockPattern((Block<?>) null));
-		WorldChange moveResult = cuboidVolumeBuffer.setAt(world, setPos, null);
+		WorldChange moveResult = cuboidVolumeBuffer.setAt(world, setPos, BlockMask.ANY);
 		moveResult.update(setResult);
 
 		return moveResult;

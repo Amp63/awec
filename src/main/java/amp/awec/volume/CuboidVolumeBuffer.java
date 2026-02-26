@@ -39,7 +39,7 @@ public class CuboidVolumeBuffer {
 		return volumeBuffer;
 	}
 
-	public WorldChange setAt(World world, Vec3i setPos, @Nullable BlockMask mask) {
+	public WorldChange setAt(World world, Vec3i setPos, BlockMask mask) {
 		Vec3i corner2 = new Vec3i(
 			setPos.x + dimX - 1,
 			setPos.y + dimY - 1,

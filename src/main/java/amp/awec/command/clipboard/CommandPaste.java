@@ -25,12 +25,12 @@ public class CommandPaste implements CommandManager.CommandRegistry {
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.requires(source -> WorldEditPermissions.hasClipboard((CommandSource) source))
 				.executes(context -> {
-					return handlePasteCommand(context, null);
+					return handlePasteCommand(context, BlockMask.ANY);
 				})
 				.then(ArgumentBuilderLiteral.literal("-m")
-					.then(ArgumentBuilderRequired.argument("world_mask", ArgumentTypeBlockMask.mask())
+					.then(ArgumentBuilderRequired.argument("mask", ArgumentTypeBlockMask.mask())
 						.executes(context -> {
-							BlockMask worldMask = context.getArgument("world_mask", BlockMask.class);
+							BlockMask worldMask = context.getArgument("mask", BlockMask.class);
 							return handlePasteCommand(context, worldMask);
 						})
 					)
@@ -38,7 +38,7 @@ public class CommandPaste implements CommandManager.CommandRegistry {
 		);
 	}
 
-	private int handlePasteCommand(CommandContext<Object> context, @Nullable BlockMask mask) {
+	private int handlePasteCommand(CommandContext<Object> context, BlockMask mask) {
 		CommandSource source = (CommandSource) context.getSource();
 		CommandPlayerData playerData = CommandPlayerData.get(source, false);
 		if (playerData == null) {
@@ -49,7 +49,7 @@ public class CommandPaste implements CommandManager.CommandRegistry {
 		MessageHelper.success(source, "Pasted");
 
 		Vec3i setPos = pastePos.add(playerData.data.copyOffset);
-		WorldChange result = playerData.data.clipboardBuffer.setAt(playerData.world, setPos, mask);
+		WorldChange result = playerData.data.clipboardBuffer.setAt(playerData.world, setPos, mask.and(playerData.data.globalMask));
 		playerData.addUndoChange(result);
 
 		return 1;

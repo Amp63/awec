@@ -14,7 +14,6 @@ import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
-import org.jetbrains.annotations.Nullable;
 
 public class CommandSet implements CommandManager.CommandRegistry {
 
@@ -26,20 +25,20 @@ public class CommandSet implements CommandManager.CommandRegistry {
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.then(ArgumentBuilderRequired.argument("pattern", ArgumentTypeBlockPattern.pattern())
 					.executes(context -> {
-						return handleSetCommand(context, null);
+						return handleSetCommand(context, BlockMask.ANY);
 					})
 					.then(ArgumentBuilderLiteral.literal("-m")
 						.then(ArgumentBuilderRequired.argument("mask", ArgumentTypeBlockMask.mask())
 							.executes(context -> {
-							BlockMask mask = context.getArgument("mask", BlockMask.class);
-							return handleSetCommand(context, mask);
+								BlockMask mask = context.getArgument("mask", BlockMask.class);
+								return handleSetCommand(context, mask);
 							})
 						)
 					)
 				));
 	}
 
-	public int handleSetCommand(CommandContext<Object> context, @Nullable BlockMask mask) {
+	public int handleSetCommand(CommandContext<Object> context, BlockMask mask) {
 		CommandSource source = (CommandSource) context.getSource();
 		CommandPlayerData playerData = CommandPlayerData.get(source);
 		if (playerData == null) {
@@ -47,7 +46,7 @@ public class CommandSet implements CommandManager.CommandRegistry {
 		}
 
 		BlockPattern pattern = context.getArgument("pattern", BlockPattern.class);
-		WorldChange result = SetOperation.execute(playerData.world, playerData.getSelection(), pattern, mask);
+		WorldChange result = SetOperation.execute(playerData.world, playerData.getSelection(), pattern, mask.and(playerData.data.globalMask));
 		playerData.addUndoChange(result);
 
 		MessageHelper.info(source, "Changed " + result.changedBlockCount + " blocks");

@@ -38,12 +38,12 @@ public class BlockState {
 	}
 
 	public BlockState setNotify(World world, Vec3i pos) {
-		return setNotify(world, pos, null);
+		return setNotify(world, pos, BlockMask.ANY);
 	}
 
-	public @Nullable BlockState setNotify(World world, Vec3i pos, @Nullable BlockMask mask) {
+	public @Nullable BlockState setNotify(World world, Vec3i pos, BlockMask mask) {
 		BlockState oldBlock = new BlockState(world, pos);
-		if (mask != null && !mask.matches(oldBlock)) {
+		if (!mask.matches(oldBlock)) {
 			return null;
 		}
 

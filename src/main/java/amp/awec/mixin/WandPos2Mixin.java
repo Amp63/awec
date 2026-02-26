@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = Block.class, remap = false)
 public class WandPos2Mixin {
 
-	@Inject(method = "onBlockRightClicked", at = @At("HEAD"))
+	@Inject(method = "onBlockRightClicked", at = @At("HEAD"), cancellable = true)
 	private void onRightClickBlock(World world, int x, int y, int z, Player player, Side side, double xHit, double yHit, CallbackInfoReturnable<Boolean> cir) {
 		if (!WorldEditPermissions.canUseWorldEdit(player) || !WandHelper.isHoldingWand(player) || player.world == null) {
 			return;
@@ -29,5 +29,7 @@ public class WandPos2Mixin {
 		Vec3i pos = new Vec3i(x, y, z);
 		playerData.getSelection(world).setCorner2(pos);
 		MessageHelper.info(player, "Corner 2 set to " + pos);
+
+		cir.cancel();
 	}
 }

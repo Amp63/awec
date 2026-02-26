@@ -1,5 +1,6 @@
 package amp.awec.operation;
 
+import amp.awec.pattern.BlockMask;
 import amp.awec.volume.CuboidVolume;
 import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolumeBuffer;
@@ -18,7 +19,7 @@ public class StackOperation {
 
 		for (int i = 0; i < amount; i++) {
 			currentSetPos.addi(shiftVector);
-			WorldChange setResult = cuboidVolumeBuffer.setAt(world, currentSetPos, null);
+			WorldChange setResult = cuboidVolumeBuffer.setAt(world, currentSetPos, BlockMask.ANY);
 			result.update(setResult);
 		}
 
