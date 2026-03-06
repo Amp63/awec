@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.1+7.3_04
+
+- Fix exception on //move and //walls commands
+
 ## v0.6.0+7.3_04
 
 - Added block masks

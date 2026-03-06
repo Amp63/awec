@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 public class SetOperation {
 
 	public static WorldChange execute(World world, CuboidVolume volume, BlockPattern pattern) {
-		return execute(world, volume, pattern, null);
+		return execute(world, volume, pattern, BlockMask.ANY);
 	}
 
 	public static WorldChange execute(World world, CuboidVolume volume, BlockPattern pattern, BlockMask mask) {

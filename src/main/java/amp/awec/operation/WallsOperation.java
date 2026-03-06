@@ -19,7 +19,6 @@ public class WallsOperation {
 
 		CuboidVolume[] volumes = getWallVolumes(thickness, minCorner, maxCorner);
 
-		int changedBlocks = 0;
 		for (CuboidVolume wallVolume : volumes) {
 			WorldChange setResult = SetOperation.execute(world, wallVolume, pattern);
 			result.update(setResult);
