@@ -3,6 +3,8 @@
 ## v0.6.2+7.3_04
 
 - `//walls` now respects global mask
+- Fix `//undo` not undoing corners from `//walls`
+- Fix weird `//walls` behavior with thin selections
 
 ## v0.6.1+7.3_04
 

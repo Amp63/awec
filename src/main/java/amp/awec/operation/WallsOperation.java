@@ -28,17 +28,30 @@ public class WallsOperation {
 		return result;
 	}
 
-	private static CuboidVolume @NonNull [] getWallVolumes(int thickness, Vec3i minCorner, Vec3i maxCorner) {
-		int insideLeftZ = minCorner.z+thickness-1;
-		int insideRightZ = maxCorner.z-thickness+1;
-		int insideFrontX = minCorner.x+thickness-1;
-		int insideBackX = maxCorner.x-thickness+1;
+	public static CuboidVolume @NonNull [] getWallVolumes(int thickness, Vec3i minCorner, Vec3i maxCorner) {
+		int insideLeftZ = Math.max(minCorner.z+thickness-1, minCorner.z);
+		int insideRightZ = Math.min(maxCorner.z-thickness+1, maxCorner.z);
+		int insideFrontX = Math.max(minCorner.x+thickness-1, minCorner.x);
+		int insideBackX = Math.min(maxCorner.x-thickness+1, maxCorner.x);
 
-		return new CuboidVolume[]{
-			new CuboidVolume(minCorner, new Vec3i(maxCorner.x, maxCorner.y, insideLeftZ)),
-			new CuboidVolume(new Vec3i(minCorner.x, minCorner.y, insideRightZ), maxCorner),
-			new CuboidVolume(new Vec3i(minCorner.x, minCorner.y, insideLeftZ), new Vec3i(insideFrontX, maxCorner.y, insideRightZ)),
-			new CuboidVolume(new Vec3i(insideBackX, minCorner.y, insideLeftZ), new Vec3i(maxCorner.x, maxCorner.y, insideRightZ))
-		};
+		CuboidVolume left = new CuboidVolume(minCorner, new Vec3i(maxCorner.x, maxCorner.y, insideLeftZ));
+		CuboidVolume right = new CuboidVolume(new Vec3i(minCorner.x, minCorner.y, insideRightZ), maxCorner);
+		CuboidVolume front = new CuboidVolume(new Vec3i(minCorner.x, minCorner.y, insideLeftZ+1), new Vec3i(insideFrontX, maxCorner.y, insideRightZ-1));
+		CuboidVolume back = new CuboidVolume(new Vec3i(insideBackX, minCorner.y, insideLeftZ+1), new Vec3i(maxCorner.x, maxCorner.y, insideRightZ-1));
+
+		int xdiff = maxCorner.x - minCorner.x;
+		int zdiff = maxCorner.z - minCorner.z;
+
+		if (xdiff == 0) {
+			return new CuboidVolume[] {left, right, front};
+		}
+		if (zdiff == 0) {
+			return new CuboidVolume[] {left};
+		}
+		if (zdiff == 1) {
+			return new CuboidVolume[] {left, right};
+		}
+
+		return new CuboidVolume[] {left, right, front, back};
 	}
 }

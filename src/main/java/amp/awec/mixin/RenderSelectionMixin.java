@@ -3,6 +3,7 @@ package amp.awec.mixin;
 import amp.awec.data.ClientPlayerData;
 import amp.awec.data.PlayerData;
 import amp.awec.data.PlayerDataManager;
+import amp.awec.operation.WallsOperation;
 import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolume;
 import net.fabricmc.api.EnvType;
@@ -62,6 +63,18 @@ public class RenderSelectionMixin {
 
 		CuboidVolume selection = playerData.getSelection(world);
 
+		drawVolume(selection, partialTicks);
+	}
+
+	@Unique
+	private AABB getAABB(ICamera camera, float partialTicks, Vec3 minCorner, Vec3 maxCorner) {
+		AABB box = AABB.getTemporaryBB(minCorner.x, minCorner.y, minCorner.z, maxCorner.x, maxCorner.y, maxCorner.z);
+		box.move(-camera.getX(partialTicks), -camera.getY(partialTicks), -camera.getZ(partialTicks));
+		return box;
+	}
+
+	@Unique
+	private void drawVolume(CuboidVolume volume, float partialTicks) {
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -71,8 +84,8 @@ public class RenderSelectionMixin {
 
 		GL11.glLineWidth(3.0F);
 
-		Vec3i corner1 = selection.getCorner1();
-		Vec3i corner2 = selection.getCorner2();
+		Vec3i corner1 = volume.getCorner1();
+		Vec3i corner2 = volume.getCorner2();
 		double boxOffset1 = (1.0 - CORNER_BOX_SIZE) / 2.0;
 		double boxOffset2 = 1.0 - boxOffset1;
 
@@ -89,9 +102,9 @@ public class RenderSelectionMixin {
 			mc.renderGlobal.drawOutlinedBoundingBox(corner2Box);
 		}
 
-		if (selection.isComplete()) {
-			Vec3 minCorner = selection.getMinCorner().asVec3();
-			Vec3 maxCorner = selection.getMaxCorner().asVec3();
+		if (volume.isComplete()) {
+			Vec3 minCorner = volume.getMinCorner().asVec3();
+			Vec3 maxCorner = volume.getMaxCorner().asVec3();
 
 			AABB mainBox = getAABB(mc.activeCamera, partialTicks, minCorner, maxCorner.add(1, 1, 1));
 			mainBox = mainBox.grow(EXPAND_AMOUNT, EXPAND_AMOUNT, EXPAND_AMOUNT);
@@ -105,11 +118,5 @@ public class RenderSelectionMixin {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
-	}
-
-	private AABB getAABB(ICamera camera, float partialTicks, Vec3 minCorner, Vec3 maxCorner) {
-		AABB box = AABB.getTemporaryBB(minCorner.x, minCorner.y, minCorner.z, maxCorner.x, maxCorner.y, maxCorner.z);
-		box.move(-camera.getX(partialTicks), -camera.getY(partialTicks), -camera.getZ(partialTicks));
-		return box;
 	}
 }
