@@ -1,5 +1,6 @@
 package amp.awec.operation;
 
+import amp.awec.pattern.BlockMask;
 import amp.awec.pattern.BlockPattern;
 import amp.awec.volume.CuboidVolume;
 import amp.awec.util.Vec3i;
@@ -8,7 +9,7 @@ import org.jspecify.annotations.NonNull;
 
 public class WallsOperation {
 
-	public static WorldChange execute(World world, CuboidVolume volume, BlockPattern pattern, int thickness) {
+	public static WorldChange execute(World world, CuboidVolume volume, BlockPattern pattern, BlockMask mask, int thickness) {
 		WorldChange result = new WorldChange();
 
 		Vec3i minCorner = volume.getMinCorner();
@@ -20,7 +21,7 @@ public class WallsOperation {
 		CuboidVolume[] volumes = getWallVolumes(thickness, minCorner, maxCorner);
 
 		for (CuboidVolume wallVolume : volumes) {
-			WorldChange setResult = SetOperation.execute(world, wallVolume, pattern);
+			WorldChange setResult = SetOperation.execute(world, wallVolume, pattern, mask);
 			result.update(setResult);
 		}
 

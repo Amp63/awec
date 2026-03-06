@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.2+7.3_04
+
+- `//walls` now respects global mask
+
 ## v0.6.1+7.3_04
 
 - Fix exception on //move and //walls commands

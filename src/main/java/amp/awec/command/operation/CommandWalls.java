@@ -45,7 +45,7 @@ public class CommandWalls implements CommandManager.CommandRegistry {
 
 		BlockPattern pattern = context.getArgument("pattern", BlockPattern.class);
 
-		WorldChange result = WallsOperation.execute(playerData.world, playerData.getSelection(), pattern, thickness);
+		WorldChange result = WallsOperation.execute(playerData.world, playerData.getSelection(), pattern, playerData.data.globalMask, thickness);
 		playerData.addUndoChange(result);
 
 		MessageHelper.info(source, "Changed " + result.changedBlockCount + " blocks");
