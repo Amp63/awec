@@ -2,10 +2,13 @@
 
 ## v0.6.2+7.3_04
 
+- Wand can now select corners in air
+- `//drawsel` now renders a wand's target position if the wand item is held
+- Set blocks no longer update neighbors
 - `//walls` now respects global mask
 - Fix `//undo` not undoing corners from `//walls`
 - Fix weird `//walls` behavior with thin selections
-- Set blocks no longer update neighbors
+- Refactored selection mixins
 
 ## v0.6.1+7.3_04
 

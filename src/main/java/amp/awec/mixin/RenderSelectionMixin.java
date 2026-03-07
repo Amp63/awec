@@ -3,8 +3,8 @@ package amp.awec.mixin;
 import amp.awec.data.ClientPlayerData;
 import amp.awec.data.PlayerData;
 import amp.awec.data.PlayerDataManager;
-import amp.awec.operation.WallsOperation;
 import amp.awec.util.Vec3i;
+import amp.awec.util.WandHelper;
 import amp.awec.volume.CuboidVolume;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,12 +24,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
 @Environment(EnvType.CLIENT)
-@Mixin(value = WorldRenderer.class, remap = false)
+@Mixin(value = WorldRenderer.class)
 public class RenderSelectionMixin {
 	@Unique
 	private static final double EXPAND_AMOUNT = 0.002;
 	@Unique
-	private static final double CORNER_BOX_SIZE = 0.25;
+	private static final double SMALL_BOX_SIZE = 0.25;
+	@Unique
+	private static final double SMALL_OFFSET_1 = (1.0 - SMALL_BOX_SIZE) / 2.0;
+	@Unique
+	private static final double SMALL_OFFSET_2 = 1.0 - SMALL_OFFSET_1;
 
 	@Unique
 	private static final double[] OUTLINE_COLOR = {0.749, 0.906, 0.988, 1.0};
@@ -37,6 +41,8 @@ public class RenderSelectionMixin {
 	private static final double[] CORNER1_COLOR = {1.0, 0.478, 0.478, 1.0};
 	@Unique
 	private static final double[] CORNER2_COLOR = {0.678, 1.0, 0.478, 1.0};
+	@Unique
+	private static final double[] TARGET_BLOCK_COLOR = {0.988, 0.894, 0.522, 1.0};
 
 	@Shadow
 	public Minecraft mc;
@@ -74,6 +80,17 @@ public class RenderSelectionMixin {
 	}
 
 	@Unique
+	private void drawSmallBox(Vec3i pos, double[] color, float partialTicks) {
+		Vec3 v = pos.asMCVector();
+		AABB corner1Box = getAABB(mc.activeCamera, partialTicks,
+			v.add(SMALL_OFFSET_1, SMALL_OFFSET_1, SMALL_OFFSET_1),
+			v.add(SMALL_OFFSET_2, SMALL_OFFSET_2, SMALL_OFFSET_2)
+		);
+		GL11.glColor4dv(color);
+		mc.renderGlobal.drawOutlinedBoundingBox(corner1Box);
+	}
+
+	@Unique
 	private void drawVolume(CuboidVolume volume, float partialTicks) {
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -86,25 +103,17 @@ public class RenderSelectionMixin {
 
 		Vec3i corner1 = volume.getCorner1();
 		Vec3i corner2 = volume.getCorner2();
-		double boxOffset1 = (1.0 - CORNER_BOX_SIZE) / 2.0;
-		double boxOffset2 = 1.0 - boxOffset1;
 
 		if (corner1 != null) {
-			Vec3 v = corner1.asVec3();
-			AABB corner1Box = getAABB(mc.activeCamera, partialTicks, v.add(boxOffset1, boxOffset1, boxOffset1), v.add(boxOffset2, boxOffset2, boxOffset2));
-			GL11.glColor4dv(CORNER1_COLOR);
-			mc.renderGlobal.drawOutlinedBoundingBox(corner1Box);
+			drawSmallBox(corner1, CORNER1_COLOR, partialTicks);
 		}
 		if (corner2 != null) {
-			Vec3 v = corner2.asVec3();
-			AABB corner2Box = getAABB(mc.activeCamera, partialTicks, v.add(boxOffset1, boxOffset1, boxOffset1), v.add(boxOffset2, boxOffset2, boxOffset2));
-			GL11.glColor4dv(CORNER2_COLOR);
-			mc.renderGlobal.drawOutlinedBoundingBox(corner2Box);
+			drawSmallBox(corner2, CORNER2_COLOR, partialTicks);
 		}
 
 		if (volume.isComplete()) {
-			Vec3 minCorner = volume.getMinCorner().asVec3();
-			Vec3 maxCorner = volume.getMaxCorner().asVec3();
+			Vec3 minCorner = volume.getMinCorner().asMCVector();
+			Vec3 maxCorner = volume.getMaxCorner().asMCVector();
 
 			AABB mainBox = getAABB(mc.activeCamera, partialTicks, minCorner, maxCorner.add(1, 1, 1));
 			mainBox = mainBox.grow(EXPAND_AMOUNT, EXPAND_AMOUNT, EXPAND_AMOUNT);
@@ -112,6 +121,12 @@ public class RenderSelectionMixin {
 			GL11.glColor4dv(OUTLINE_COLOR);
 			mc.renderGlobal.drawOutlinedBoundingBox(mainBox);
 		}
+
+		if (WandHelper.isHoldingWand(mc.thePlayer)) {
+			Vec3i targetPos = WandHelper.getTargetedPos(mc.thePlayer, partialTicks);
+			drawSmallBox(targetPos, TARGET_BLOCK_COLOR, partialTicks);
+		}
+
 
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_LINE_SMOOTH);

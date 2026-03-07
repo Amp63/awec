@@ -6,14 +6,17 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "WandPos2Mixin"
+    "WandPos2Mixin",
+    "WandCancelRightClickMixin"
   ],
   "client": [
-    "WandPos1ClientMixin",
-    "RenderSelectionMixin"
+    "MinecraftTimerAccessor",
+    "RenderSelectionMixin",
+    "WandPos1ClientMixin"
   ],
   "server": [
     "PlayerLeaveServerMixin",
-    "WandPos1ServerMixin"
+    "WandPos1ServerMixin",
+    "WandCancelDestroyServerMixin"
   ]
 }

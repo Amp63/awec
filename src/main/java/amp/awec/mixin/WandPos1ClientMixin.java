@@ -11,6 +11,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.controller.PlayerController;
+import net.minecraft.core.Timer;
+import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.helper.Side;
 import org.spongepowered.asm.mixin.Final;
@@ -19,16 +21,18 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
-@Mixin(value = PlayerController.class, remap = false)
+@Mixin(value = PlayerController.class)
 public class WandPos1ClientMixin {
 	@Shadow
 	@Final
 	protected Minecraft mc;
 
-	@Inject(method = "startDestroyBlock", at = @At("HEAD"), cancellable = true)
-	private void startDestroyBlock(int x, int y, int z, Side side, double xHit, double yHit, boolean repeat, CallbackInfo ci) {
+	// Select corner 1
+	@Inject(method = "swingItem", at = @At("HEAD"))
+	private void swingItem(boolean force, CallbackInfoReturnable<Boolean> cir) {
 		Player player = mc.thePlayer;
 
 		if (!WorldEditPermissions.canUseWorldEdit(player) || !WandHelper.isHoldingWand(player) || player.world == null) {
@@ -37,10 +41,22 @@ public class WandPos1ClientMixin {
 
 		PlayerData playerData = PlayerDataManager.getPlayerData(player.uuid);
 
-		Vec3i pos = new Vec3i(x, y, z);
+		Timer timer = ((MinecraftTimerAccessor) mc).getTimer();
+		Vec3i pos = WandHelper.getTargetedPos(player, timer.partialTicks);
 		playerData.getSelection(player.world).setCorner1(pos);
 
 		MessageHelper.info(player, "Corner 1" + " set to " + pos);
+	}
+
+	// Cancel destroy block
+	@Inject(method = "startDestroyBlock", at = @At("HEAD"), cancellable = true)
+	private void startDestroyBlock(int x, int y, int z, Side side, double xHit, double yHit, boolean repeat, CallbackInfo ci) {
+		Player player = mc.thePlayer;
+
+		if (!WorldEditPermissions.canUseWorldEdit(player) || !WandHelper.isHoldingWand(player) || player.world == null) {
+			return;
+		}
+
 		ci.cancel();
 	}
 }

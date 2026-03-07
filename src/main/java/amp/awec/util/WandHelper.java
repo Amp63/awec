@@ -8,8 +8,12 @@ import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.Items;
+import net.minecraft.core.util.phys.HitResult;
+import net.minecraft.core.util.phys.Vec3;
 
 public class WandHelper {
+	private static final double TARGET_POS_AIR_DISTANCE = 2;
+
 	public static boolean isHoldingWand(Player player) {
 		ItemStack heldItem = player.getHeldItem();
 		PlayerData playerData = PlayerDataManager.getPlayerData(player.uuid);
@@ -28,6 +32,20 @@ public class WandHelper {
 		}
 
 		return Item.getItem(wandItemId);
+	}
+
+	public static Vec3i getTargetedPos(Player player, float partialTick) {
+		float reach = player.gamemode.getBlockReachDistance();
+		HitResult result = player.rayTrace(reach, partialTick, false, false);
+		if (result != null) {
+			return new Vec3i(result.x, result.y, result.z);
+		}
+
+		Vec3 playerPos = player.getPosition(partialTick, true);
+		Vec3 shiftVector = player.getViewVector(partialTick).scale(TARGET_POS_AIR_DISTANCE);
+		Vec3 targetedPos = playerPos.add(shiftVector.x, shiftVector.y, shiftVector.z);
+
+		return new Vec3i(targetedPos);
 	}
 
 }

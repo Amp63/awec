@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.SERVER)
-@Mixin(value = PlayerList.class, remap = false)
+@Mixin(value = PlayerList.class)
 public class PlayerLeaveServerMixin {
 	@Inject(method = "playerLoggedOut", at = @At("TAIL"))
 	private void playerLoggedOut(PlayerServer entityplayermp, CallbackInfo ci) {

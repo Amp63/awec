@@ -36,6 +36,14 @@ public class Vec3i {
 		);
 	}
 
+	public Vec3i(Vec3 mcVector) {
+		set(
+			(int) Math.floor(mcVector.x),
+			(int) Math.floor(mcVector.y),
+			(int) Math.floor(mcVector.z)
+		);
+	}
+
 	public void set(int x, int y, int z) {
 		this.x = x;
 		this.y = y;
@@ -117,7 +125,7 @@ public class Vec3i {
 		return this;
 	}
 
-	public Vec3 asVec3() {
+	public Vec3 asMCVector() {
 		return Vec3.getTempVec3(x, y, z);
 	}
 }
