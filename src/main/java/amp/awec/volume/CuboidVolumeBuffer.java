@@ -6,7 +6,6 @@ import amp.awec.util.BlockFlipper;
 import amp.awec.util.Vec3i;
 import amp.awec.util.BlockState;
 import net.minecraft.core.world.World;
-import org.jetbrains.annotations.Nullable;
 
 public class CuboidVolumeBuffer {
 	private final BlockState[] blockBuffer;
@@ -55,7 +54,7 @@ public class CuboidVolumeBuffer {
 		while (iterator.hasNext()) {
 			Vec3i setBlockPos = iterator.next();
 			BlockState setBlock = blockBuffer[index];
-			BlockState oldBlock = setBlock.setNotify(world, setBlockPos, mask);
+			BlockState oldBlock = setBlock.set(world, setBlockPos, mask);
 			result.putChange(setBlockPos, oldBlock);
 			index++;
 		}

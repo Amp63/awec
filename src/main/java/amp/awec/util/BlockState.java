@@ -37,11 +37,11 @@ public class BlockState {
 		this.tileEntity = tileEntity;
 	}
 
-	public BlockState setNotify(World world, Vec3i pos) {
-		return setNotify(world, pos, BlockMask.ANY);
+	public BlockState set(World world, Vec3i pos) {
+		return set(world, pos, BlockMask.ANY);
 	}
 
-	public @Nullable BlockState setNotify(World world, Vec3i pos, BlockMask mask) {
+	public @Nullable BlockState set(World world, Vec3i pos, BlockMask mask) {
 		BlockState oldBlock = new BlockState(world, pos);
 		if (!mask.matches(oldBlock)) {
 			return null;
@@ -58,7 +58,8 @@ public class BlockState {
 			setMetadata = oldBlock.metadata;
 		}
 
-		world.setBlockAndMetadataWithNotify(pos.x, pos.y, pos.z, blockId, setMetadata);
+		world.setBlockAndMetadataRaw(pos.x, pos.y, pos.z, blockId, setMetadata);
+		world.markBlockNeedsUpdate(pos.x, pos.y, pos.z);
 
 		if (tileEntity != null) {
 			try {

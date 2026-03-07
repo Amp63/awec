@@ -32,7 +32,7 @@ public class WorldChange {
 		WorldChange oldWorld = new WorldChange();
 
 		changedBlocks.forEach((pos, blockState) -> {
-			BlockState oldBlock = blockState.setNotify(world, pos);
+			BlockState oldBlock = blockState.set(world, pos);
 			oldWorld.putChange(pos, oldBlock);
 		});
 

@@ -5,6 +5,7 @@
 - `//walls` now respects global mask
 - Fix `//undo` not undoing corners from `//walls`
 - Fix weird `//walls` behavior with thin selections
+- Set blocks no longer update neighbors
 
 ## v0.6.1+7.3_04
 

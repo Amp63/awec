@@ -55,7 +55,7 @@ public class HollowSphereOperation {
 						BlockState sampledBlock = pattern.sample();
 						if (sampledBlock != null) {
 							setPos.set(x, y, z);
-							BlockState oldBlock = sampledBlock.setNotify(world, setPos);
+							BlockState oldBlock = sampledBlock.set(world, setPos);
 							result.putChange(setPos, oldBlock);
 						}
 					}

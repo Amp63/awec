@@ -7,7 +7,6 @@ import amp.awec.volume.CuboidVolume;
 import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolumeIterator;
 import net.minecraft.core.world.World;
-import org.jetbrains.annotations.Nullable;
 
 public class SetOperation {
 
@@ -24,7 +23,7 @@ public class SetOperation {
 			Vec3i setPos = iterator.next();
 			BlockState sampledBlock = pattern.sample();
 			if (sampledBlock != null) {
-				BlockState oldBlock = sampledBlock.setNotify(world, setPos, mask);
+				BlockState oldBlock = sampledBlock.set(world, setPos, mask);
 				result.putChange(setPos, oldBlock);
 			}
 		}
