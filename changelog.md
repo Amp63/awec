@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.7.0+7.3_04
+
+- Added `//distr`
+- Added `//count`
+- `hand` in block masks now matches any metadata if not specified
+- Added `HAND` pattern which matches the exact metadata of the held item
+- Added "hand" and "HAND" to block pattern suggestions
+
 ## v0.6.2+7.3_04
 
 - Wand can now select corners in air

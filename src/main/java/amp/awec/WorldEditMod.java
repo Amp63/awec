@@ -5,6 +5,8 @@ import amp.awec.command.clipboard.CommandCut;
 import amp.awec.command.clipboard.CommandFlip;
 import amp.awec.command.clipboard.CommandPaste;
 import amp.awec.command.config.CommandReloadConfig;
+import amp.awec.command.info.CommandCount;
+import amp.awec.command.info.CommandDistr;
 import amp.awec.command.mask.CommandGmask;
 import amp.awec.command.navigation.CommandAscend;
 import amp.awec.command.navigation.CommandDescend;
@@ -75,6 +77,8 @@ public class WorldEditMod implements ModInitializer {
 		CommandManager.registerCommand(new CommandSchem());
 		CommandManager.registerCommand(new CommandReloadConfig());
 		CommandManager.registerCommand(new CommandGmask());
+		CommandManager.registerCommand(new CommandDistr());
+		CommandManager.registerCommand(new CommandCount());
 
 
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {

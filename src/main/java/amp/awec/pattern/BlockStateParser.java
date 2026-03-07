@@ -40,7 +40,7 @@ public class BlockStateParser {
 	private void setAliases(@Nullable Player player) {
 		blockAliases = new HashMap<>(BlockAliases.aliasMap);
 
-		// Set "hand" entry
+		// Set "hand" entries
 		if (player == null) {
 			return;
 		}
@@ -52,8 +52,11 @@ public class BlockStateParser {
 		if (heldItem.itemID < Blocks.highestBlockId) {
 			handBlock = Blocks.getBlock(heldItem.itemID);
 		}
-		BlockState handBlockState = new BlockState(handBlock, 0);
+
+		BlockState handBlockState = new BlockState(handBlock, -1);
+		BlockState strictHandBlockState = new BlockState(handBlock, heldItem.getMetadata());
 		blockAliases.put("hand", handBlockState);
+		blockAliases.put("HAND", strictHandBlockState);
 	}
 
 	public BlockState parse(String blockStateString) throws BlockStateException {

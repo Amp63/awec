@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SuggestionHelper {
+	public static final String[] ADDITIONAL_BLOCK_SUGGESTIONS = {"hand", "HAND"};
+
 	public static List<String> getBlockSuggestions(String partialString) {
 		List<String> suggestions = Arrays.stream(Blocks.blocksList)
 			.map(b -> b != null ? b.namespaceId().value() : "air")
@@ -17,6 +19,7 @@ public class SuggestionHelper {
 			.collect(Collectors.toList());
 
 		suggestions.addAll(BlockAliases.aliasMap.keySet());
+		suggestions.addAll(Arrays.asList(ADDITIONAL_BLOCK_SUGGESTIONS));
 
 		return suggestions.stream()
 			.filter(s -> s.startsWith(partialString))
