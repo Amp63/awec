@@ -4,6 +4,7 @@
 
 - Added `//distr`
 - Added `//count`
+- Added `//trim`
 - `hand` in block masks now matches any metadata if not specified
 - Added `HAND` pattern which matches the exact metadata of the held item
 - Added "hand" and "HAND" to block pattern suggestions
