@@ -7,7 +7,11 @@
 - Added `//trim`
 - `hand` in block masks now matches any metadata if not specified
 - Added `HAND` pattern which matches the exact metadata of the held item
-- Added "hand" and "HAND" to block pattern suggestions
+- Added `target` and `TARGET` custom block states
+  - These refer to the currently targeted block
+- Added `h1` - `h9` and `H1` - `H9` custom block states
+  - These refer to hotbar slots
+- Added all custom block states to command suggestions
 
 ## v0.6.2+7.3_04
 

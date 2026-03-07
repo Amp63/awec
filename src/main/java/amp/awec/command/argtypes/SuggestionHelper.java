@@ -10,7 +10,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SuggestionHelper {
-	public static final String[] ADDITIONAL_BLOCK_SUGGESTIONS = {"hand", "HAND"};
+	public static final String[] ADDITIONAL_BLOCK_SUGGESTIONS = {
+		"hand", "HAND",
+		"target", "TARGET",
+		"h1", "h2","h3","h4","h5","h6","h7","h8","h9",
+		"H1", "H2","H3","H4","H5","H6","H7","H8","H9",
+	};
 
 	public static List<String> getBlockSuggestions(String partialString) {
 		List<String> suggestions = Arrays.stream(Blocks.blocksList)

@@ -79,7 +79,7 @@ public class ArgumentTypeBlockMask implements ArgumentType<BlockMask> {
 
 	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-		String remaining = builder.getRemainingLowerCase();
+		String remaining = builder.getRemaining();
 		int lastOperatorIndex = RegexUtil.lastIndexOfSet(remaining, "[|&!%]");
 		String suggestionPrefix = "";
 		if (lastOperatorIndex != -1) {

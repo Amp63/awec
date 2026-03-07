@@ -1,6 +1,8 @@
 package amp.awec.pattern;
 
 import amp.awec.util.BlockState;
+import amp.awec.util.Vec3i;
+import amp.awec.util.WandHelper;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.entity.player.Player;
@@ -40,23 +42,49 @@ public class BlockStateParser {
 	private void setAliases(@Nullable Player player) {
 		blockAliases = new HashMap<>(BlockAliases.aliasMap);
 
-		// Set "hand" entries
+		// Set custom entries
 		if (player == null) {
 			return;
 		}
+
+		// Hand
 		ItemStack heldItem = player.getHeldItem();
-		if (heldItem == null) {
-			return;
-		}
-		Block<?> handBlock = null;
-		if (heldItem.itemID < Blocks.highestBlockId) {
-			handBlock = Blocks.getBlock(heldItem.itemID);
+		if (heldItem != null) {
+			if (heldItem.itemID < Blocks.highestBlockId) {
+				Block<?> handBlock = Blocks.getBlock(heldItem.itemID);
+				BlockState handBlockState = new BlockState(handBlock, -1);
+				BlockState strictHandBlockState = new BlockState(handBlock, heldItem.getMetadata());
+				blockAliases.put("hand", handBlockState);
+				blockAliases.put("HAND", strictHandBlockState);
+			}
 		}
 
-		BlockState handBlockState = new BlockState(handBlock, -1);
-		BlockState strictHandBlockState = new BlockState(handBlock, heldItem.getMetadata());
-		blockAliases.put("hand", handBlockState);
-		blockAliases.put("HAND", strictHandBlockState);
+		// Target
+		if (player.world != null) {
+			Vec3i targetPos = WandHelper.getTargetedPos(player, 1.0f);
+			BlockState strictTargetBlock = new BlockState(player.world, targetPos);
+			if (strictTargetBlock.block != null) {
+				BlockState targetBlock = new BlockState(strictTargetBlock.block, -1);
+				blockAliases.put("target", targetBlock);
+				blockAliases.put("TARGET", strictTargetBlock);
+			}
+		}
+
+		// Hotbar
+		int hotbarOffset = player.inventory.getHotbarOffset();
+		for (int i = 0; i < 9; i++) {
+			int itemIndex = i + hotbarOffset * 9;
+			ItemStack hotbarItem = player.inventory.mainInventory[itemIndex];
+			if (hotbarItem != null) {
+				if (hotbarItem.itemID < Blocks.highestBlockId) {
+					Block<?>hotbarBlock = Blocks.getBlock(hotbarItem.itemID);
+					BlockState hotbarBlockState = new BlockState(hotbarBlock, -1);
+					BlockState strictHotbarBlockState = new BlockState(hotbarBlock, hotbarItem.getMetadata());
+					blockAliases.put("h" + (i+1), hotbarBlockState);
+					blockAliases.put("H" + (i+1), strictHotbarBlockState);
+				}
+			}
+		}
 	}
 
 	public BlockState parse(String blockStateString) throws BlockStateException {
