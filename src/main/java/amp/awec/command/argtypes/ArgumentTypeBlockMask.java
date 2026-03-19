@@ -35,7 +35,7 @@ public class ArgumentTypeBlockMask implements ArgumentType<BlockMask> {
 	}
 
 	private boolean isValidMaskChar(char c) {
-		return String.valueOf(c).matches("[A-Za-z0-9_:%#&|!]");
+		return String.valueOf(c).matches("[A-Za-z0-9_:%#.&|!]");
 	}
 
 	private String readMaskString(StringReader reader) {
@@ -68,6 +68,12 @@ public class ArgumentTypeBlockMask implements ArgumentType<BlockMask> {
 		}
 		catch (BlockMask.BlockTagException e) {
 			currentSuggestions = SuggestionHelper.getBlockTagSuggestions(e.partialString);
+			LiteralMessage message = new LiteralMessage(e.getMessage());
+			throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
+		}
+		catch (BlockMask.DyeColorException e) {
+			WorldEditMod.LOGGER.info("Partial string: " + e.partialString);
+			currentSuggestions = SuggestionHelper.getDyeColorSuggestions(e.partialString);
 			LiteralMessage message = new LiteralMessage(e.getMessage());
 			throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
 		}

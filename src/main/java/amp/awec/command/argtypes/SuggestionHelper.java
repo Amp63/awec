@@ -38,4 +38,11 @@ public class SuggestionHelper {
 			.map(name -> "#" + name)
 			.collect(Collectors.toList());
 	}
+
+	public static List<String> getDyeColorSuggestions(String partialString) {
+		return ArgumentTypeDyeColor.DYE_COLOR_LOOKUP.keySet().stream()
+			.filter(color -> color.startsWith(partialString))
+			.map(color -> "c." + color)
+			.collect(Collectors.toList());
+	}
 }

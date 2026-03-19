@@ -80,6 +80,7 @@ public class WorldEditMod implements ModInitializer {
 		CommandManager.registerCommand(new CommandDistr());
 		CommandManager.registerCommand(new CommandCount());
 		CommandManager.registerCommand(new CommandTrim());
+		CommandManager.registerCommand(new CommandPaint());
 
 
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {

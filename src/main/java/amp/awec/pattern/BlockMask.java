@@ -1,10 +1,15 @@
 package amp.awec.pattern;
 
+import amp.awec.command.argtypes.ArgumentTypeDyeColor;
 import amp.awec.util.BlockState;
+import com.mojang.brigadier.arguments.ArgumentType;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.block.IPaintable;
+import net.minecraft.core.block.IPainted;
 import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.data.tag.Tag;
 import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.util.helper.DyeColor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -50,12 +55,42 @@ class BlockTag extends MaskElement {
 	}
 }
 
+class MaskDyeColor extends MaskElement {
+	private final DyeColor dyeColor;
+
+	public MaskDyeColor(DyeColor dyeColor) {
+		this.dyeColor = dyeColor;
+	}
+
+	@Override
+	public boolean matches(BlockState blockState) {
+		Block<?> block = blockState.block;
+		if (block == null) {
+			return false;
+		}
+
+		if (!Block.hasLogicClass(block, IPaintable.class)) {
+			return false;
+		}
+
+		IPaintable paintable = (IPaintable) block.getLogic();
+		if (paintable.canBePainted() && paintable instanceof IPainted) {
+			IPainted painted = (IPainted) paintable;
+			int checkMeta = painted.fromMetadata(blockState.metadata).blockMeta;
+			return this.dyeColor.blockMeta == checkMeta;
+		}
+
+		return false;
+	}
+}
+
 public class BlockMask {
 	private static final String splitPattern = "(?=[|&!])|(?<=[|&!])";
 	private static final Pattern operatorPattern = Pattern.compile("[|&!]");
 	private static final String binaryOperatorPattern  = "[|&]";
 	private static final Pattern randomBlockPattern = Pattern.compile("(?:(\\d+)%)?([A-Za-z0-9_]+(?::\\d+)?)");
 	private static final Pattern blockTagPattern = Pattern.compile("#([a-zA-Z_]+)");
+	private static final Pattern dyeColorPattern = Pattern.compile("c\\.([a-zA-Z]+)");
 
 	private final BlockStateParser blockStateParser;
 	private final List<Object> rpnTokens = new ArrayList<>();
@@ -80,6 +115,14 @@ public class BlockMask {
 	public static class BlockTagException extends BlockMaskException {
 		public String partialString;
 		public BlockTagException(String errorMessage, String partialString) {
+			super(errorMessage);
+			this.partialString = partialString;
+		}
+	}
+
+	public static class DyeColorException extends BlockMaskException {
+		public String partialString;
+		public DyeColorException(String errorMessage, String partialString) {
 			super(errorMessage);
 			this.partialString = partialString;
 		}
@@ -176,14 +219,18 @@ public class BlockMask {
 			}
 
 			Matcher randomBlockMatcher = randomBlockPattern.matcher(token);
-			Matcher blockTagMatcher    = blockTagPattern.matcher(token);
+			Matcher blockTagMatcher = blockTagPattern.matcher(token);
+			Matcher dyeColorMatcher = dyeColorPattern.matcher(token);
 			MaskElement parsedElement;
 
 			if (blockTagMatcher.find()) {
 				parsedElement = parseBlockTag(blockTagMatcher);
+			} else if (dyeColorMatcher.find()) {
+				parsedElement = parseDyeColor(dyeColorMatcher);
 			} else if (randomBlockMatcher.find()) {
 				parsedElement = parseRandomBlock(randomBlockMatcher);
-			} else {
+			}
+			else {
 				throw new BlockMaskException("Unrecognized mask element type");
 			}
 
@@ -241,5 +288,16 @@ public class BlockMask {
 		}
 
 		return new BlockTag(tag);
+	}
+
+	private MaskDyeColor parseDyeColor(Matcher matcher) throws DyeColorException {
+		String colorString = matcher.group(1);
+		DyeColor dyeColor = ArgumentTypeDyeColor.DYE_COLOR_LOOKUP.get(colorString);
+
+		if (dyeColor == null) {
+			throw new DyeColorException("Unrecognized dye color", colorString);
+		}
+
+		return new MaskDyeColor(dyeColor);
 	}
 }

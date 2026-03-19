@@ -2,9 +2,15 @@
 
 ## v0.7.0+7.3_04
 
+- Added `//paint`
+  - Paints all paintable blocks in a selection to a specific color
+  - Ex: `//paint blue`, `//paint red yellow`
 - Added `//distr`
 - Added `//count`
 - Added `//trim`
+- Added dye colors to block masks
+  - You can now use `c.[color]` in a mask to match any blocks that are painted with that color
+  - Ex: `//replace c.blue air`
 - `hand` in block masks now matches any metadata if not specified
 - Added `HAND` pattern which matches the exact metadata of the held item
 - Added `target` and `TARGET` custom block states
