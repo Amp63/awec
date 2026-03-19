@@ -3,7 +3,7 @@
 	"id": "awec",
 	"version": "${version}",
 	"name": "Another WorldEdit Clone",
-	"description": "Another WorldEdit Clone",
+	"description": "Another WorldEdit Clone for BTA",
 	"authors": [
 		"Amp63"
 	],
@@ -12,7 +12,7 @@
 		"sources": ""
 	},
 	"icon": "icon.png",
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
