@@ -1,19 +1,12 @@
 package amp.awec.operation;
 
-import amp.awec.WorldEditMod;
-import amp.awec.command.CommandPlayerData;
 import amp.awec.pattern.BlockMask;
-import amp.awec.pattern.BlockPattern;
 import amp.awec.util.BlockState;
-import amp.awec.util.MessageHelper;
 import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolume;
 import amp.awec.volume.CuboidVolumeIterator;
-import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.IPaintable;
-import net.minecraft.core.block.IPainted;
-import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.util.helper.DyeColor;
 import net.minecraft.core.world.World;
 

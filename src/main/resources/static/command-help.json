@@ -1,0 +1,189 @@
+{
+  "set": {
+    "usage": "//set <pattern> (-m <mask>)",
+    "description": "Sets all blocks in the selected region using a pattern",
+    "examples": "//set stone\n//set sand,gravel\n//set 20%dirt,grass",
+    "requires_selection": "true"
+  },
+  "pos1": {
+    "usage": "//pos1 (<x> <y> <z>)",
+    "description": "Sets position 1 of the selection",
+    "examples": "//pos1\n//pos1 0 100 0",
+    "requires_selection": "false"
+  },
+  "pos2": {
+    "usage": "//pos2 (<x> <y> <z>)",
+    "description": "Sets position 2 of the selection",
+    "examples": "//pos2\n//pos2 0 100 0",
+    "requires_selection": "false"
+  },
+  "wand": {
+    "usage": "//wand",
+    "description": "Gives the player a selection wand",
+    "requires_selection": "false"
+  },
+  "up": {
+    "usage": "//up (<amount>)",
+    "description": "Moves the player upwards",
+    "examples": "//up\n//up 10",
+    "requires_selection": "false"
+  },
+  "thru": {
+    "usage": "//thru (<wall_count>)",
+    "description": "Moves the player through a targeted wall",
+    "examples": "//thru\n//thru 3",
+    "requires_selection": "false"
+  },
+  "ascend": {
+    "usage": "//ascend (<wall_count>)",
+    "description": "Moves the player up a number of levels",
+    "examples": "//ascend\n//ascend 2",
+    "requires_selection": "false"
+  },
+  "descend": {
+    "usage": "//descend (<wall_count>)",
+    "description": "Moves the player down a number of levels",
+    "examples": "//descend\n//descend 2",
+    "requires_selection": "false"
+  },
+  "togglewand": {
+    "usage": "//togglewand",
+    "description": "Enables or disables the selection wand",
+    "requires_selection": "false"
+  },
+  "copy": {
+    "usage": "//copy",
+    "description": "Copies the selected region to the clipboard",
+    "requires_selection": "true"
+  },
+  "paste": {
+    "usage": "//paste (-m <mask>)",
+    "description": "Pastes a region from the clipboard",
+    "examples": "//paste\n//paste -m air",
+    "requires_selection": "false"
+  },
+  "cut": {
+    "usage": "//cut",
+    "description": "Copies and sets the selected region to air",
+    "requires_selection": "true"
+  },
+  "flip": {
+    "usage": "//flip (<direction>)",
+    "description": "Flips the clipboard on an axis",
+    "examples": "//flip\n//flip north\n//flip up",
+    "requires_selection": "false"
+  },
+  "replace": {
+    "usage": "//replace <mask> <pattern>",
+    "description": "Sets all blocks that match the given mask in the selected region using a pattern",
+    "examples": "//replace stone air\n//replace grass dirt,gravel\n//replace water|lava glass",
+    "requires_selection": "true"
+  },
+  "walls": {
+    "usage": "//walls <pattern> (<thickness>)",
+    "description": "Creates walls around the selected region using a pattern",
+    "examples": "//walls stone\n//walls dirt 2",
+    "requires_selection": "true"
+  },
+  "stack": {
+    "usage": "//stack (<count>) (<direction>)",
+    "description": "Repeats the selected region a number of times in a given direction",
+    "examples": "//stack\n//stack 10\n//stack 5 left\n//stack 8 up",
+    "requires_selection": "true"
+  },
+  "undo": {
+    "usage": "//undo (<count>)",
+    "description": "Undoes previous operations",
+    "examples": "//undo\n//undo 5",
+    "requires_selection": "false"
+  },
+  "redo": {
+    "usage": "//redo (<count>)",
+    "description": "Redoes undone operations",
+    "examples": "//redo\n//redo 5",
+    "requires_selection": "false"
+  },
+  "move": {
+    "usage": "//move (<amount>) (<direction>)",
+    "description": "Moves the selected region by a given amount in some direction",
+    "examples": "//move\n//move 10\n//move 5 down",
+    "requires_selection": "true"
+  },
+  "shift": {
+    "usage": "//shift (<amount>) (<direction>)",
+    "description": "Shifts the current selection by a given amount in some direction",
+    "examples": "//shift\n//shift 3\n//shift 2 right",
+    "requires_selection": "true"
+  },
+  "expand": {
+    "usage": "//expand (<amount>) (<direction>)",
+    "description": "Expands the current selection by a given amount in some direction",
+    "examples": "//expand\n//expand 5\n//expand 10 left\n//expand -1    (contract selection)",
+    "requires_selection": "true"
+  },
+  "sphere": {
+    "usage": "//sphere <pattern> <radius>)",
+    "description": "Creates a filled sphere with a given radius using a pattern",
+    "examples": "//sphere glass 5\n//sphere air 10\n//sphere stone,cobble_stone 6",
+    "requires_selection": "false"
+  },
+  "hsphere": {
+    "usage": "//hsphere <pattern> <radius>)",
+    "description": "Creates a hollow sphere with a given radius using a pattern",
+    "examples": "//hsphere glass 5\n//hsphere stone,cobble_stone 6",
+    "requires_selection": "false"
+  },
+  "cyl": {
+    "usage": "//cyl <pattern> <radius> (<height>)",
+    "description": "Creates a filled cylinder with a given radius and height using a pattern",
+    "examples": "//cyl grass 10\n//cyl stone 6 7",
+    "requires_selection": "false"
+  },
+  "hcyl": {
+    "usage": "//hcyl <pattern> <radius> (<height>)",
+    "description": "Creates a hollow cylinder with a given radius and height using a pattern",
+    "examples": "//hcyl grass 10\n//hcyl stone 6 7",
+    "requires_selection": "false"
+  },
+  "schem": {
+    "usage": "//schem [save,load,delete,list]",
+    "description": "Performs a schematic operation",
+    "examples": "//schem save myschem    (save clipboard to schematic)\n//schem load myschem.schem    (load schematic to clipboard)\n//schem delete myschem.schem\n//schem list",
+    "requires_selection": "true"
+  },
+  "reloadconfig": {
+    "usage": "//reloadconfig",
+    "description": "Reloads the WorldEdit configuration file",
+    "requires_selection": "false"
+  },
+  "gmask": {
+    "usage": "//gmask <mask>",
+    "description": "Sets the global mask",
+    "examples": "//gmask air\n//gmask #mineable_by_pickaxe\n//gmask grass|dirt",
+    "requires_selection": "false"
+  },
+  "distr": {
+    "usage": "//distr (<mask>)",
+    "description": "Gets the block distribution in the selected region using the given mask",
+    "examples": "//distr\n//distr !air\n//distr #mineable_by_shovel",
+    "requires_selection": "true"
+  },
+  "count": {
+    "usage": "//distr (<mask>)",
+    "description": "Counts the number of blocks in the selected region that match the given mask",
+    "examples": "//count\n//count !air\n//count #mineable_by_shovel",
+    "requires_selection": "true"
+  },
+  "trim": {
+    "usage": "//trim (<mask>)",
+    "description": "Minimizes the size of the selection using the given mask",
+    "examples": "//trim\n//trim !air&!water",
+    "requires_selection": "true"
+  },
+  "paint": {
+    "usage": "//paint <color> (<set color>)",
+    "description": "Paints all paintable blocks in the selected region to a given color",
+    "examples": "//paint red\n//paint blue green    (paints all blue blocks green)",
+    "requires_selection": "true"
+  }
+}

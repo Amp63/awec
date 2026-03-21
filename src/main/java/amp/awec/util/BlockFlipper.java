@@ -51,6 +51,7 @@ public class BlockFlipper {
 		}
 	}
 
+	// TODO: flipping on metadata 1,2 and 9,8 does nothing
 	public static int stairs(int metadata, Vec3i flipVector) {
 		metadata ^= (flipVector.x & ~(metadata >> 1 & 1));
 		metadata ^= (flipVector.z & (metadata >> 1 & 1));

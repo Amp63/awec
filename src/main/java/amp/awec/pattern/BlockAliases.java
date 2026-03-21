@@ -20,7 +20,7 @@ public class BlockAliases {
 	public static final String ALIASES_DATA_PATH = "/static/block-aliases.json";
 	public static final Map<String, BlockState> aliasMap = new HashMap<>();
 
-	public static void initialize() {
+	static {
 		try (InputStream is = BlockAliases.class.getResourceAsStream(ALIASES_DATA_PATH)) {
 			assert is != null;
 			try (Reader reader = new InputStreamReader(is)) {

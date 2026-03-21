@@ -7,6 +7,7 @@ import amp.awec.command.clipboard.CommandPaste;
 import amp.awec.command.config.CommandReloadConfig;
 import amp.awec.command.info.CommandCount;
 import amp.awec.command.info.CommandDistr;
+import amp.awec.command.info.CommandHelp;
 import amp.awec.command.mask.CommandGmask;
 import amp.awec.command.navigation.CommandAscend;
 import amp.awec.command.navigation.CommandDescend;
@@ -22,6 +23,7 @@ import amp.awec.config.Config;
 import amp.awec.pattern.BlockAliases;
 import amp.awec.permission.WorldEditWhitelist;
 import amp.awec.util.BlockFlipper;
+import amp.awec.util.HelpList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -46,7 +48,6 @@ public class WorldEditMod implements ModInitializer {
 			throw new RuntimeException("Failed to load WorldEdit configuration");
 		}
 
-		BlockAliases.initialize();
 		BlockFlipper.initialize();
 
 		CommandManager.registerCommand(new CommandPos1());
@@ -81,6 +82,7 @@ public class WorldEditMod implements ModInitializer {
 		CommandManager.registerCommand(new CommandCount());
 		CommandManager.registerCommand(new CommandTrim());
 		CommandManager.registerCommand(new CommandPaint());
+		CommandManager.registerCommand(new CommandHelp());
 
 
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {

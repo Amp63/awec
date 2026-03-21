@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.7.1+7.3_04
+
+- Added `//help`
+
 ## v0.7.0+7.3_04
 
 - Added `//paint`
