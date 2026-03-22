@@ -72,8 +72,12 @@ public class ArgumentTypeBlockMask implements ArgumentType<BlockMask> {
 			throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
 		}
 		catch (BlockMask.DyeColorException e) {
-			WorldEditMod.LOGGER.info("Partial string: " + e.partialString);
 			currentSuggestions = SuggestionHelper.getDyeColorSuggestions(e.partialString);
+			LiteralMessage message = new LiteralMessage(e.getMessage());
+			throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
+		}
+		catch (BlockMask.BlockTypeException e) {
+			currentSuggestions = SuggestionHelper.getBlockTypeSuggestions(e.partialString);
 			LiteralMessage message = new LiteralMessage(e.getMessage());
 			throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
 		}

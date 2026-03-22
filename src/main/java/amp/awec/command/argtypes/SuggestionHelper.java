@@ -1,6 +1,7 @@
 package amp.awec.command.argtypes;
 
 import amp.awec.pattern.BlockAliases;
+import amp.awec.pattern.BlockTypes;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.data.tag.Tag;
@@ -45,4 +46,12 @@ public class SuggestionHelper {
 			.map(color -> "c." + color)
 			.collect(Collectors.toList());
 	}
+
+	public static List<String> getBlockTypeSuggestions(String partialString) {
+		return BlockTypes.blockTypeMap.keySet().stream()
+			.filter(color -> color.startsWith(partialString))
+			.map(color -> "t." + color)
+			.collect(Collectors.toList());
+	}
+
 }

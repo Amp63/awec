@@ -84,13 +84,27 @@ class MaskDyeColor extends MaskElement {
 	}
 }
 
+class MaskBlockType extends MaskElement {
+	private final Set<Block<?>> matchingBlocks;
+
+	public MaskBlockType(Set<Block<?>> matchingBlocks) {
+		this.matchingBlocks = matchingBlocks;
+	}
+
+	@Override
+	public boolean matches(BlockState blockState) {
+		return matchingBlocks.contains(blockState.block);
+	}
+}
+
 public class BlockMask {
 	private static final String splitPattern = "(?=[|&!])|(?<=[|&!])";
 	private static final Pattern operatorPattern = Pattern.compile("[|&!]");
 	private static final String binaryOperatorPattern  = "[|&]";
 	private static final Pattern randomBlockPattern = Pattern.compile("(?:(\\d+)%)?([A-Za-z0-9_]+(?::\\d+)?)");
 	private static final Pattern blockTagPattern = Pattern.compile("#([a-zA-Z_]+)");
-	private static final Pattern dyeColorPattern = Pattern.compile("c\\.([a-zA-Z]+)");
+	private static final Pattern dyeColorPattern = Pattern.compile("c\\.([a-zA-Z]*)");
+	private static final Pattern blockTypePattern = Pattern.compile("t\\.([a-zA-Z]*)");
 
 	private final BlockStateParser blockStateParser;
 	private final List<Object> rpnTokens = new ArrayList<>();
@@ -123,6 +137,14 @@ public class BlockMask {
 	public static class DyeColorException extends BlockMaskException {
 		public String partialString;
 		public DyeColorException(String errorMessage, String partialString) {
+			super(errorMessage);
+			this.partialString = partialString;
+		}
+	}
+
+	public static class BlockTypeException extends BlockMaskException {
+		public String partialString;
+		public BlockTypeException(String errorMessage, String partialString) {
 			super(errorMessage);
 			this.partialString = partialString;
 		}
@@ -221,12 +243,15 @@ public class BlockMask {
 			Matcher randomBlockMatcher = randomBlockPattern.matcher(token);
 			Matcher blockTagMatcher = blockTagPattern.matcher(token);
 			Matcher dyeColorMatcher = dyeColorPattern.matcher(token);
+			Matcher blockTypeMatcher = blockTypePattern.matcher(token);
 			MaskElement parsedElement;
 
 			if (blockTagMatcher.find()) {
 				parsedElement = parseBlockTag(blockTagMatcher);
 			} else if (dyeColorMatcher.find()) {
 				parsedElement = parseDyeColor(dyeColorMatcher);
+			} else if (blockTypeMatcher.find()) {
+				parsedElement = parseBlockType(blockTypeMatcher);
 			} else if (randomBlockMatcher.find()) {
 				parsedElement = parseRandomBlock(randomBlockMatcher);
 			}
@@ -299,5 +324,16 @@ public class BlockMask {
 		}
 
 		return new MaskDyeColor(dyeColor);
+	}
+
+	private MaskBlockType parseBlockType(Matcher matcher) throws BlockTypeException {
+		String blockTypeString = matcher.group(1);
+		Set<Block<?>> matchingBlocks = BlockTypes.blockTypeMap.get(blockTypeString);
+
+		if (matchingBlocks == null) {
+			throw new BlockTypeException("Unrecognized dye color", blockTypeString);
+		}
+
+		return new MaskBlockType(matchingBlocks);
 	}
 }
