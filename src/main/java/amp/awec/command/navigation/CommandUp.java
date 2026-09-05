@@ -1,6 +1,5 @@
 package amp.awec.command.navigation;
 
-import amp.awec.util.Vec3i;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.PosHelper;
 import com.mojang.brigadier.CommandDispatcher;
@@ -9,15 +8,17 @@ import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import org.joml.Vector3dc;
 
 public class CommandUp implements CommandManager.CommandRegistry {
-	private static final int UP_BLOCK_ID = Blocks.GLASS.id();
+	private static final Block<?> UP_BLOCK = Blocks.GLASS;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -45,16 +46,13 @@ public class CommandUp implements CommandManager.CommandRegistry {
 		Player player = source.getSender();
 		if (player != null) {
 			World world = source.getWorld();
-			Vec3 playerPos = player.getPosition(1.0f, false);
-			Vec3i blockPos = PosHelper.getPlayerBlockPos(player);
-			int shiftedY = Math.max(0, Math.min(255, blockPos.y + distance));
-			double playerTeleportY = shiftedY + 1.1;
-			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-				playerTeleportY += player.getHeightOffset();
-			}
+			Vector3dc playerPos = player.getPosition(1.0f, false);
+			TilePos blockPos = PosHelper.getPlayerTilePos(player);
+			double playerTeleportY = Math.max(0, Math.min(255, blockPos.y + distance));
+			blockPos.y += distance - 1;
 
-			source.teleportPlayerToPos(player, playerPos.x, playerTeleportY, playerPos.z);
-			world.setBlockWithNotify(blockPos.x, shiftedY, blockPos.z, UP_BLOCK_ID);
+			source.teleportPlayerToPos(player, playerPos.x(), playerTeleportY, playerPos.z());
+			world.setBlockTypeNotify(blockPos, UP_BLOCK);
 		}
 	}
 }

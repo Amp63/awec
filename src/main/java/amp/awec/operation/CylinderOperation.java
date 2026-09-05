@@ -2,15 +2,15 @@ package amp.awec.operation;
 
 import amp.awec.pattern.BlockPattern;
 import amp.awec.util.BlockState;
-import amp.awec.util.Vec3i;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
 
 public class CylinderOperation {
-	public static WorldChange execute(World world, Vec3i center, BlockPattern pattern, int radius, int height) {
+	public static WorldChange execute(World world, TilePos center, BlockPattern pattern, int radius, int height) {
 		WorldChange result = new WorldChange();
 
 		final int radiusSquared = radius * radius;
-		Vec3i setPos = new Vec3i();
+		TilePos setPos = new TilePos();
 
 		int cx = center.x;
 		int cy = center.y;
@@ -41,5 +41,4 @@ public class CylinderOperation {
 
 		return result;
 	}
-
 }

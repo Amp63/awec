@@ -109,6 +109,12 @@
     "examples": "//move\n//move 10\n//move 5 down",
     "requires_selection": "true"
   },
+  "moves": {
+    "usage": "//moves (<amount>) (<direction>)",
+    "description": "Moves the selected region and shifts the current selection",
+    "examples": "//moves\n//moves 10\n//moves 5 down",
+    "requires_selection": "true"
+  },
   "shift": {
     "usage": "//shift (<amount>) (<direction>)",
     "description": "Shifts the current selection by a given amount in some direction",

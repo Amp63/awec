@@ -3,6 +3,7 @@ package amp.awec.util;
 import amp.awec.WorldEditMod;
 import net.minecraft.core.block.*;
 import net.minecraft.core.block.piston.*;
+import org.joml.Vector3i;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,7 @@ import java.util.function.BiFunction;
 // trapdoor
 // chest
 public class BlockFlipper {
-	public static Map<Class<?>, BiFunction<Integer, Vec3i, Integer>> flipMap = new HashMap<>();
+	public static Map<Class<?>, BiFunction<Integer, Vector3i, Integer>> flipMap = new HashMap<>();
 
 	public static void initialize() {
 		flipMap.put(BlockLogicStairs.class, BlockFlipper::stairs);
@@ -27,8 +28,6 @@ public class BlockFlipper {
 		flipMap.put(BlockLogicPressurePlatePainted.class, BlockFlipper::pressurePlate);
 		flipMap.put(BlockLogicMotionSensor.class, BlockFlipper::sixDirectionBlock);
 		flipMap.put(BlockLogicPistonBase.class, BlockFlipper::sixDirectionBlock);
-		flipMap.put(BlockLogicPistonBaseSteel.class, BlockFlipper::sixDirectionBlock);
-		flipMap.put(BlockLogicPistonBaseSticky.class, BlockFlipper::sixDirectionBlock);
 		flipMap.put(BlockLogicPistonHead.class, BlockFlipper::sixDirectionBlock);
 		flipMap.put(BlockLogicPistonMoving.class, BlockFlipper::sixDirectionBlock);
 		flipMap.put(BlockLogicActivator.class, BlockFlipper::sixDirectionBlock);
@@ -39,7 +38,7 @@ public class BlockFlipper {
 		flipMap.put(BlockLogicDoorPainted.class, BlockFlipper::door);
 	}
 
-	public static void flip(BlockState blockState, Vec3i flipVector) {
+	public static void flip(BlockState blockState, Vector3i flipVector) {
 		Block<?> block = blockState.block;
 		if (block == null) {
 			return;
@@ -52,18 +51,18 @@ public class BlockFlipper {
 	}
 
 	// TODO: flipping on metadata 1,2 and 9,8 does nothing
-	public static int stairs(int metadata, Vec3i flipVector) {
+	public static int stairs(int metadata, Vector3i flipVector) {
 		metadata ^= (flipVector.x & ~(metadata >> 1 & 1));
 		metadata ^= (flipVector.z & (metadata >> 1 & 1));
 		metadata ^= (flipVector.y & 1) << 3;
 		return metadata;
 	}
 
-	public static int slab(int metadata, Vec3i flipVector) {
+	public static int slab(int metadata, Vector3i flipVector) {
 		return metadata ^ (flipVector.y & 1) << 1;
 	}
 
-	public static int button(int metadata, Vec3i flipVector) {
+	public static int button(int metadata, Vector3i flipVector) {
 		int metadataMod = metadata % 8;
 
 		if (flipVector.x == 1) {
@@ -85,7 +84,7 @@ public class BlockFlipper {
 		return metadata;
 	}
 
-	public static int pressurePlate(int metadata, Vec3i flipVector) {
+	public static int pressurePlate(int metadata, Vector3i flipVector) {
 		if (flipVector.y == 1) {
 			if (metadata >= 0 && metadata <= 3) {
 				return metadata ^ 2;
@@ -105,7 +104,7 @@ public class BlockFlipper {
 		return metadata;
 	}
 
-	public static int fourDirectionBlock(int metadata, Vec3i flipVector) {
+	public static int fourDirectionBlock(int metadata, Vector3i flipVector) {
 		if (flipVector.z == 1) {
 			if (metadata >= 2 && metadata <= 3) {
 				return metadata ^ 1;
@@ -120,7 +119,7 @@ public class BlockFlipper {
 		return metadata;
 	}
 
-	public static int sixDirectionBlock(int metadata, Vec3i flipVector) {
+	public static int sixDirectionBlock(int metadata, Vector3i flipVector) {
 		if (flipVector.y == 1) {
 			if (metadata < 3) {
 				return metadata ^ 1;
@@ -140,12 +139,12 @@ public class BlockFlipper {
 		return metadata;
 	}
 
-	public static int sign(int metadata, Vec3i flipVector) {
+	public static int sign(int metadata, Vector3i flipVector) {
 		// TODO
 		return metadata;
 	}
 
-	public static int door(int metadata, Vec3i flipVector) {
+	public static int door(int metadata, Vector3i flipVector) {
 		if (metadata % 2 == 0 && flipVector.x == 1) {
 			return metadata ^ 2;
 		}

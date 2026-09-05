@@ -1,23 +1,23 @@
 package amp.awec.operation;
 
 import amp.awec.util.BlockState;
-import amp.awec.util.Vec3i;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class WorldChange {
-	public Map<Vec3i, BlockState> changedBlocks = new HashMap<>();
+	public Map<TilePos, BlockState> changedBlocks = new HashMap<>();
 	public int changedBlockCount = 0;
 
-	public void putChange(Vec3i pos, @Nullable BlockState blockState) {
+	public void putChange(TilePos pos, @Nullable BlockState blockState) {
 		if (blockState == null) {
 			return;
 		}
 
-		Vec3i newPos = new Vec3i(pos);
+		TilePos newPos = new TilePos(pos);
 		if (changedBlocks.put(newPos, blockState) == null) {
 			changedBlockCount++;
 		}

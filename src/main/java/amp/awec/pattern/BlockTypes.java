@@ -1,7 +1,7 @@
 package amp.awec.pattern;
 
 import amp.awec.util.BlockState;
-import com.google.common.reflect.TypeToken;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;

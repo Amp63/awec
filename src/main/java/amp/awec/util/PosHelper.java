@@ -1,16 +1,27 @@
 package amp.awec.util;
 
 import net.minecraft.core.entity.player.Player;
-import net.minecraft.core.util.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.world.pos.TilePos;
+import org.joml.RoundingMode;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
+import org.joml.Vector3i;
 
 public class PosHelper {
-	public static Vec3i getPlayerBlockPos(Player player) {
-		Vec3 playerPos = player.getPosition(1.0f, true);
-		return new Vec3i(
-			(int) Math.floor(playerPos.x),
-			(int) Math.floor(playerPos.y)-2,
-			(int) Math.floor(playerPos.z)
+	public static Vector3d getPlayerBlockPos(Player player) {
+		Vector3dc playerPos = player.getPosition(1.0f, false);
+		return new Vector3d(
+			(int) Math.floor(playerPos.x()),
+			(int) Math.floor(playerPos.y()),
+			(int) Math.floor(playerPos.z())
 		);
+	}
+
+	public static Vector3i getPlayerBlockPosFloor(Player player) {
+		return new Vector3i(getPlayerBlockPos(player), RoundingMode.FLOOR);
+	}
+
+	public static TilePos getPlayerTilePos(Player player) {
+		return new TilePos(getPlayerBlockPosFloor(player));
 	}
 }

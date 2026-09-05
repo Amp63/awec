@@ -5,7 +5,6 @@ import amp.awec.command.argtypes.ArgumentTypeBlockMask;
 import amp.awec.operation.WorldChange;
 import amp.awec.pattern.BlockMask;
 import amp.awec.util.MessageHelper;
-import amp.awec.util.Vec3i;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.PosHelper;
 import com.mojang.brigadier.CommandDispatcher;
@@ -14,6 +13,7 @@ import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
+import net.minecraft.core.world.pos.TilePos;
 import org.jetbrains.annotations.Nullable;
 
 public class CommandPaste implements CommandManager.CommandRegistry {
@@ -45,10 +45,10 @@ public class CommandPaste implements CommandManager.CommandRegistry {
 			return 0;
 		}
 
-		Vec3i pastePos = PosHelper.getPlayerBlockPos(playerData.player);
+		TilePos pastePos = PosHelper.getPlayerTilePos(playerData.player);
 		MessageHelper.success(source, "Pasted");
 
-		Vec3i setPos = pastePos.add(playerData.data.copyOffset);
+		TilePos setPos = pastePos.add(playerData.data.copyOffset);
 		WorldChange result = playerData.data.clipboardBuffer.setAt(playerData.world, setPos, mask.and(playerData.data.globalMask));
 		playerData.addUndoChange(result);
 

@@ -2,7 +2,7 @@ package amp.awec.pattern;
 
 import amp.awec.WorldEditMod;
 import amp.awec.util.BlockState;
-import com.google.common.reflect.TypeToken;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;
@@ -39,17 +39,12 @@ public class BlockAliases {
 			int metadata = 0;
 
 			String entryValue = entry.getValue();
-			if (entryValue == null) {
-				block = null;
-			}
-			else {
-				String[] namespaceAndMetadata = entryValue.split(";");
-				NamespaceID namespaceID = NamespaceID.getTemp(namespaceAndMetadata[0]);
-				block = Blocks.blockMap.get(namespaceID);
+			String[] namespaceAndMetadata = entryValue.split(";");
+			NamespaceID namespaceID = NamespaceID.fromPool(namespaceAndMetadata[0]);
+			block = Blocks.blockMap.get(namespaceID);
 
-				if (namespaceAndMetadata.length > 1) {
-					metadata = Integer.parseInt(namespaceAndMetadata[1]);
-				}
+			if (namespaceAndMetadata.length > 1) {
+				metadata = Integer.parseInt(namespaceAndMetadata[1]);
 			}
 
 			BlockState blockState = new BlockState(block, metadata);

@@ -19,9 +19,6 @@ class BlockProbability {
 	}
 
 	public String toString() {
-		if (this.blockState.block == null) {
-			return "air";
-		}
 		return this.blockState + ": " + this.probability;
 	}
 }
@@ -47,7 +44,7 @@ public class BlockPattern {
 		}
 	}
 
-	public BlockPattern(@Nullable Block<?> singleBlock) {
+	public BlockPattern(Block<?> singleBlock) {
 		blockProbabilities.add(new BlockProbability(
 			new BlockState(singleBlock, 0), 1.0
 		));

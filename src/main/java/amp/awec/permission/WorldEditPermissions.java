@@ -22,10 +22,6 @@ public class WorldEditPermissions {
 
 		// Client -- Allow if cheats are enabled
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-			World world = player.world;
-			if (world == null) {
-				return false;
-			}
 			return player.world.getLevelData().getCheatsEnabled();
 		}
 		// Server -- Allow if operator or the player is on the worldedit whitelist

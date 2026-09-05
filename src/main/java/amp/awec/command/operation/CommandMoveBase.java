@@ -1,48 +1,48 @@
-package amp.awec.command.selection;
+package amp.awec.command.operation;
+
 import amp.awec.command.CommandPlayerData;
 import amp.awec.command.argtypes.ArgumentTypeDirection;
+import amp.awec.operation.MoveOperation;
+import amp.awec.operation.WorldChange;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.DirectionHelper;
 import amp.awec.util.MessageHelper;
-import amp.awec.volume.CuboidVolume;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeInteger;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.util.helper.Direction;
-import org.joml.Vector3i;
+import org.jetbrains.annotations.Nullable;
 
-public class CommandShift implements CommandManager.CommandRegistry {
-
-	@Override
+public class CommandMoveBase {
 	@SuppressWarnings("unchecked")
-	public void register(CommandDispatcher<CommandSource> dispatcher) {
+	public static void register(CommandDispatcher<CommandSource> dispatcher, String command, boolean shiftSelection) {
 		dispatcher.register(
-			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal("/shift")
+			(ArgumentBuilderLiteral) ArgumentBuilderLiteral.literal(command)
 				.requires(source -> WorldEditPermissions.canUseWorldEdit((CommandSource) source))
 				.executes(context -> {
-					return handleShiftCommand(context, 1, null);
+					return handleMoveCommand(context, 1, null, shiftSelection);
 				})
 				.then(ArgumentBuilderRequired.argument("amount", ArgumentTypeInteger.integer(1, 255))
 					.executes(context -> {
 						int amount = context.getArgument("amount", Integer.class);
-						return handleShiftCommand(context, amount, null);
+						return handleMoveCommand(context, amount, null, shiftSelection);
 					})
 					.then(ArgumentBuilderRequired.argument("direction", ArgumentTypeDirection.direction())
 						.executes(context -> {
 							int amount = context.getArgument("amount", Integer.class);
 							Direction direction = context.getArgument("direction", Direction.class);
-							return handleShiftCommand(context, amount, direction);
+							return handleMoveCommand(context, amount, direction, shiftSelection);
 						}))
 				));
 	}
 
-	private int handleShiftCommand(CommandContext<Object> context, int amount, Direction direction) {
+	private static int handleMoveCommand(CommandContext<Object> context, int amount, @Nullable Direction direction, boolean shiftSelection) {
 		CommandSource source = (CommandSource) context.getSource();
 		CommandPlayerData playerData = CommandPlayerData.get(source);
+
 		if (playerData == null) {
 			return 0;
 		}
@@ -52,13 +52,10 @@ public class CommandShift implements CommandManager.CommandRegistry {
 			direction = DirectionHelper.getMajorDirection(playerData.player.xRot, playerData.player.yRot);
 		}
 
-		CuboidVolume selection = playerData.getSelection();
+		WorldChange result = MoveOperation.execute(playerData.world, playerData.getSelection(), amount, direction, shiftSelection);
+		playerData.addUndoChange(result);
 
-		Vector3i shiftVector = DirectionHelper.getVec3i(direction);
-		shiftVector.mul(amount);
-		selection.shift(shiftVector);
-
-		MessageHelper.info(source, "Moved selection " + amount + " blocks");
+		MessageHelper.info(source, "Changed " + result.changedBlockCount + " blocks");
 
 		return 1;
 	}

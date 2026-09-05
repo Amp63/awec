@@ -3,9 +3,11 @@ package amp.awec.volume;
 import amp.awec.operation.WorldChange;
 import amp.awec.pattern.BlockMask;
 import amp.awec.util.BlockFlipper;
-import amp.awec.util.Vec3i;
 import amp.awec.util.BlockState;
+import net.minecraft.core.util.phys.HitResult;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import org.joml.Vector3i;
 
 public class CuboidVolumeBuffer {
 	private final BlockState[] blockBuffer;
@@ -30,7 +32,7 @@ public class CuboidVolumeBuffer {
 
 		int index = 0;
 		while (iterator.hasNext()) {
-			Vec3i copyPos = iterator.next();
+			TilePos copyPos = iterator.next();
 			volumeBuffer.blockBuffer[index] = new BlockState(world, copyPos);
 			index++;
 		}
@@ -38,8 +40,8 @@ public class CuboidVolumeBuffer {
 		return volumeBuffer;
 	}
 
-	public WorldChange setAt(World world, Vec3i setPos, BlockMask mask) {
-		Vec3i corner2 = new Vec3i(
+	public WorldChange setAt(World world, TilePos setPos, BlockMask mask) {
+		TilePos corner2 = new TilePos(
 			setPos.x + dimX - 1,
 			setPos.y + dimY - 1,
 			setPos.z + dimZ - 1
@@ -52,7 +54,7 @@ public class CuboidVolumeBuffer {
 		CuboidVolumeIterator iterator = new CuboidVolumeIterator(setVolume);
 		int index = 0;
 		while (iterator.hasNext()) {
-			Vec3i setBlockPos = iterator.next();
+			TilePos setBlockPos = iterator.next();
 			BlockState setBlock = blockBuffer[index];
 			BlockState oldBlock = setBlock.set(world, setBlockPos, mask);
 			result.putChange(setBlockPos, oldBlock);
@@ -66,8 +68,8 @@ public class CuboidVolumeBuffer {
 		return blockBuffer;
 	}
 
-	public Vec3i getDim() {
-		return new Vec3i(dimX, dimY, dimZ);
+	public Vector3i getDim() {
+		return new Vector3i(dimX, dimY, dimZ);
 	}
 
 	@FunctionalInterface
@@ -75,10 +77,10 @@ public class CuboidVolumeBuffer {
 		int apply(int x, int y, int z);
 	}
 
-	private void flipAxis(Vec3i corner2, Vec3i flipVector, IndexFunction currentIndexFn, IndexFunction swapIndexFn) {
-		CuboidVolumeIterator iterator = new CuboidVolumeIterator(new CuboidVolume(Vec3i.ZERO, corner2));
+	private void flipAxis(TilePos corner2, Vector3i flipVector, IndexFunction currentIndexFn, IndexFunction swapIndexFn) {
+		CuboidVolumeIterator iterator = new CuboidVolumeIterator(new CuboidVolume(new TilePos(0, 0, 0), corner2));
 		while (iterator.hasNext()) {
-			Vec3i pos = iterator.next();
+			TilePos pos = iterator.next();
 			int currentIndex = currentIndexFn.apply(pos.x, pos.y, pos.z);
 			int swapIndex = swapIndexFn.apply(pos.x, pos.y, pos.z);
 
@@ -94,12 +96,12 @@ public class CuboidVolumeBuffer {
 		}
 	}
 
-	public void flip(Vec3i flipVector) {
-		flipVector.absi();
+	public void flip(Vector3i flipVector) {
+		flipVector = flipVector.absolute();
 
 		if (flipVector.x == 1) {
 			flipAxis(
-				new Vec3i((dimX+1)/2-1, dimY-1, dimZ-1),
+				new TilePos((dimX+1)/2-1, dimY-1, dimZ-1),
 				flipVector,
 				(x, y, z) -> x + z*dimX + y*dimX*dimZ,
 				(x, y, z) -> (dimX-1 - x) + z*dimX + y*dimX*dimZ
@@ -107,7 +109,7 @@ public class CuboidVolumeBuffer {
 		}
 		if (flipVector.y == 1) {
 			flipAxis(
-				new Vec3i(dimX-1, (dimY+1)/2-1, dimZ-1),
+				new TilePos(dimX-1, (dimY+1)/2-1, dimZ-1),
 				flipVector,
 				(x, y, z) -> x + z*dimX + y*dimX*dimZ,
 				(x, y, z) -> x + z*dimX + (dimY-1 - y)*dimX*dimZ
@@ -115,7 +117,7 @@ public class CuboidVolumeBuffer {
 		}
 		if (flipVector.z == 1) {
 			flipAxis(
-				new Vec3i(dimX-1, dimY-1, (dimZ+1)/2-1),
+				new TilePos(dimX-1, dimY-1, (dimZ+1)/2-1),
 				flipVector,
 				(x, y, z) -> x + z*dimX + y*dimX*dimZ,
 				(x, y, z) -> x + (dimZ-1 - z)*dimX + y*dimX*dimZ

@@ -1,12 +1,9 @@
 package amp.awec.command.selection;
 import amp.awec.command.CommandPlayerData;
 import amp.awec.command.argtypes.ArgumentTypeDirection;
-import amp.awec.operation.WorldChange;
-import amp.awec.operation.StackOperation;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.DirectionHelper;
 import amp.awec.util.MessageHelper;
-import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolume;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeInteger;
@@ -56,7 +53,7 @@ public class CommandExpand implements CommandManager.CommandRegistry {
 
 		CuboidVolume selection = playerData.getSelection();
 
-		selection.expand(new Vec3i(direction), amount);
+		selection.expand(DirectionHelper.getVec3i(direction), amount);
 
 		MessageHelper.info(source, "Expanded selection by " + amount + " blocks");
 

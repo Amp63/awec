@@ -8,7 +8,6 @@ import amp.awec.pattern.BlockPattern;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.MessageHelper;
 import amp.awec.util.PosHelper;
-import amp.awec.util.Vec3i;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeInteger;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
@@ -16,6 +15,7 @@ import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
+import net.minecraft.core.world.pos.TilePos;
 
 public class CommandHollowCylinder implements CommandManager.CommandRegistry {
 
@@ -51,7 +51,7 @@ public class CommandHollowCylinder implements CommandManager.CommandRegistry {
 		BlockPattern pattern = context.getArgument("pattern", BlockPattern.class);
 		int radius = context.getArgument("radius", Integer.class);
 
-		Vec3i centerPos = PosHelper.getPlayerBlockPos(playerData.player);
+		TilePos centerPos = PosHelper.getPlayerTilePos(playerData.player);
 		WorldChange result = HollowCylinderOperation.execute(playerData.world, centerPos, pattern, radius, height);
 		playerData.addUndoChange(result);
 

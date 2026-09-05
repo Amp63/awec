@@ -1,14 +1,13 @@
-package amp.awec.command.navigation;
+package amp.awec.command.operation;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
-import org.joml.Vector3d;
 
-public class CommandThru implements CommandManager.CommandRegistry {
+public class CommandMoves implements CommandManager.CommandRegistry {
 
 	@Override
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
-		CommandThruBase.register(dispatcher, "thru", "walls", p -> p.getViewVector(1.0f), new Vector3d(0, -1, 0));
+		CommandMoveBase.register(dispatcher, "/moves", true);
 	}
 }

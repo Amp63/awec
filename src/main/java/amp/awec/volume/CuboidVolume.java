@@ -1,31 +1,32 @@
 package amp.awec.volume;
 
-import amp.awec.util.Vec3i;
+import net.minecraft.core.world.pos.TilePos;
+import org.joml.Vector3i;
 
 public class CuboidVolume {
-	private Vec3i corner1, corner2;
-	private Vec3i minCorner, maxCorner;
+	private TilePos corner1, corner2;
+	private TilePos minCorner, maxCorner;
 
-	public CuboidVolume(Vec3i c1, Vec3i c2) {
+	public CuboidVolume(TilePos c1, TilePos c2) {
 		corner1 = c1;
 		corner2 = c2;
 		updateCorrectedCorners();
 	}
 
-	public Vec3i getCorner1() {
+	public TilePos getCorner1() {
 		return corner1;
 	}
 
-	public Vec3i getCorner2() {
+	public TilePos getCorner2() {
 		return corner2;
 	}
 
-	public void setCorner1(Vec3i pos) {
+	public void setCorner1(TilePos pos) {
 		corner1 = pos;
 		updateCorrectedCorners();
 	}
 
-	public void setCorner2(Vec3i pos) {
+	public void setCorner2(TilePos pos) {
 		corner2 = pos;
 		updateCorrectedCorners();
 	}
@@ -38,15 +39,15 @@ public class CuboidVolume {
 		if (!isComplete()) {
 			return;
 		}
-		minCorner = new Vec3i(Math.min(corner1.x, corner2.x), Math.min(corner1.y, corner2.y), Math.min(corner1.z, corner2.z));
-		maxCorner = new Vec3i(Math.max(corner1.x, corner2.x), Math.max(corner1.y, corner2.y), Math.max(corner1.z, corner2.z));
+		minCorner = new TilePos(Math.min(corner1.x, corner2.x), Math.min(corner1.y, corner2.y), Math.min(corner1.z, corner2.z));
+		maxCorner = new TilePos(Math.max(corner1.x, corner2.x), Math.max(corner1.y, corner2.y), Math.max(corner1.z, corner2.z));
 	}
 
-	public Vec3i getMinCorner() {
+	public TilePos getMinCorner() {
 		return minCorner;
 	}
 
-	public Vec3i getMaxCorner() {
+	public TilePos getMaxCorner() {
 		return maxCorner;
 	}
 
@@ -71,42 +72,42 @@ public class CuboidVolume {
 		return maxCorner.z - minCorner.z + 1;
 	}
 
-	public Vec3i getDim() {
-		return new Vec3i(getDimX(), getDimY(), getDimZ());
+	public Vector3i getDim() {
+		return new Vector3i(getDimX(), getDimY(), getDimZ());
 	}
 
-	public boolean shift(Vec3i shiftVector) {
+	public boolean shift(Vector3i shiftVector) {
 		if (!isComplete()) {
 			return false;
 		}
 
-		corner1.addi(shiftVector);
-		corner2.addi(shiftVector);
+		corner1 = corner1.add(shiftVector);
+		corner2 = corner2.add(shiftVector);
 		updateCorrectedCorners();
 
 		return true;
 	}
 
-	public boolean expand(Vec3i expandVector, int amount) {
+	public boolean expand(Vector3i expandVector, int amount) {
 		if (!isComplete()) {
 			return false;
 		}
 
-		Vec3i scaledVector = expandVector.scale(amount);
+		Vector3i scaledVector = expandVector.mul(amount);
 
-		Vec3i minCornerExpand = new Vec3i(
+		Vector3i minCornerExpand = new Vector3i(
 			expandVector.x < 0 ? scaledVector.x : 0,
 			expandVector.y < 0 ? scaledVector.y : 0,
 			expandVector.z < 0 ? scaledVector.z : 0
 		);
-		Vec3i maxCornerExpand = new Vec3i(
+		Vector3i maxCornerExpand = new Vector3i(
 			expandVector.x > 0 ? scaledVector.x : 0,
 			expandVector.y > 0 ? scaledVector.y : 0,
 			expandVector.z > 0 ? scaledVector.z : 0
 		);
 
-		Vec3i newMin = minCorner.add(minCornerExpand);
-		Vec3i newMax = maxCorner.add(maxCornerExpand);
+		TilePos newMin = minCorner.add(minCornerExpand);
+		TilePos newMax = maxCorner.add(maxCornerExpand);
 
 		newMin.x = Math.min(newMin.x, maxCorner.x);
 		newMin.y = Math.min(newMin.y, maxCorner.y);

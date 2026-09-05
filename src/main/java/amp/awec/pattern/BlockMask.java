@@ -273,12 +273,12 @@ public class BlockMask {
 	}
 
 	private static int precedence(String op) {
-		switch (op) {
-			case "!": return 3;
-			case "&": return 2;
-			case "|": return 1;
-			default:  return 0;
-		}
+		return switch (op) {
+			case "!" -> 3;
+			case "&" -> 2;
+			case "|" -> 1;
+			default -> 0;
+		};
 	}
 
 	private RandomBlock parseRandomBlock(Matcher matcher) throws BlockMaskException {

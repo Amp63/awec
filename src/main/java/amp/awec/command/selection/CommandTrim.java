@@ -5,23 +5,16 @@ import amp.awec.command.argtypes.ArgumentTypeBlockMask;
 import amp.awec.pattern.BlockMask;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.BlockState;
-import amp.awec.util.DistributionHelper;
 import amp.awec.util.MessageHelper;
-import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolume;
 import amp.awec.volume.CuboidVolumeIterator;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.core.block.Block;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
-import net.minecraft.core.net.command.TextFormatting;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import net.minecraft.core.world.pos.TilePos;
 
 public class CommandTrim implements CommandManager.CommandRegistry {
 	@Override
@@ -56,12 +49,12 @@ public class CommandTrim implements CommandManager.CommandRegistry {
 		}
 
 		CuboidVolume selection = playerData.getSelection();
-		Vec3i newMin = new Vec3i(selection.getMinCorner());
-		Vec3i newMax = new Vec3i(selection.getMaxCorner());
+		TilePos newMin = new TilePos(selection.getMinCorner());
+		TilePos newMax = new TilePos(selection.getMaxCorner());
 
 		CuboidVolumeIterator iterator = new CuboidVolumeIterator(selection);
 		while (iterator.hasNext()) {
-			Vec3i pos = iterator.next();
+			TilePos pos = iterator.next();
 			BlockState blockState = new BlockState(playerData.world, pos);
 			if (mask.matches(blockState)) {
 				if (pos.x > newMin.x) newMin.x = pos.x;

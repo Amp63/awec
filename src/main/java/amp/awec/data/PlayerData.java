@@ -2,12 +2,12 @@ package amp.awec.data;
 
 import amp.awec.WorldEditMod;
 import amp.awec.pattern.BlockMask;
-import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolume;
 import amp.awec.volume.CuboidVolumeBuffer;
 import net.minecraft.core.world.Dimension;
 import net.minecraft.core.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3i;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ public class PlayerData {
 	public boolean wandEnabled = true;
 
 	public CuboidVolumeBuffer clipboardBuffer = null;
-	public Vec3i copyOffset = null;
+	public Vector3i copyOffset = null;
 
 	public BlockMask globalMask = BlockMask.ANY;
 

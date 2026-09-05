@@ -9,6 +9,8 @@
     - `t.leaves`: Matches any leaf block
     - `t.stone`: Matches any "stone-like" block like stone, granite, basalt
     - `t.stair`: Matches any stair block
+- Added `//moves`
+  - Combines `//move` and `//shift` into one command
 
 ## v0.7.0+7.3_04
 

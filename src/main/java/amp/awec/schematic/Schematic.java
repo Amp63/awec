@@ -1,7 +1,6 @@
 package amp.awec.schematic;
 
 import amp.awec.util.BlockState;
-import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolumeBuffer;
 import com.mojang.nbt.tags.*;
 import net.fabricmc.loader.api.FabricLoader;
@@ -10,9 +9,12 @@ import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.util.HardIllegalArgumentException;
 import net.minecraft.core.util.collection.NamespaceID;
+import net.minecraft.core.world.pos.TilePos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3i;
 
+import javax.naming.Name;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -44,7 +46,7 @@ public class Schematic {
 		schematicDataTag.putShort("Height", (short) 0);
 		schematicDataTag.putShort("Length", (short) 0);
 
-		schematicDataTag.putList("Offset", vec3iToListTag(new Vec3i(0, 0, 0)));
+		schematicDataTag.putList("Offset", tilePosToListTag(new TilePos(0, 0, 0)));
 
 		schematicDataTag.putCompound("Blocks", new CompoundTag());
 
@@ -61,17 +63,17 @@ public class Schematic {
 		this.readFromFile(filePath);
 	}
 
-	public static Schematic fromVolumeBuffer(CuboidVolumeBuffer buffer, Vec3i offset,
+	public static Schematic fromVolumeBuffer(CuboidVolumeBuffer buffer, TilePos offset,
 											 String name, String author, long date) {
 		Schematic schem = new Schematic();
 		CompoundTag schematicTag = schem.data.getCompound("").getCompound("Schematic");
 
-		Vec3i bufferDim = buffer.getDim();
+		Vector3i bufferDim = buffer.getDim();
 
 		schematicTag.putShort("Width", (short) bufferDim.x);
 		schematicTag.putShort("Height", (short) bufferDim.y);
 		schematicTag.putShort("Length", (short) bufferDim.z);
-		schematicTag.putList("Offset", vec3iToListTag(offset));
+		schematicTag.putList("Offset", tilePosToListTag(offset));
 
 		CompoundTag paletteTag = new CompoundTag();
 		int paletteIndex = 0;
@@ -101,7 +103,7 @@ public class Schematic {
 			blockData[blockIndex] = new IntTag(paletteTag.getInteger(fullNamespaceString));
 
 			if (blockState.tileEntity != null) {
-				Vec3i tileEntityPos = new Vec3i(
+				TilePos tileEntityPos = new TilePos(
 					blockIndex % bufferDim.x,
 					blockIndex / (bufferDim.x * bufferDim.z),
 					blockIndex / bufferDim.x % bufferDim.z
@@ -130,8 +132,8 @@ public class Schematic {
 
 	public static class LoadResult {
 		public CuboidVolumeBuffer buffer;
-		public Vec3i offset;
-		public LoadResult(CuboidVolumeBuffer buffer, Vec3i offset) {
+		public TilePos offset;
+		public LoadResult(CuboidVolumeBuffer buffer, TilePos offset) {
 			this.buffer = buffer; this.offset = offset;
 		}
 	}
@@ -158,7 +160,7 @@ public class Schematic {
 			String blockString = entry.getKey();
 			String[] blockStringSplit = blockString.split(";");
 
-			NamespaceID blockNamespaceId = NamespaceID.getTemp(blockStringSplit[0]);
+			NamespaceID blockNamespaceId = NamespaceID.fromPool(blockStringSplit[0]);
 			Block<?> block = Blocks.blockMap.get(blockNamespaceId);
 
 			int blockMetadata = Integer.parseInt(blockStringSplit[1]);
@@ -185,10 +187,10 @@ public class Schematic {
 			ListTag posTag = ((CompoundTag) blockEntityTag).getList("Pos");
 			CompoundTag blockEntityData = ((CompoundTag) blockEntityTag).getCompound("Data");
 
-			Vec3i pos = listTagToVec3i(posTag);
+			TilePos pos = listTagToTilePos(posTag);
 			int blockStateIndex = pos.x + pos.z * dimX + pos.y * dimX * dimZ;
 			BlockState blockState = blockBuffer[blockStateIndex];
-			if (blockState.block != null && blockState.block.entitySupplier != null) {
+			if (blockState.block.entitySupplier != null) {
 				TileEntity newTileEntity = blockState.block.entitySupplier.get();
 				newTileEntity.readFromNBT(blockEntityData);
 				blockState.tileEntity = newTileEntity;
@@ -196,7 +198,7 @@ public class Schematic {
 		}
 
 		ListTag offsetTag = schematicTag.getList("Offset");
-		Vec3i offsetVec = listTagToVec3i(offsetTag);
+		TilePos offsetVec = listTagToTilePos(offsetTag);
 
 		return new LoadResult(volumeBuffer, offsetVec);
 	}
@@ -230,10 +232,10 @@ public class Schematic {
 		return tag;
 	}
 
-	private static CompoundTag createBlockEntityTag(TileEntity tileEntity, Vec3i pos) {
+	private static CompoundTag createBlockEntityTag(TileEntity tileEntity, TilePos pos) {
 		CompoundTag blockEntityTag = new CompoundTag();
 
-		blockEntityTag.putList("Pos", Schematic.vec3iToListTag(pos));
+		blockEntityTag.putList("Pos", Schematic.tilePosToListTag(pos));
 
 		CompoundTag blockEntityData = new CompoundTag();
 		tileEntity.writeToNBT(blockEntityData);
@@ -242,17 +244,17 @@ public class Schematic {
 		return blockEntityTag;
 	}
 
-	private static ListTag vec3iToListTag(Vec3i v) {
+	private static ListTag tilePosToListTag(TilePos pos) {
 		return new ListTag(Arrays.asList(new IntTag[] {
-			new IntTag(v.x), new IntTag(v.y), new IntTag(v.z)
+			new IntTag(pos.x), new IntTag(pos.y), new IntTag(pos.z)
 		}));
 	}
 
-	private static Vec3i listTagToVec3i(ListTag tag) {
+	private static TilePos listTagToTilePos(ListTag tag) {
 		int x = ((IntTag) tag.tagAt(0)).getValue();
 		int y = ((IntTag) tag.tagAt(1)).getValue();
 		int z = ((IntTag) tag.tagAt(2)).getValue();
-		return new Vec3i(x, y, z);
+		return new TilePos(x, y, z);
 	}
 
 	public static class ModNotFoundException extends RuntimeException {

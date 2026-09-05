@@ -21,7 +21,7 @@ public class ArgumentTypeWorldEditCommandName implements ArgumentType<String> {
 	public String parse(StringReader stringReader) throws CommandSyntaxException {
 		String readString = stringReader.readUnquotedString();
 		if (!HelpList.commandMap.containsKey(readString)) {
-			LiteralMessage message = new LiteralMessage("Unrecognized color");
+			LiteralMessage message = new LiteralMessage("Unrecognized command");
 			throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
 		}
 

@@ -2,20 +2,17 @@ package amp.awec.command.clipboard;
 
 import amp.awec.command.CommandPlayerData;
 import amp.awec.command.argtypes.ArgumentTypeDirection;
-import amp.awec.operation.MoveOperation;
-import amp.awec.operation.WorldChange;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.DirectionHelper;
 import amp.awec.util.MessageHelper;
-import amp.awec.util.Vec3i;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.ArgumentTypeInteger;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.util.helper.Direction;
+import org.joml.Vector3i;
 
 public class CommandFlip implements CommandManager.CommandRegistry {
 
@@ -44,14 +41,14 @@ public class CommandFlip implements CommandManager.CommandRegistry {
 			return 0;
 		}
 
-		Vec3i flipVector;
+		Vector3i flipVector;
 		if (direction == null) {
 			// Default to forward direction
 			direction = DirectionHelper.getMajorDirection(playerData.player.xRot, playerData.player.yRot);
-			flipVector = new Vec3i(direction.rotate(1));  // Rotate to make perpendicular
+			flipVector = DirectionHelper.getVec3i(direction.rotateY(1));  // Rotate to make perpendicular
 		}
 		else {
-			flipVector = new Vec3i(direction);
+			flipVector = DirectionHelper.getVec3i(direction);
 		}
 
 		playerData.data.clipboardBuffer.flip(flipVector);

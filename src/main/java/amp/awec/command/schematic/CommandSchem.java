@@ -13,6 +13,8 @@ import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
+import net.minecraft.core.world.pos.TilePos;
+import org.joml.Vector3i;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
@@ -42,7 +44,7 @@ public class CommandSchem implements CommandManager.CommandRegistry {
 							String filePath = context.getArgument("file_path", String.class);
 
 							Schematic schem = Schematic.fromVolumeBuffer(
-								playerData.data.clipboardBuffer, playerData.data.copyOffset,
+								playerData.data.clipboardBuffer, new TilePos(playerData.data.copyOffset),
 								filePath, playerData.player.username, System.currentTimeMillis()
 							);
 
@@ -77,7 +79,7 @@ public class CommandSchem implements CommandManager.CommandRegistry {
 								Schematic schem = SchematicsManager.load(filePath);
 								Schematic.LoadResult result = schem.toVolumeBuffer();
 								playerData.data.clipboardBuffer = result.buffer;
-								playerData.data.copyOffset = result.offset;
+								playerData.data.copyOffset.set(result.offset.vec());
 
 								MessageHelper.success(source, "Schematic loaded successfully");
 								return 1;

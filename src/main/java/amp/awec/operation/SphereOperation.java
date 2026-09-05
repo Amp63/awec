@@ -2,15 +2,15 @@ package amp.awec.operation;
 
 import amp.awec.pattern.BlockPattern;
 import amp.awec.util.BlockState;
-import amp.awec.util.Vec3i;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
 
 public class SphereOperation {
-	public static WorldChange execute(World world, Vec3i center, BlockPattern pattern, int radius) {
+	public static WorldChange execute(World world, TilePos center, BlockPattern pattern, int radius) {
 		WorldChange result = new WorldChange();
 
 		final int radiusSquared = radius * radius;
-		Vec3i setPos = new Vec3i();
+		TilePos setPos = new TilePos();
 
 		for (int x = center.x-radius; x <= center.y+radius; x++) {
 			int dxSquared = (x - center.x) * (x - center.x);

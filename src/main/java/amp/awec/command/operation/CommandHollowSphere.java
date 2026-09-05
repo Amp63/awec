@@ -8,13 +8,13 @@ import amp.awec.pattern.BlockPattern;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.util.MessageHelper;
 import amp.awec.util.PosHelper;
-import amp.awec.util.Vec3i;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeInteger;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
+import net.minecraft.core.world.pos.TilePos;
 
 public class CommandHollowSphere implements CommandManager.CommandRegistry {
 
@@ -36,7 +36,7 @@ public class CommandHollowSphere implements CommandManager.CommandRegistry {
 							BlockPattern pattern = context.getArgument("pattern", BlockPattern.class);
 							int radius = context.getArgument("radius", Integer.class);
 
-							Vec3i centerPos = PosHelper.getPlayerBlockPos(playerData.player);
+							TilePos centerPos = PosHelper.getPlayerTilePos(playerData.player);
 							WorldChange result = HollowSphereOperation.execute(playerData.world, centerPos, pattern, radius);
 							playerData.addUndoChange(result);
 

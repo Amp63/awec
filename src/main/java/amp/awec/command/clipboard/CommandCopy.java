@@ -2,7 +2,6 @@ package amp.awec.command.clipboard;
 
 import amp.awec.command.CommandPlayerData;
 import amp.awec.util.MessageHelper;
-import amp.awec.util.Vec3i;
 import amp.awec.data.PlayerData;
 import amp.awec.permission.WorldEditPermissions;
 import amp.awec.volume.CuboidVolume;
@@ -13,6 +12,9 @@ import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import org.joml.RoundingMode;
+import org.joml.Vector3i;
 
 public class CommandCopy implements CommandManager.CommandRegistry {
 	@Override
@@ -29,7 +31,7 @@ public class CommandCopy implements CommandManager.CommandRegistry {
 					}
 
 					CuboidVolume selection = playerData.getSelection();
-					Vec3i copyPos = PosHelper.getPlayerBlockPos(playerData.player);
+					Vector3i copyPos = PosHelper.getPlayerBlockPosFloor(playerData.player);
 					doCopy(playerData.world, selection, copyPos, playerData.data);
 					MessageHelper.info(source, "Copied");
 
@@ -38,9 +40,9 @@ public class CommandCopy implements CommandManager.CommandRegistry {
 		);
 	}
 
-	private void doCopy(World world, CuboidVolume volume, Vec3i copyPos, PlayerData playerData) {
+	private void doCopy(World world, CuboidVolume volume, Vector3i copyPos, PlayerData playerData) {
 		playerData.clipboardBuffer = CuboidVolumeBuffer.copyFrom(world, volume);
-		Vec3i rootPos = volume.getMinCorner();
-		playerData.copyOffset = rootPos.subtract(copyPos);
+		TilePos rootPos = volume.getMinCorner();
+		playerData.copyOffset = new Vector3i(rootPos.vec()).sub(copyPos);
 	}
 }

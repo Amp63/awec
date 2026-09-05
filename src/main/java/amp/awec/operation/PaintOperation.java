@@ -2,13 +2,13 @@ package amp.awec.operation;
 
 import amp.awec.pattern.BlockMask;
 import amp.awec.util.BlockState;
-import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolume;
 import amp.awec.volume.CuboidVolumeIterator;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.IPaintable;
 import net.minecraft.core.util.helper.DyeColor;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
 
 public class PaintOperation {
 	public static WorldChange execute(World world, CuboidVolume volume, DyeColor dyeColor, BlockMask mask) {
@@ -17,13 +17,9 @@ public class PaintOperation {
 		CuboidVolumeIterator iterator = new CuboidVolumeIterator(volume);
 
 		while (iterator.hasNext()) {
-			Vec3i pos = iterator.next();
+			TilePos pos = iterator.next();
 			BlockState blockState = new BlockState(world, pos);
 			if (!mask.matches(blockState)) {
-				continue;
-			}
-
-			if (blockState.block == null) {
 				continue;
 			}
 
@@ -33,7 +29,7 @@ public class PaintOperation {
 
 			IPaintable paintable = (IPaintable) blockState.block.getLogic();
 			if (paintable.canBePainted()) {
-				paintable.setColor(world, pos.x, pos.y, pos.z, dyeColor);
+				paintable.setColor(world, pos, dyeColor);
 				result.putChange(pos, blockState);
 			}
 		}

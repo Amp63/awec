@@ -1,5 +1,5 @@
 {
-  "air": null,
+  "air": "minecraft:block/air",
 
   "water": "minecraft:block/fluid_water_still",
   "lava": "minecraft:block/fluid_lava_still",

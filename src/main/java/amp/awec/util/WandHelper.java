@@ -10,6 +10,11 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.Items;
 import net.minecraft.core.util.phys.HitResult;
 import net.minecraft.core.util.phys.Vec3;
+import net.minecraft.core.world.pos.TilePos;
+import org.joml.RoundingMode;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
+import org.joml.Vector3i;
 
 public class WandHelper {
 	private static final double TARGET_POS_AIR_DISTANCE = 2;
@@ -34,18 +39,18 @@ public class WandHelper {
 		return Item.getItem(wandItemId);
 	}
 
-	public static Vec3i getTargetedPos(Player player, float partialTick) {
-		float reach = player.gamemode.getBlockReachDistance();
-		HitResult result = player.rayTrace(reach, partialTick, false, false);
-		if (result != null) {
-			return new Vec3i(result.x, result.y, result.z);
+	public static TilePos getTargetedPos(Player player, float partialTick) {
+		double reach = player.gamemode.getBlockReachDistance();
+		HitResult result = player.rayCast(reach, partialTick, false, false, false);
+		if (result instanceof HitResult.Tile) {
+			return new TilePos(((HitResult.Tile) result).tilePos);
 		}
 
-		Vec3 playerPos = player.getPosition(partialTick, true);
-		Vec3 shiftVector = player.getViewVector(partialTick).scale(TARGET_POS_AIR_DISTANCE);
-		Vec3 targetedPos = playerPos.add(shiftVector.x, shiftVector.y, shiftVector.z);
+		Vector3d playerPos = new Vector3d(player.getPosition(partialTick, true));
+		Vector3d shiftVector = new Vector3d(player.getViewVector(partialTick)).mul(TARGET_POS_AIR_DISTANCE);
+		Vector3d targetedPos = playerPos.add(shiftVector);
 
-		return new Vec3i(targetedPos);
+		return new TilePos(targetedPos);
 	}
 
 }

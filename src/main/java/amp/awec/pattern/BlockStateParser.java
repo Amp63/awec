@@ -1,7 +1,6 @@
 package amp.awec.pattern;
 
 import amp.awec.util.BlockState;
-import amp.awec.util.Vec3i;
 import amp.awec.util.WandHelper;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;
@@ -9,6 +8,7 @@ import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.HardIllegalArgumentException;
 import net.minecraft.core.util.collection.NamespaceID;
+import net.minecraft.core.world.pos.TilePos;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -61,7 +61,7 @@ public class BlockStateParser {
 
 		// Target
 		if (player.world != null) {
-			Vec3i targetPos = WandHelper.getTargetedPos(player, 1.0f);
+			TilePos targetPos = WandHelper.getTargetedPos(player, 1.0f);
 			BlockState strictTargetBlock = new BlockState(player.world, targetPos);
 			if (strictTargetBlock.block != null) {
 				BlockState targetBlock = new BlockState(strictTargetBlock.block, -1);

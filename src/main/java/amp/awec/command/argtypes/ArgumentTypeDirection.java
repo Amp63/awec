@@ -28,9 +28,9 @@ public class ArgumentTypeDirection implements ArgumentType<Direction> {
 		put("east", d -> Direction.EAST);
 		put("west", d -> Direction.WEST);
 		put("forward", d -> d);
-		put("backward", Direction::getOpposite);
-		put("left", d -> d.rotate(-1));
-		put("right", d -> d.rotate(1));
+		put("backward", Direction::opposite);
+		put("left", d -> d.rotateY(-1));
+		put("right", d -> d.rotateY(1));
 	}};
 
 	public static ArgumentTypeDirection direction() {

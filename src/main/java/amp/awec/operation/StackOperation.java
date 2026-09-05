@@ -1,11 +1,13 @@
 package amp.awec.operation;
 
 import amp.awec.pattern.BlockMask;
+import amp.awec.util.DirectionHelper;
 import amp.awec.volume.CuboidVolume;
-import amp.awec.util.Vec3i;
 import amp.awec.volume.CuboidVolumeBuffer;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import org.joml.Vector3i;
 
 public class StackOperation {
 	public static WorldChange execute(World world, CuboidVolume volume, int amount, Direction direction) {
@@ -13,12 +15,12 @@ public class StackOperation {
 
 		CuboidVolumeBuffer cuboidVolumeBuffer = CuboidVolumeBuffer.copyFrom(world, volume);
 
-		Vec3i currentSetPos = new Vec3i(volume.getMinCorner());
-		Vec3i directionVec = new Vec3i(direction);
-		Vec3i shiftVector = volume.getDim().componentMultiply(directionVec);
+		TilePos currentSetPos = new TilePos(volume.getMinCorner());
+		Vector3i directionVec = DirectionHelper.getVec3i(direction);
+		Vector3i shiftVector = volume.getDim().mul(directionVec);
 
 		for (int i = 0; i < amount; i++) {
-			currentSetPos.addi(shiftVector);
+			currentSetPos.add(shiftVector);
 			WorldChange setResult = cuboidVolumeBuffer.setAt(world, currentSetPos, BlockMask.ANY);
 			result.update(setResult);
 		}
